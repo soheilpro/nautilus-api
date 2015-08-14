@@ -52,6 +52,8 @@ DB.prototype.insertUser = function(user, callback) {
 
 DB.prototype.updateUser = function(userId, change, callback) {
   var update = new Update();
+  update.setOrUnset('username', change.username);
+  update.setOrUnset('passwordHash', change.passwordHash);
   update.setOrUnset('name', change.name);
 
   this.findAndModify('users', {_id: mongodb.ObjectId(userId)}, update.value(), {new: true}, function(error, result) {
@@ -414,6 +416,8 @@ module.exports = DB;
 function documentToUser(document) {
   return {
     id: document._id.toString(),
+    username: document.username,
+    passwordHash: document.passwordHash,
     name: document.name
   };
 }
@@ -421,6 +425,8 @@ function documentToUser(document) {
 function userToDocument(user) {
   return {
     _id: mongodb.ObjectId(user.id),
+    username: user.username,
+    passwordHash: user.passwordHash,
     name: user.name
   };
 }
