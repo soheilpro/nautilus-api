@@ -5,271 +5,7 @@ var DB = require('../db.js');
 
 var router = express.Router();
 
-router.get('/users', function(request, response, next) {
-  var db = new DB();
-
-  db.getUsers(function(error, users) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    async.each(users, function(user, callback) {
-      expandUser(user, db, callback);
-    }, function(error) {
-      response.json({
-        data: users
-      });
-    });
-  });
-});
-
-router.post('/users', function(request, response, next) {
-  var user = {};
-
-  if (request.param('name'))
-    user.name = request.param('name');
-
-  var db = new DB();
-
-  db.insertUser(user, function(error, user) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    expandUser(user, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.json({
-        data: user
-      });
-    });
-  });
-});
-
-router.patch('/users/:userId', function(request, response, next) {
-  var db = new DB();
-  var change = {};
-
-  if (request.param('name') !== undefined)
-    change.name = request.param('name');
-
-  db.updateUser(request.param('userId'), change, function(error, user) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    expandUser(user, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.json({
-        data: user
-      });
-    });
-  });
-});
-
-function expandUser(user, db, callback) {
-  if (!user.name)
-    user.name = '';
-
-  callback();
-}
-
-router.get('/projects', function(request, response, next) {
-  var db = new DB();
-
-  db.getProjects(function(error, projects) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    async.each(projects, function(project, callback) {
-      expandProject(project, db, callback);
-    }, function(error) {
-      response.json({
-        data: projects
-      });
-    });
-  });
-});
-
-router.post('/projects', function(request, response, next) {
-  var project = {};
-
-  if (request.param('name'))
-    project.name = request.param('name');
-
-  if (request.param('group'))
-    project.group = request.param('group');
-
-  var db = new DB();
-
-  db.insertProject(project, function(error, project) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    expandProject(project, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.json({
-        data: project
-      });
-    });
-  });
-});
-
-router.patch('/projects/:projectId', function(request, response, next) {
-  var db = new DB();
-  var change = {};
-
-  if (request.param('name') !== undefined)
-    change.name = request.param('name');
-
-  if (request.param('group') !== undefined)
-    change.group = request.param('group');
-
-  db.updateProject(request.param('projectId'), change, function(error, project) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    expandProject(project, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.json({
-        data: project
-      });
-    });
-  });
-});
-
-function expandProject(project, db, callback) {
-  if (!project.name)
-    project.name = '';
-
-  if (!project.group)
-    project.group = '';
-
-  callback();
-}
-
-router.get('/states', function(request, response, next) {
-  var db = new DB();
-
-  db.getStates(function(error, states) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    async.each(states, function(state, callback) {
-      expandState(state, db, callback);
-    }, function(error) {
-      response.json({
-        data: states
-      });
-    });
-  });
-});
-
-router.post('/states', function(request, response, next) {
-  var state = {};
-
-  if (request.param('title'))
-    state.title = request.param('title');
-
-  if (request.param('type'))
-    state.type = request.param('type');
-
-  if (request.param('color'))
-    state.color = request.param('color');
-
-  var db = new DB();
-
-  db.insertState(state, function(error, state) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    expandState(state, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.json({
-        data: state
-      });
-    });
-  });
-});
-
-router.patch('/states/:stateId', function(request, response, next) {
-  var db = new DB();
-  var change = {};
-
-  if (request.param('title') !== undefined)
-    change.title = request.param('title');
-
-  if (request.param('type') !== undefined)
-    change.type = request.param('type');
-
-  if (request.param('color') !== undefined)
-    change.color = request.param('color');
-
-  db.updateState(request.param('stateId'), change, function(error, state) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    expandState(state, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.json({
-        data: state
-      });
-    });
-  });
-});
-
-function expandState(state, db, callback) {
-  if (!state.title)
-    state.title = '';
-
-  if (!state.type)
-    state.type = '';
-
-  if (!state.color)
-    state.color = '';
-
-  callback();
-}
-
-router.get('/items', function(request, response, next) {
+router.get('/', function(request, response, next) {
   var db = new DB();
 
   db.getItems(function(error, items) {
@@ -279,7 +15,7 @@ router.get('/items', function(request, response, next) {
     }
 
     async.each(items, function(item, callback) {
-      expandItem(item, db, callback);
+      router.expandItem(item, db, callback);
     }, function(error) {
       response.json({
         data: items
@@ -288,7 +24,7 @@ router.get('/items', function(request, response, next) {
   });
 });
 
-router.post('/items', function(request, response, next) {
+router.post('/', function(request, response, next) {
   var item = {};
 
   if (request.param('type'))
@@ -328,7 +64,7 @@ router.post('/items', function(request, response, next) {
       return;
     }
 
-    expandItem(item, db, function(error) {
+    router.expandItem(item, db, function(error) {
       if (error) {
         next(error);
         return;
@@ -341,7 +77,7 @@ router.post('/items', function(request, response, next) {
   });
 });
 
-router.patch('/items/:itemId', function(request, response, next) {
+router.patch('/:itemId', function(request, response, next) {
   var db = new DB();
   var change = {};
 
@@ -408,7 +144,7 @@ router.patch('/items/:itemId', function(request, response, next) {
       return;
     }
 
-    expandItem(item, db, function(error) {
+    router.expandItem(item, db, function(error) {
       if (error) {
         next(error);
         return;
@@ -421,9 +157,7 @@ router.patch('/items/:itemId', function(request, response, next) {
   });
 });
 
-module.exports = router;
-
-function expandItem(item, db, callback) {
+router.expandItem = function(item, db, callback) {
   if (!item.type)
     item.type = 'issue';
 
@@ -487,7 +221,7 @@ function expandItem(item, db, callback) {
           }
 
           item.prerequisiteItems[item.prerequisiteItems.indexOf(prerequisiteItem)] = item2;
-          expandItem(item2, db, callback);
+          router.expandItem(item2, db, callback);
         });
       }, function(error) {
         callback(error);
@@ -502,7 +236,7 @@ function expandItem(item, db, callback) {
           }
 
           item.subItems[item.subItems.indexOf(subItem)] = item2;
-          expandItem(item2, db, callback);
+          router.expandItem(item2, db, callback);
         });
       }, function(error) {
         callback(error);
@@ -528,3 +262,5 @@ function expandItem(item, db, callback) {
     callback(error);
   });
 }
+
+module.exports = router;

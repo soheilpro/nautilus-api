@@ -10,7 +10,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-app.use('/', require('./routes/api'));
+app.use('/users', require('./routes/users'));
+app.use('/states', require('./routes/states'));
+app.use('/projects', require('./routes/projects'));
+app.use('/items', require('./routes/items'));
 
 app.use(function(request, response, next) {
   var error = new Error('Not Found');
