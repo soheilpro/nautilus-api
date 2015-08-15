@@ -36,6 +36,23 @@ DB.prototype.getUserById = function(userId, callback) {
   });
 };
 
+DB.prototype.getUserByUsername = function(username, callback) {
+  this.findOne('users', {username: username}, null, function(error, result) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    if (!result) {
+      callback(null, null);
+      return;
+    }
+
+    var user = documentToUser(result);
+    callback(null, user);
+  });
+};
+
 DB.prototype.insertUser = function(user, callback) {
   var document = userToDocument(user);
 
@@ -64,6 +81,37 @@ DB.prototype.updateUser = function(userId, change, callback) {
 
     var user = documentToUser(result.value);
     callback(null, user);
+  });
+};
+
+DB.prototype.getSessionById = function(sessionId, callback) {
+  this.findOne('sessions', {_id: sessionId}, null, function(error, result) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    if (!result) {
+      callback(null, null);
+      return;
+    }
+
+    var session = documentToSession(result);
+    callback(null, session);
+  });
+};
+
+DB.prototype.insertSession = function(session, callback) {
+  var document = sessionToDocument(session);
+
+  this.insert('sessions', document, function(error) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var session = documentToSession(document);
+    callback(null, session);
   });
 };
 
@@ -428,6 +476,20 @@ function userToDocument(user) {
     username: user.username,
     passwordHash: user.passwordHash,
     name: user.name
+  };
+}
+
+function documentToSession(document) {
+  return {
+    id: document._id,
+    user: fromRef(document.user)
+  };
+}
+
+function sessionToDocument(session) {
+  return {
+    _id: session.id,
+    user: toRef(session.user)
   };
 }
 

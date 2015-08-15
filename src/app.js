@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 app.use('/users', require('./routes/users'));
+app.use('/sessions', require('./routes/sessions'));
 app.use('/states', require('./routes/states'));
 app.use('/projects', require('./routes/projects'));
 app.use('/items', require('./routes/items'));
