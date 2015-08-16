@@ -1,17 +1,40 @@
 var express = require('express');
+var passport = require('passport');
+var passportHTTP = require('passport-http');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var debug = require('debug')('odin-api');
+var DB = require('./db');
+
+passport.use(new passportHTTP.BasicStrategy(function(username, password, callback) {
+  var db = new DB();
+
+  db.getSessionById(username, function (error, session) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    if (!session) {
+      callback(null, false);
+      return;
+    }
+
+    callback(null, session);
+  });
+}));
 
 var app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+app.use(passport.initialize());
 
-app.use('/users', require('./routes/users'));
 app.use('/sessions', require('./routes/sessions'));
+app.use(passport.authenticate('basic', { session: false }));
+app.use('/users', require('./routes/users'));
 app.use('/states', require('./routes/states'));
 app.use('/projects', require('./routes/projects'));
 app.use('/items', require('./routes/items'));
