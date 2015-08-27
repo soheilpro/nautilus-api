@@ -9,10 +9,8 @@ router.get('/', function(request, response, next) {
   var db = new DB();
 
   db.getItems(function(error, items) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     async.each(items, function(item, callback) {
       router.expandItem(item, db, callback);
@@ -59,16 +57,12 @@ router.post('/', function(request, response, next) {
   var db = new DB();
 
   db.insertItem(item, function(error, item) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     router.expandItem(item, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
+      if (error)
+        return next(error);
 
       response.json({
         data: item
@@ -139,16 +133,12 @@ router.patch('/:itemId', function(request, response, next) {
     change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), function(id) { return { id: id }; });
 
   db.updateItem(request.param('itemId'), change, function(error, item) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     router.expandItem(item, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
+      if (error)
+        return next(error);
 
       response.json({
         data: item
@@ -181,32 +171,24 @@ router.expandItem = function(item, db, callback) {
 
   async.parallel([
     function(callback) {
-      if (!item.state) {
-        callback();
-        return;
-      }
+      if (!item.state)
+        return callback();
 
       db.getStateById(item.state.id, function(error, state) {
-        if (error) {
-          callback(error);
-          return;
-        }
+        if (error)
+          return callback(error);
 
         item.state = state;
         callback();
       });
     },
     function(callback) {
-      if (!item.project) {
-        callback();
-        return;
-      }
+      if (!item.project)
+        return callback();
 
       db.getProjectById(item.project.id, function(error, project) {
-        if (error) {
-          callback(error);
-          return;
-        }
+        if (error)
+          return callback(error);
 
         item.project = project;
         callback();
@@ -215,10 +197,8 @@ router.expandItem = function(item, db, callback) {
     function(callback) {
       async.each(item.prerequisiteItems, function(prerequisiteItem, callback) {
         db.getItemById(prerequisiteItem.id, function(error, item2) {
-          if (error) {
-            callback(error);
-            return;
-          }
+          if (error)
+            return callback(error);
 
           item.prerequisiteItems[item.prerequisiteItems.indexOf(prerequisiteItem)] = item2;
           router.expandItem(item2, db, callback);
@@ -230,10 +210,8 @@ router.expandItem = function(item, db, callback) {
     function(callback) {
       async.each(item.subItems, function(subItem, callback) {
         db.getItemById(subItem.id, function(error, item2) {
-          if (error) {
-            callback(error);
-            return;
-          }
+          if (error)
+            return callback(error);
 
           item.subItems[item.subItems.indexOf(subItem)] = item2;
           router.expandItem(item2, db, callback);
@@ -245,10 +223,8 @@ router.expandItem = function(item, db, callback) {
     function(callback) {
       async.each(item.assignedUsers, function(assignedUser, callback) {
         db.getUserById(assignedUser.id, function(error, user) {
-          if (error) {
-            callback(error);
-            return;
-          }
+          if (error)
+            return callback(error);
 
           item.assignedUsers[item.assignedUsers.indexOf(assignedUser)] = user;
           callback();

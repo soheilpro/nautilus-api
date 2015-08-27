@@ -10,10 +10,8 @@ router.get('/', function(request, response, next) {
   var db = new DB();
 
   db.getUsers(function(error, users) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     async.each(users, function(user, callback) {
       router.expandUser(user, db, callback);
@@ -40,16 +38,12 @@ router.post('/', function(request, response, next) {
   var db = new DB();
 
   db.insertUser(user, function(error, user) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     router.expandUser(user, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
+      if (error)
+        return next(error);
 
       response.json({
         data: user
@@ -72,16 +66,12 @@ router.patch('/:userId', function(request, response, next) {
     change.name = request.param('name');
 
   db.updateUser(request.param('userId'), change, function(error, user) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     router.expandUser(user, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
+      if (error)
+        return next(error);
 
       response.json({
         data: user

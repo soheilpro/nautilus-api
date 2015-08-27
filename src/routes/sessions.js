@@ -11,17 +11,14 @@ router.get('/:sessionId', function(request, response, next) {
   var db = new DB();
 
   db.getSessionById(request.param('sessionId'), function(error, session) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     if (!session) {
       var error = new Error();
       error.status = 404;
 
-      next(error);
-      return;
+      return next(error);
     }
 
     router.expandSession(session, db, function() {
@@ -39,10 +36,8 @@ router.post('/', function(request, response, next) {
   var db = new DB();
 
   db.getUserByUsername(username, function(error, user) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
       response.status(403);
@@ -56,16 +51,12 @@ router.post('/', function(request, response, next) {
     };
 
     db.insertSession(session, function(error, session) {
-      if (error) {
-        next(error);
-        return;
-      }
+      if (error)
+        return next(error);
 
       router.expandSession(session, db, function(error) {
-        if (error) {
-          next(error);
-          return;
-        }
+        if (error)
+          return next(error);
 
         response.status(201);
 

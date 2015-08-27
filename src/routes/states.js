@@ -9,10 +9,8 @@ router.get('/', function(request, response, next) {
   var db = new DB();
 
   db.getStates(function(error, states) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     async.each(states, function(state, callback) {
       router.expandState(state, db, callback);
@@ -39,16 +37,12 @@ router.post('/', function(request, response, next) {
   var db = new DB();
 
   db.insertState(state, function(error, state) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     router.expandState(state, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
+      if (error)
+        return next(error);
 
       response.json({
         data: state
@@ -71,16 +65,12 @@ router.patch('/:stateId', function(request, response, next) {
     change.color = request.param('color');
 
   db.updateState(request.param('stateId'), change, function(error, state) {
-    if (error) {
-      next(error);
-      return;
-    }
+    if (error)
+      return next(error);
 
     router.expandState(state, db, function(error) {
-      if (error) {
-        next(error);
-        return;
-      }
+      if (error)
+        return next(error);
 
       response.json({
         data: state

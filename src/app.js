@@ -11,15 +11,11 @@ passport.use(new passportHTTP.BasicStrategy(function(username, password, callbac
   var db = new DB();
 
   db.getSessionById(username, function (error, session) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
-    if (!session) {
-      callback(null, false);
-      return;
-    }
+    if (!session)
+      return callback(null, false);
 
     callback(null, session);
   });

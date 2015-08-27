@@ -9,10 +9,8 @@ function DB() {
 
 DB.prototype.getUsers = function(callback) {
   this.find('users', null, null, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var users = _.map(result, documentToUser);
     callback(null, users);
@@ -21,15 +19,11 @@ DB.prototype.getUsers = function(callback) {
 
 DB.prototype.getUserById = function(userId, callback) {
   this.findOne('users', {_id: mongodb.ObjectId(userId)}, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
-    if (!result) {
-      callback(null, null);
-      return;
-    }
+    if (!result)
+      return callback(null, null);
 
     var user = documentToUser(result);
     callback(null, user);
@@ -38,15 +32,11 @@ DB.prototype.getUserById = function(userId, callback) {
 
 DB.prototype.getUserByUsername = function(username, callback) {
   this.findOne('users', {username: username}, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
-    if (!result) {
-      callback(null, null);
-      return;
-    }
+    if (!result)
+      return callback(null, null);
 
     var user = documentToUser(result);
     callback(null, user);
@@ -57,10 +47,8 @@ DB.prototype.insertUser = function(user, callback) {
   var document = userToDocument(user);
 
   this.insert('users', document, function(error) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var user = documentToUser(document);
     callback(null, user);
@@ -74,10 +62,8 @@ DB.prototype.updateUser = function(userId, change, callback) {
   update.setOrUnset('name', change.name);
 
   this.findAndModify('users', {_id: mongodb.ObjectId(userId)}, update.value(), {new: true}, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var user = documentToUser(result.value);
     callback(null, user);
@@ -86,15 +72,11 @@ DB.prototype.updateUser = function(userId, change, callback) {
 
 DB.prototype.getSessionById = function(sessionId, callback) {
   this.findOne('sessions', {_id: sessionId}, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
-    if (!result) {
-      callback(null, null);
-      return;
-    }
+    if (!result)
+      return callback(null, null);
 
     var session = documentToSession(result);
     callback(null, session);
@@ -105,10 +87,8 @@ DB.prototype.insertSession = function(session, callback) {
   var document = sessionToDocument(session);
 
   this.insert('sessions', document, function(error) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var session = documentToSession(document);
     callback(null, session);
@@ -117,10 +97,8 @@ DB.prototype.insertSession = function(session, callback) {
 
 DB.prototype.getStates = function(callback) {
   this.find('states', null, null, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var states = _.map(result, documentToState);
     callback(null, states);
@@ -129,15 +107,11 @@ DB.prototype.getStates = function(callback) {
 
 DB.prototype.getStateById = function(stateId, callback) {
   this.findOne('states', {_id: mongodb.ObjectId(stateId)}, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
-    if (!result) {
-      callback(null, null);
-      return;
-    }
+    if (!result)
+      return callback(null, null);
 
     var state = documentToState(result);
     callback(null, state);
@@ -148,10 +122,8 @@ DB.prototype.insertState = function(state, callback) {
   var document = stateToDocument(state);
 
   this.insert('states', document,function(error) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var state = documentToState(document);
     callback(null, state);
@@ -165,10 +137,8 @@ DB.prototype.updateState = function(stateId, change, callback) {
   update.setOrUnset('color', change.color);
 
   this.findAndModify('states', {_id: mongodb.ObjectId(stateId)}, update.value(), {new: true}, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var state = documentToState(result.value);
     callback(null, state);
@@ -177,10 +147,8 @@ DB.prototype.updateState = function(stateId, change, callback) {
 
 DB.prototype.getProjects = function(callback) {
   this.find('projects', null, null, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var projects = _.map(result, documentToProject);
     callback(null, projects);
@@ -189,15 +157,11 @@ DB.prototype.getProjects = function(callback) {
 
 DB.prototype.getProjectById = function(projectId, callback) {
   this.findOne('projects', {_id: mongodb.ObjectId(projectId)}, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
-    if (!result) {
-      callback(null, null);
-      return;
-    }
+    if (!result)
+      return callback(null, null);
 
     var project = documentToProject(result);
     callback(null, project);
@@ -208,10 +172,8 @@ DB.prototype.insertProject = function(project, callback) {
   var document = projectToDocument(project);
 
   this.insert('projects', document, function(error) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var project = documentToProject(document);
     callback(null, project);
@@ -224,10 +186,8 @@ DB.prototype.updateProject = function(projectId, change, callback) {
   update.setOrUnset('group', change.group);
 
   this.findAndModify('projects', {_id: mongodb.ObjectId(projectId)}, update.value(), {new: true}, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var project = documentToProject(result.value);
     callback(null, project);
@@ -236,10 +196,8 @@ DB.prototype.updateProject = function(projectId, change, callback) {
 
 DB.prototype.getItems = function(callback) {
   this.find('items', null, null, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var items = _.map(result, documentToItem);
     callback(null, items);
@@ -248,15 +206,11 @@ DB.prototype.getItems = function(callback) {
 
 DB.prototype.getItemById = function(itemId, callback) {
   this.findOne('items', {_id: mongodb.ObjectId(itemId)}, null, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
-    if (!result) {
-      callback(null, null);
-      return;
-    }
+    if (!result)
+      return callback(null, null);
 
     var item = documentToItem(result);
     callback(null, item);
@@ -267,10 +221,8 @@ DB.prototype.insertItem = function(item, callback) {
   var document = itemToDocument(item);
 
   this.insert('items', document, function(error) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var item = documentToItem(document);
     callback(null, item);
@@ -294,10 +246,8 @@ DB.prototype.updateItem = function(itemId, change, callback) {
   update.removeFromSet('assignedUsers', change.assignedUsers_remove, toRefArray);
 
   this.findAndModify('items', {_id: mongodb.ObjectId(itemId)}, update.value(), {new: true}, function(error, result) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     var item = documentToItem(result.value);
     callback(null, item);
@@ -305,16 +255,12 @@ DB.prototype.updateItem = function(itemId, change, callback) {
 };
 
 DB.prototype.opendb = function(callback) {
-  if (_db) {
-    callback(null, _db);
-    return;
-  }
+  if (_db)
+    return callback(null, _db);
 
   mongodb.MongoClient.connect(config.get('db'), function(error, db) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     _db = db;
 
@@ -324,16 +270,12 @@ DB.prototype.opendb = function(callback) {
 
 DB.prototype.collection = function(collectionName, callback) {
   this.opendb(function(error, db) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     db.collection(collectionName, function(error, collection) {
-      if (error) {
-        callback(error);
-        return;
-      }
+      if (error)
+        return callback(error);
 
       callback(null, collection, function() {});
     });
@@ -342,10 +284,8 @@ DB.prototype.collection = function(collectionName, callback) {
 
 DB.prototype.insert = function(collectionName, document, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.insert(document, function(error) {
       finalizer();
@@ -358,10 +298,8 @@ DB.prototype.insert = function(collectionName, document, callback) {
 
 DB.prototype.update = function(collectionName, query, document, options, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.update(query, document, options, function(error, result) {
       finalizer();
@@ -374,10 +312,8 @@ DB.prototype.update = function(collectionName, query, document, options, callbac
 
 DB.prototype.findAndModify = function(collectionName, query, document, options, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.findAndModify(query, [], document, options, function(error, result) {
       finalizer();
@@ -388,10 +324,8 @@ DB.prototype.findAndModify = function(collectionName, query, document, options, 
 
 DB.prototype.remove = function(collectionName, query, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.remove(query, function(error) {
       finalizer();
@@ -404,10 +338,8 @@ DB.prototype.remove = function(collectionName, query, callback) {
 
 DB.prototype.find = function(collectionName, query, fields, options, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.find(query, fields || {}, options).toArray(function(error, result) {
       finalizer();
@@ -419,10 +351,8 @@ DB.prototype.find = function(collectionName, query, fields, options, callback) {
 
 DB.prototype.findOne = function(collectionName, query, fields, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.findOne(query, fields || {}, function(error, result) {
       finalizer();
@@ -433,10 +363,8 @@ DB.prototype.findOne = function(collectionName, query, fields, callback) {
 
 DB.prototype.count = function(collectionName, query, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.count(query, function(error, count) {
       finalizer();
@@ -447,10 +375,8 @@ DB.prototype.count = function(collectionName, query, callback) {
 
 DB.prototype.group = function(collectionName, keys, condition, initial, reduce, callback) {
   this.collection(collectionName, function(error, collection, finalizer) {
-    if (error) {
-      callback(error);
-      return;
-    }
+    if (error)
+      return callback(error);
 
     collection.group(keys, condition, initial, reduce, null, true, {}, function(error, result) {
       finalizer();
