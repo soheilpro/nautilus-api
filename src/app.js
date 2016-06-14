@@ -4,7 +4,7 @@ var passportHTTP = require('passport-http');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var debug = require('debug')('odin-api');
+var debug = require('debug')('nautilus-api');
 var DB = require('./db');
 
 passport.use(new passportHTTP.BasicStrategy(function(username, password, callback) {
