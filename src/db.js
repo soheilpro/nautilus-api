@@ -7,8 +7,10 @@ var _db;
 function DB() {
 }
 
-DB.prototype.getUsers = function(callback) {
-  this.find('users', null, null, null, function(error, result) {
+DB.prototype.getUsers = function(filter, callback) {
+  var query = {};
+
+  this.find('users', query, null, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -17,21 +19,13 @@ DB.prototype.getUsers = function(callback) {
   });
 };
 
-DB.prototype.getUserById = function(userId, callback) {
-  this.findOne('users', {_id: mongodb.ObjectId(userId)}, null, function(error, result) {
-    if (error)
-      return callback(error);
+DB.prototype.getUser = function(filter, callback) {
+  var query = {
+    _id: filter.userId ? mongodb.ObjectId(filter.userId) : undefined,
+    username: filter.username
+  };
 
-    if (!result)
-      return callback(null, null);
-
-    var user = documentToUser(result);
-    callback(null, user);
-  });
-};
-
-DB.prototype.getUserByUsername = function(username, callback) {
-  this.findOne('users', {username: username}, null, function(error, result) {
+  this.findOne('users', query, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -70,8 +64,12 @@ DB.prototype.updateUser = function(userId, change, callback) {
   });
 };
 
-DB.prototype.getSessionById = function(sessionId, callback) {
-  this.findOne('sessions', {_id: sessionId}, null, function(error, result) {
+DB.prototype.getSession = function(filter, callback) {
+  var query = {
+    _id: filter.sessionId
+  };
+
+  this.findOne('sessions', query, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -95,8 +93,10 @@ DB.prototype.insertSession = function(session, callback) {
   });
 };
 
-DB.prototype.getStates = function(callback) {
-  this.find('states', null, null, null, function(error, result) {
+DB.prototype.getStates = function(filter, callback) {
+  var query = {};
+
+  this.find('states', query, null, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -105,8 +105,12 @@ DB.prototype.getStates = function(callback) {
   });
 };
 
-DB.prototype.getStateById = function(stateId, callback) {
-  this.findOne('states', {_id: mongodb.ObjectId(stateId)}, null, function(error, result) {
+DB.prototype.getState = function(filter, callback) {
+  var query = {
+    _id: filter.stateId ? mongodb.ObjectId(filter.stateId) : undefined
+  };
+
+  this.findOne('states', query, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -145,8 +149,10 @@ DB.prototype.updateState = function(stateId, change, callback) {
   });
 };
 
-DB.prototype.getProjects = function(callback) {
-  this.find('projects', null, null, null, function(error, result) {
+DB.prototype.getProjects = function(filter, callback) {
+  var query = {};
+
+  this.find('projects', query, null, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -155,8 +161,12 @@ DB.prototype.getProjects = function(callback) {
   });
 };
 
-DB.prototype.getProjectById = function(projectId, callback) {
-  this.findOne('projects', {_id: mongodb.ObjectId(projectId)}, null, function(error, result) {
+DB.prototype.getProjectById = function(filter, callback) {
+  var query = {
+    _id: filter.projectId ? mongodb.ObjectId(filter.projectId) : undefined
+  };
+
+  this.findOne('projects', query, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -194,8 +204,10 @@ DB.prototype.updateProject = function(projectId, change, callback) {
   });
 };
 
-DB.prototype.getItems = function(callback) {
-  this.find('items', null, null, null, function(error, result) {
+DB.prototype.getItems = function(filter, callback) {
+  var query = {};
+
+  this.find('items', query, null, null, function(error, result) {
     if (error)
       return callback(error);
 
@@ -204,8 +216,12 @@ DB.prototype.getItems = function(callback) {
   });
 };
 
-DB.prototype.getItemById = function(itemId, callback) {
-  this.findOne('items', {_id: mongodb.ObjectId(itemId)}, null, function(error, result) {
+DB.prototype.getItem = function(filter, callback) {
+  var query = {
+    _id: filter.itemId ? mongodb.ObjectId(filter.itemId) : undefined
+  };
+
+  this.findOne('items', query, null, function(error, result) {
     if (error)
       return callback(error);
 

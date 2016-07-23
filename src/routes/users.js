@@ -9,7 +9,7 @@ var router = express.Router();
 router.get('/', function(request, response, next) {
   var db = new DB();
 
-  db.getUsers(function(error, users) {
+  db.getUsers(null, function(error, users) {
     if (error)
       return next(error);
 

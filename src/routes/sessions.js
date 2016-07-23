@@ -10,7 +10,7 @@ var router = express.Router();
 router.get('/:sessionId', function(request, response, next) {
   var db = new DB();
 
-  db.getSessionById(request.param('sessionId'), function(error, session) {
+  db.getSession({ sessionId: request.param('sessionId') }, function(error, session) {
     if (error)
       return next(error);
 
@@ -33,7 +33,7 @@ router.post('/', function(request, response, next) {
 
   var db = new DB();
 
-  db.getUserByUsername(username, function(error, user) {
+  db.getUser({ username: username }, function(error, user) {
     if (error)
       return next(error);
 

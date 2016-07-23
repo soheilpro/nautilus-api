@@ -10,7 +10,7 @@ var DB = require('./db');
 passport.use(new passportHTTP.BasicStrategy(function(username, password, callback) {
   var db = new DB();
 
-  db.getSessionById(username, function (error, session) {
+  db.getSession({ sessionId: username }, function (error, session) {
     if (error)
       return callback(error);
 

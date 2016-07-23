@@ -8,7 +8,7 @@ var router = express.Router();
 router.get('/', function(request, response, next) {
   var db = new DB();
 
-  db.getProjects(function(error, projects) {
+  db.getProjects(null, function(error, projects) {
     if (error)
       return next(error);
 

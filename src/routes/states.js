@@ -8,7 +8,7 @@ var router = express.Router();
 router.get('/', function(request, response, next) {
   var db = new DB();
 
-  db.getStates(function(error, states) {
+  db.getStates(null, function(error, states) {
     if (error)
       return next(error);
 
