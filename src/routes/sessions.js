@@ -21,10 +21,8 @@ router.get('/:sessionId', function(request, response, next) {
       return next(error);
     }
 
-    router.expandSession(session, db, function() {
-      response.json({
-        data: session
-      });
+    response.json({
+      data: session
     });
   });
 });
@@ -54,22 +52,17 @@ router.post('/', function(request, response, next) {
       if (error)
         return next(error);
 
-      router.expandSession(session, db, function(error) {
-        if (error)
-          return next(error);
+      response.status(201);
 
-        response.status(201);
-
-        response.json({
-          data: session
-        });
+      response.json({
+        data: session
       });
     });
   });
 });
 
 router.expandSession = function(session, db, callback) {
-  callback();
+  callback(session);
 }
 
 module.exports = router;

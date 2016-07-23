@@ -13,12 +13,8 @@ router.get('/', function(request, response, next) {
     if (error)
       return next(error);
 
-    async.each(users, function(user, callback) {
-      router.expandUser(user, db, callback);
-    }, function(error) {
-      response.json({
-        data: users
-      });
+    response.json({
+      data: users
     });
   });
 });
@@ -41,13 +37,8 @@ router.post('/', function(request, response, next) {
     if (error)
       return next(error);
 
-    router.expandUser(user, db, function(error) {
-      if (error)
-        return next(error);
-
-      response.json({
-        data: user
-      });
+    response.json({
+      data: user
     });
   });
 });
@@ -69,24 +60,14 @@ router.patch('/:userId', function(request, response, next) {
     if (error)
       return next(error);
 
-    router.expandUser(user, db, function(error) {
-      if (error)
-        return next(error);
-
-      response.json({
-        data: user
-      });
+    response.json({
+      data: user
     });
   });
 });
 
 router.expandUser = function(user, db, callback) {
-  if (!user.name)
-    user.name = '';
-
-  delete user.passwordHash;
-
-  callback();
+  callback(user);
 }
 
 module.exports = router;

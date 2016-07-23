@@ -12,12 +12,8 @@ router.get('/', function(request, response, next) {
     if (error)
       return next(error);
 
-    async.each(items, function(item, callback) {
-      router.expandItem(item, db, callback);
-    }, function(error) {
-      response.json({
-        data: items
-      });
+    response.json({
+      data: items
     });
   });
 });
@@ -60,13 +56,8 @@ router.post('/', function(request, response, next) {
     if (error)
       return next(error);
 
-    router.expandItem(item, db, function(error) {
-      if (error)
-        return next(error);
-
-      response.json({
-        data: item
-      });
+    response.json({
+      data: item
     });
   });
 });
@@ -136,107 +127,14 @@ router.patch('/:itemId', function(request, response, next) {
     if (error)
       return next(error);
 
-    router.expandItem(item, db, function(error) {
-      if (error)
-        return next(error);
-
-      response.json({
-        data: item
-      });
+    response.json({
+      data: item
     });
   });
 });
 
 router.expandItem = function(item, db, callback) {
-  if (!item.type)
-    item.type = 'issue';
-
-  if (!item.title)
-    item.title = '';
-
-  if (!item.description)
-    item.description = '';
-
-  if (!item.tags)
-    item.tags = [];
-
-  if (!item.prerequisiteItems)
-    item.prerequisiteItems = [];
-
-  if (!item.subItems)
-    item.subItems = [];
-
-  if (!item.assignedUsers)
-    item.assignedUsers = [];
-
-  async.parallel([
-    function(callback) {
-      if (!item.state)
-        return callback();
-
-      db.getStateById(item.state.id, function(error, state) {
-        if (error)
-          return callback(error);
-
-        item.state = state;
-        callback();
-      });
-    },
-    function(callback) {
-      if (!item.project)
-        return callback();
-
-      db.getProjectById(item.project.id, function(error, project) {
-        if (error)
-          return callback(error);
-
-        item.project = project;
-        callback();
-      });
-    },
-    function(callback) {
-      async.each(item.prerequisiteItems, function(prerequisiteItem, callback) {
-        db.getItemById(prerequisiteItem.id, function(error, item2) {
-          if (error)
-            return callback(error);
-
-          item.prerequisiteItems[item.prerequisiteItems.indexOf(prerequisiteItem)] = item2;
-          router.expandItem(item2, db, callback);
-        });
-      }, function(error) {
-        callback(error);
-      });
-    },
-    function(callback) {
-      async.each(item.subItems, function(subItem, callback) {
-        db.getItemById(subItem.id, function(error, item2) {
-          if (error)
-            return callback(error);
-
-          item.subItems[item.subItems.indexOf(subItem)] = item2;
-          router.expandItem(item2, db, callback);
-        });
-      }, function(error) {
-        callback(error);
-      });
-    },
-    function(callback) {
-      async.each(item.assignedUsers, function(assignedUser, callback) {
-        db.getUserById(assignedUser.id, function(error, user) {
-          if (error)
-            return callback(error);
-
-          item.assignedUsers[item.assignedUsers.indexOf(assignedUser)] = user;
-          callback();
-        });
-      }, function(error) {
-        callback(error);
-      });
-    }
-  ],
-  function(error) {
-    callback(error);
-  });
+  callback(item);
 }
 
 module.exports = router;

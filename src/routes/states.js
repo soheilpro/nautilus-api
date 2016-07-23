@@ -12,12 +12,8 @@ router.get('/', function(request, response, next) {
     if (error)
       return next(error);
 
-    async.each(states, function(state, callback) {
-      router.expandState(state, db, callback);
-    }, function(error) {
-      response.json({
-        data: states
-      });
+    response.json({
+      data: states
     });
   });
 });
@@ -40,13 +36,8 @@ router.post('/', function(request, response, next) {
     if (error)
       return next(error);
 
-    router.expandState(state, db, function(error) {
-      if (error)
-        return next(error);
-
-      response.json({
-        data: state
-      });
+    response.json({
+      data: state
     });
   });
 });
@@ -68,28 +59,14 @@ router.patch('/:stateId', function(request, response, next) {
     if (error)
       return next(error);
 
-    router.expandState(state, db, function(error) {
-      if (error)
-        return next(error);
-
-      response.json({
-        data: state
-      });
+    response.json({
+      data: state
     });
   });
 });
 
 router.expandState = function(state, db, callback) {
-  if (!state.title)
-    state.title = '';
-
-  if (!state.type)
-    state.type = '';
-
-  if (!state.color)
-    state.color = '';
-
-  callback();
+  callback(state);
 }
 
 module.exports = router;
