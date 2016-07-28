@@ -205,7 +205,9 @@ DB.prototype.updateProject = function(projectId, change, callback) {
 };
 
 DB.prototype.getItems = function(filter, callback) {
-  var query = {};
+  var query = {
+    type: filter.type
+  };
 
   this.find('items', query, null, null, function(error, result) {
     if (error)

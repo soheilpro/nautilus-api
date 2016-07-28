@@ -8,7 +8,7 @@ var router = express.Router();
 router.get('/', function(request, response, next) {
   var db = new DB();
 
-  db.getItems(null, function(error, items) {
+  db.getItems({ type: request.param('type') }, function(error, items) {
     if (error)
       return next(error);
 
