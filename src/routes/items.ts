@@ -1,14 +1,17 @@
+/// <reference path="../typings/index.d.ts" />
+
+import { Repository } from '../repository';
+
 var express = require('express');
 var async = require('async');
 var _ = require('underscore');
-var DB = require('../db.js');
 
 var router = express.Router();
 
-router.get('/', function(request, response, next) {
-  var db = new DB();
+router.get('/', (request, response, next) => {
+  var repository = new Repository();
 
-  db.getItems({ type: request.param('type') }, function(error, items) {
+  repository.getItems({ type: request.param('type') }, (error, items) => {
     if (error)
       return next(error);
 
@@ -18,8 +21,8 @@ router.get('/', function(request, response, next) {
   });
 });
 
-router.post('/', function(request, response, next) {
-  var item = {};
+router.post('/', (request, response, next) => {
+  var item : any = {};
 
   if (request.param('type'))
     item.type = request.param('type');
@@ -42,17 +45,17 @@ router.post('/', function(request, response, next) {
     item.tags = request.param('tags').split(' ');
 
   if (request.param('prerequisite_item_ids'))
-    item.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+    item.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), (id) => { return { id: id }; });
 
   if (request.param('sub_item_ids'))
-    item.subItems = _.map(request.param('sub_item_ids').split(','), function(id) { return { id: id }; });
+    item.subItems = _.map(request.param('sub_item_ids').split(','), (id) => { return { id: id }; });
 
   if (request.param('assigned_user_ids'))
-    item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
+    item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), (id) => { return { id: id }; });
 
-  var db = new DB();
+  var repository = new Repository();
 
-  db.insertItem(item, function(error, item) {
+  repository.insertItem(item, (error, item) => {
     if (error)
       return next(error);
 
@@ -62,9 +65,9 @@ router.post('/', function(request, response, next) {
   });
 });
 
-router.patch('/:itemId', function(request, response, next) {
-  var db = new DB();
-  var change = {};
+router.patch('/:itemId', (request, response, next) => {
+  var repository = new Repository();
+  var change : any = {};
 
   if (request.param('title') !== undefined)
     change.title = request.param('title');
@@ -89,41 +92,41 @@ router.patch('/:itemId', function(request, response, next) {
 
   if (request.param('prerequisite_item_ids') !== undefined)
     if (request.param('prerequisite_item_ids'))
-      change.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+      change.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), (id) => { return { id: id }; });
     else
       change.prerequisiteItems = null;
 
   if (request.param('add_prerequisite_item_ids'))
-    change.prerequisiteItems_add = _.map(request.param('add_prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+    change.prerequisiteItems_add = _.map(request.param('add_prerequisite_item_ids').split(','), (id) => { return { id: id }; });
 
   if (request.param('remove_prerequisite_item_ids'))
-    change.prerequisiteItems_remove = _.map(request.param('remove_prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+    change.prerequisiteItems_remove = _.map(request.param('remove_prerequisite_item_ids').split(','), (id) => { return { id: id }; });
 
   if (request.param('sub_item_ids') !== undefined)
     if (request.param('sub_item_ids'))
-      change.subItems = _.map(request.param('sub_item_ids').split(','), function(id) { return { id: id }; });
+      change.subItems = _.map(request.param('sub_item_ids').split(','), (id) => { return { id: id }; });
     else
       change.subItems = null;
 
   if (request.param('add_sub_item_ids'))
-    change.subItems_add = _.map(request.param('add_sub_item_ids').split(','), function(id) { return { id: id }; });
+    change.subItems_add = _.map(request.param('add_sub_item_ids').split(','), (id) => { return { id: id }; });
 
   if (request.param('remove_sub_item_ids'))
-    change.subItems_remove = _.map(request.param('remove_sub_item_ids').split(','), function(id) { return { id: id }; });
+    change.subItems_remove = _.map(request.param('remove_sub_item_ids').split(','), (id) => { return { id: id }; });
 
   if (request.param('assigned_user_ids') !== undefined)
     if (request.param('assigned_user_ids'))
-      change.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
+      change.assignedUsers = _.map(request.param('assigned_user_ids').split(','), (id) => { return { id: id }; });
     else
       change.assignedUsers = null;
 
   if (request.param('add_assigned_user_ids'))
-    change.assignedUsers_add = _.map(request.param('add_assigned_user_ids').split(','), function(id) { return { id: id }; });
+    change.assignedUsers_add = _.map(request.param('add_assigned_user_ids').split(','), (id) => { return { id: id }; });
 
   if (request.param('remove_assigned_user_ids'))
-    change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), function(id) { return { id: id }; });
+    change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), (id) => { return { id: id }; });
 
-  db.updateItem(request.param('itemId'), change, function(error, item) {
+  repository.updateItem(request.param('itemId'), change, (error, item) => {
     if (error)
       return next(error);
 
@@ -133,8 +136,8 @@ router.patch('/:itemId', function(request, response, next) {
   });
 });
 
-router.expandItem = function(item, db, callback) {
+router.expandItem = (item, repository, callback) => {
   callback(item);
 }
 
-module.exports = router;
+export = router;

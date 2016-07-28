@@ -1,21 +1,24 @@
+/// <reference path="../typings/index.d.ts" />
+
+import { Repository } from '../repository';
+
 var express = require('express');
 var async = require('async');
 var bcrypt = require('bcryptjs');
 var uuid = require('node-uuid');
 var _ = require('underscore');
-var DB = require('../db.js');
 
 var router = express.Router();
 
-router.get('/:sessionId', function(request, response, next) {
-  var db = new DB();
+router.get('/:sessionId', (request, response, next) => {
+  var repository = new Repository();
 
-  db.getSession({ sessionId: request.param('sessionId') }, function(error, session) {
+  repository.getSession({ sessionId: request.param('sessionId') }, (error, session) => {
     if (error)
       return next(error);
 
     if (!session) {
-      var error = new Error();
+      var error : any = new Error();
       error.status = 404;
 
       return next(error);
@@ -27,13 +30,13 @@ router.get('/:sessionId', function(request, response, next) {
   });
 });
 
-router.post('/', function(request, response, next) {
+router.post('/', (request, response, next) => {
   var username = request.param('username');
   var password = request.param('password');
 
-  var db = new DB();
+  var repository = new Repository();
 
-  db.getUser({ username: username }, function(error, user) {
+  repository.getUser({ username: username }, (error, user) => {
     if (error)
       return next(error);
 
@@ -48,7 +51,7 @@ router.post('/', function(request, response, next) {
       user: user
     };
 
-    db.insertSession(session, function(error, session) {
+    repository.insertSession(session, (error, session) => {
       if (error)
         return next(error);
 
@@ -61,8 +64,8 @@ router.post('/', function(request, response, next) {
   });
 });
 
-router.expandSession = function(session, db, callback) {
+router.expandSession = (session, repository, callback) => {
   callback(session);
 }
 
-module.exports = router;
+export = router;

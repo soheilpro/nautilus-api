@@ -1,15 +1,18 @@
+/// <reference path="../typings/index.d.ts" />
+
+import { Repository } from '../repository';
+
 var express = require('express');
 var async = require('async');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
-var DB = require('../db.js');
 
 var router = express.Router();
 
-router.get('/', function(request, response, next) {
-  var db = new DB();
+router.get('/', (request, response, next) => {
+  var repository = new Repository();
 
-  db.getUsers(null, function(error, users) {
+  repository.getUsers(null, (error, users) => {
     if (error)
       return next(error);
 
@@ -19,8 +22,8 @@ router.get('/', function(request, response, next) {
   });
 });
 
-router.post('/', function(request, response, next) {
-  var user = {};
+router.post('/', (request, response, next) => {
+  var user : any = {};
 
   if (request.param('username'))
     user.username = request.param('username');
@@ -31,9 +34,9 @@ router.post('/', function(request, response, next) {
   if (request.param('name'))
     user.name = request.param('name');
 
-  var db = new DB();
+  var repository = new Repository();
 
-  db.insertUser(user, function(error, user) {
+  repository.insertUser(user, (error, user) => {
     if (error)
       return next(error);
 
@@ -43,9 +46,9 @@ router.post('/', function(request, response, next) {
   });
 });
 
-router.patch('/:userId', function(request, response, next) {
-  var db = new DB();
-  var change = {};
+router.patch('/:userId', (request, response, next) => {
+  var repository = new Repository();
+  var change : any = {};
 
   if (request.param('username') !== undefined)
     change.username = request.param('username');
@@ -56,7 +59,7 @@ router.patch('/:userId', function(request, response, next) {
   if (request.param('name') !== undefined)
     change.name = request.param('name');
 
-  db.updateUser(request.param('userId'), change, function(error, user) {
+  repository.updateUser(request.param('userId'), change, (error, user) => {
     if (error)
       return next(error);
 
@@ -66,8 +69,8 @@ router.patch('/:userId', function(request, response, next) {
   });
 });
 
-router.expandUser = function(user, db, callback) {
+router.expandUser = (user, db, callback) => {
   callback(user);
 }
 
-module.exports = router;
+export = router;

@@ -1,14 +1,17 @@
+/// <reference path="../typings/index.d.ts" />
+
+import { Repository } from '../repository';
+
 var express = require('express');
 var async = require('async');
 var _ = require('underscore');
-var DB = require('../db.js');
 
 var router = express.Router();
 
-router.get('/', function(request, response, next) {
-  var db = new DB();
+router.get('/', (request, response, next) => {
+  var repository = new Repository();
 
-  db.getProjects(null, function(error, projects) {
+  repository.getProjects(null, (error, projects) => {
     if (error)
       return next(error);
 
@@ -18,8 +21,8 @@ router.get('/', function(request, response, next) {
   });
 });
 
-router.post('/', function(request, response, next) {
-  var project = {};
+router.post('/', (request, response, next) => {
+  var project : any = {};
 
   if (request.param('name'))
     project.name = request.param('name');
@@ -27,9 +30,9 @@ router.post('/', function(request, response, next) {
   if (request.param('group'))
     project.group = request.param('group');
 
-  var db = new DB();
+  var repository = new Repository();
 
-  db.insertProject(project, function(error, project) {
+  repository.insertProject(project, (error, project) => {
     if (error)
       return next(error);
 
@@ -39,9 +42,9 @@ router.post('/', function(request, response, next) {
   });
 });
 
-router.patch('/:projectId', function(request, response, next) {
-  var db = new DB();
-  var change = {};
+router.patch('/:projectId', (request, response, next) => {
+  var repository = new Repository();
+  var change : any = {};
 
   if (request.param('name') !== undefined)
     change.name = request.param('name');
@@ -49,7 +52,7 @@ router.patch('/:projectId', function(request, response, next) {
   if (request.param('group') !== undefined)
     change.group = request.param('group');
 
-  db.updateProject(request.param('projectId'), change, function(error, project) {
+  repository.updateProject(request.param('projectId'), change, (error, project) => {
     if (error)
       return next(error);
 
@@ -59,8 +62,8 @@ router.patch('/:projectId', function(request, response, next) {
   });
 });
 
-router.expandProject = function(project, db, callback) {
+router.expandProject = (project, repository, callback) => {
   callback(project);
 }
 
-module.exports = router;
+export = router;

@@ -1,14 +1,17 @@
+/// <reference path="../typings/index.d.ts" />
+
+import { Repository } from '../repository';
+
 var express = require('express');
 var async = require('async');
 var _ = require('underscore');
-var DB = require('../db.js');
 
 var router = express.Router();
 
-router.get('/', function(request, response, next) {
-  var db = new DB();
+router.get('/', (request, response, next) => {
+  var repository = new Repository();
 
-  db.getStates(null, function(error, states) {
+  repository.getStates(null, (error, states) => {
     if (error)
       return next(error);
 
@@ -18,8 +21,8 @@ router.get('/', function(request, response, next) {
   });
 });
 
-router.post('/', function(request, response, next) {
-  var state = {};
+router.post('/', (request, response, next) => {
+  var state : any = {};
 
   if (request.param('title'))
     state.title = request.param('title');
@@ -30,9 +33,9 @@ router.post('/', function(request, response, next) {
   if (request.param('color'))
     state.color = request.param('color');
 
-  var db = new DB();
+  var repository = new Repository();
 
-  db.insertState(state, function(error, state) {
+  repository.insertState(state, (error, state) => {
     if (error)
       return next(error);
 
@@ -42,9 +45,9 @@ router.post('/', function(request, response, next) {
   });
 });
 
-router.patch('/:stateId', function(request, response, next) {
-  var db = new DB();
-  var change = {};
+router.patch('/:stateId', (request, response, next) => {
+  var repository = new Repository();
+  var change : any = {};
 
   if (request.param('title') !== undefined)
     change.title = request.param('title');
@@ -55,7 +58,7 @@ router.patch('/:stateId', function(request, response, next) {
   if (request.param('color') !== undefined)
     change.color = request.param('color');
 
-  db.updateState(request.param('stateId'), change, function(error, state) {
+  repository.updateState(request.param('stateId'), change, (error, state) => {
     if (error)
       return next(error);
 
@@ -65,8 +68,8 @@ router.patch('/:stateId', function(request, response, next) {
   });
 });
 
-router.expandState = function(state, db, callback) {
+router.expandState = (state, repository, callback) => {
   callback(state);
 }
 
-module.exports = router;
+export = router;
