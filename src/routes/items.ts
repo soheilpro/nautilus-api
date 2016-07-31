@@ -136,6 +136,17 @@ router.patch('/:itemId', (request, response, next) => {
   });
 });
 
+router.delete('/:itemId', (request, response, next) => {
+  var repository = new Repository();
+
+  repository.deleteItem(request.param('itemId'), (error, item) => {
+    if (error)
+      return next(error);
+
+    response.sendStatus(200);
+  });
+});
+
 router.expandItem = (item, repository, callback) => {
   callback(item);
 }

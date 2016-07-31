@@ -276,6 +276,10 @@ export class Repository {
     });
   };
 
+  deleteItem(itemId, callback) {
+    this.db.remove('items', {_id: DB.ObjectId(itemId)}, callback);
+  };
+
   private documentToUser(document) {
     return {
       id: document._id.toString(),
