@@ -8,7 +8,7 @@ COPY . /usr/app
 WORKDIR /usr/app/src
 
 RUN npm install
-RUN tsc
+RUN ./build
 
 EXPOSE 3000
 
