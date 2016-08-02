@@ -280,6 +280,18 @@ export class Repository {
     this.db.remove('items', {_id: DB.ObjectId(id)}, callback);
   };
 
+  insertUserLog(userLog, callback) {
+    var document = this.userLogToDocument(userLog);
+
+    this.db.insert('userLogs', document, (error) => {
+      if (error)
+        return callback(error);
+
+      var userLog = null;
+      callback(null, userLog);
+    });
+  };
+
   private documentToUser(document) {
     return {
       id: document._id.toString(),
@@ -369,6 +381,16 @@ export class Repository {
       subItems: this.toRefArray(item.subItems),
       prerequisiteItems: this.toRefArray(item.prerequisiteItems),
       assignedUsers: this.toRefArray(item.assignedUsers),
+    };
+  }
+
+  private userLogToDocument(userLog) {
+    return {
+      _id: DB.ObjectId(userLog.id),
+      dateTime: userLog.dateTime,
+      user: this.toRef(userLog.user),
+      action: userLog.action,
+      params: userLog.params
     };
   }
 
