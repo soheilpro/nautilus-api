@@ -12,4 +12,4 @@ RUN tsc
 
 EXPOSE 3000
 
-ENTRYPOINT [ "node", "www.js" ]
+ENTRYPOINT [ "node", "./out/www.js" ]

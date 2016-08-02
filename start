@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-DEBUG=nautilus-api nodemon ./src/www.js
+DEBUG=nautilus-api nodemon ./src/out/www.js
