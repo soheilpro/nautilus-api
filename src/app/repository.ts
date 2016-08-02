@@ -25,7 +25,7 @@ export class Repository {
 
   getUser(filter, callback) {
     var query = {
-      _id: filter.userId ? DB.ObjectId(filter.userId) : undefined,
+      _id: filter.id ? DB.ObjectId(filter.id) : undefined,
       username: filter.username
     };
 
@@ -53,13 +53,13 @@ export class Repository {
     });
   };
 
-  updateUser(userId, change, callback) {
+  updateUser(id, change, callback) {
     var update = new Update();
     update.setOrUnset('username', change.username);
     update.setOrUnset('passwordHash', change.passwordHash);
     update.setOrUnset('name', change.name);
 
-    this.db.findAndModify('users', {_id: DB.ObjectId(userId)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('users', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -70,7 +70,7 @@ export class Repository {
 
   getSession(filter, callback) {
     var query = {
-      _id: filter.sessionId
+      _id: filter.id
     };
 
     this.db.findOne('sessions', query, null, (error, result) => {
@@ -111,7 +111,7 @@ export class Repository {
 
   getState(filter, callback) {
     var query = {
-      _id: filter.stateId ? DB.ObjectId(filter.stateId) : undefined
+      _id: filter.id ? DB.ObjectId(filter.id) : undefined
     };
 
     this.db.findOne('states', query, null, (error, result) => {
@@ -138,13 +138,13 @@ export class Repository {
     });
   };
 
-  updateState(stateId, change, callback) {
+  updateState(id, change, callback) {
     var update = new Update();
     update.setOrUnset('title', change.title);
     update.setOrUnset('type', change.type);
     update.setOrUnset('color', change.color);
 
-    this.db.findAndModify('states', {_id: DB.ObjectId(stateId)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('states', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -165,9 +165,9 @@ export class Repository {
     });
   };
 
-  getProjectById(filter, callback) {
+  getProject(filter, callback) {
     var query = {
-      _id: filter.projectId ? DB.ObjectId(filter.projectId) : undefined
+      _id: filter.id ? DB.ObjectId(filter.id) : undefined
     };
 
     this.db.findOne('projects', query, null, (error, result) => {
@@ -194,12 +194,12 @@ export class Repository {
     });
   };
 
-  updateProject(projectId, change, callback) {
+  updateProject(id, change, callback) {
     var update = new Update();
     update.setOrUnset('name', change.name);
     update.setOrUnset('group', change.group);
 
-    this.db.findAndModify('projects', {_id: DB.ObjectId(projectId)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('projects', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -224,7 +224,7 @@ export class Repository {
 
   getItem(filter, callback) {
     var query = {
-      _id: filter.itemId ? DB.ObjectId(filter.itemId) : undefined
+      _id: filter.id ? DB.ObjectId(filter.id) : undefined
     };
 
     this.db.findOne('items', query, null, (error, result) => {
@@ -251,7 +251,7 @@ export class Repository {
     });
   };
 
-  updateItem(itemId, change, callback) {
+  updateItem(id, change, callback) {
     var update = new Update();
     update.setOrUnset('title', change.title);
     update.setOrUnset('description', change.description);
@@ -267,7 +267,7 @@ export class Repository {
     update.addToSet('assignedUsers', change.assignedUsers_add, this.toRefArray.bind(this));
     update.removeFromSet('assignedUsers', change.assignedUsers_remove, this.toRefArray.bind(this));
 
-    this.db.findAndModify('items', {_id: DB.ObjectId(itemId)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('items', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -276,8 +276,8 @@ export class Repository {
     });
   };
 
-  deleteItem(itemId, callback) {
-    this.db.remove('items', {_id: DB.ObjectId(itemId)}, callback);
+  deleteItem(id, callback) {
+    this.db.remove('items', {_id: DB.ObjectId(id)}, callback);
   };
 
   private documentToUser(document) {
