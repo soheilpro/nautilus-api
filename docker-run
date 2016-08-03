@@ -1,1 +1,1 @@
-docker run --name nautilus-api --link nautilus-db -p 3000:3000 -d soheilpro/nautilus-api:latest --port=3000 --db=mongodb://nautilus-db:27017/nautilus
+docker run --name nautilus-api --link nautilus-db -p 3000:3000 -d soheilpro/nautilus-api:latest -- --port=3000 --db=mongodb://nautilus-db:27017/nautilus

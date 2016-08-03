@@ -8,8 +8,8 @@ COPY . /usr/app
 WORKDIR /usr/app/src
 
 RUN npm install
-RUN ./build
+RUN npm run build
 
 EXPOSE 3000
 
-ENTRYPOINT [ "node", "./out/www.js" ]
+ENTRYPOINT [ "npm", "start" ]
