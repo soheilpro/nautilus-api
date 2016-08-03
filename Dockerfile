@@ -1,7 +1,5 @@
 FROM node:latest
 
-RUN npm install -g typescript
-
 RUN mkdir -p /usr/app
 COPY . /usr/app
 
