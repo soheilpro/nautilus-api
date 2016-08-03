@@ -143,6 +143,21 @@ export class DB {
   }
 }
 
+export class Query {
+  private fields = {};
+
+  set(key, value, map?) {
+    if (value === undefined)
+      return;
+
+    this.fields[key] = map ? map(value) : value;
+  };
+
+  value() {
+    return this.fields;
+  };
+}
+
 export class Update {
   private $set = {};
   private $unset = { __noop__: '' };

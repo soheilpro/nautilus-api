@@ -1,6 +1,6 @@
 /// <reference path="./typings/index.d.ts" />
 
-import { DB, Update } from './db';
+import { DB, Query, Update } from './db';
 
 var _ = require('underscore');
 
@@ -12,9 +12,9 @@ export class Repository {
   }
 
   getUsers(filter, callback) {
-    var query = {};
+    var query = new Query;
 
-    this.db.find('users', query, null, null, (error, result) => {
+    this.db.find('users', query.value(), null, null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -24,12 +24,11 @@ export class Repository {
   };
 
   getUser(filter, callback) {
-    var query = {
-      _id: filter.id ? DB.ObjectId(filter.id) : undefined,
-      username: filter.username
-    };
+    var query = new Query();
+    query.set('_id', filter.id, DB.ObjectId.bind(this));
+    query.set('username', filter.username);
 
-    this.db.findOne('users', query, null, (error, result) => {
+    this.db.findOne('users', query.value(), null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -54,12 +53,15 @@ export class Repository {
   };
 
   updateUser(id, change, callback) {
+    var query = new Query();
+    query.set('_id', id, DB.ObjectId.bind(this));
+
     var update = new Update();
     update.setOrUnset('username', change.username);
     update.setOrUnset('passwordHash', change.passwordHash);
     update.setOrUnset('name', change.name);
 
-    this.db.findAndModify('users', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('users', query.value(), update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -69,11 +71,10 @@ export class Repository {
   };
 
   getSession(filter, callback) {
-    var query = {
-      _id: filter.id
-    };
+    var query = new Query();
+    query.set('_id', filter.id, DB.ObjectId.bind(this));
 
-    this.db.findOne('sessions', query, null, (error, result) => {
+    this.db.findOne('sessions', query.value(), null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -98,9 +99,9 @@ export class Repository {
   };
 
   getStates(filter, callback) {
-    var query = {};
+    var query = new Query;
 
-    this.db.find('states', query, null, null, (error, result) => {
+    this.db.find('states', query.value(), null, null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -110,11 +111,10 @@ export class Repository {
   };
 
   getState(filter, callback) {
-    var query = {
-      _id: filter.id ? DB.ObjectId(filter.id) : undefined
-    };
+    var query = new Query();
+    query.set('_id', filter.id, DB.ObjectId.bind(this));
 
-    this.db.findOne('states', query, null, (error, result) => {
+    this.db.findOne('states', query.value(), null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -139,12 +139,15 @@ export class Repository {
   };
 
   updateState(id, change, callback) {
+    var query = new Query();
+    query.set('_id', id, DB.ObjectId.bind(this));
+
     var update = new Update();
     update.setOrUnset('title', change.title);
     update.setOrUnset('type', change.type);
     update.setOrUnset('color', change.color);
 
-    this.db.findAndModify('states', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('states', query.value(), update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -154,9 +157,9 @@ export class Repository {
   };
 
   getProjects(filter, callback) {
-    var query = {};
+    var query = new Query;
 
-    this.db.find('projects', query, null, null, (error, result) => {
+    this.db.find('projects', query.value(), null, null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -166,11 +169,10 @@ export class Repository {
   };
 
   getProject(filter, callback) {
-    var query = {
-      _id: filter.id ? DB.ObjectId(filter.id) : undefined
-    };
+    var query = new Query();
+    query.set('_id', filter.id, DB.ObjectId.bind(this));
 
-    this.db.findOne('projects', query, null, (error, result) => {
+    this.db.findOne('projects', query.value(), null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -195,11 +197,14 @@ export class Repository {
   };
 
   updateProject(id, change, callback) {
+    var query = new Query();
+    query.set('_id', id, DB.ObjectId.bind(this));
+
     var update = new Update();
     update.setOrUnset('name', change.name);
     update.setOrUnset('group', change.group);
 
-    this.db.findAndModify('projects', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('projects', query.value(), update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -209,11 +214,10 @@ export class Repository {
   };
 
   getItems(filter, callback) {
-    var query = {
-      type: filter.type
-    };
+    var query = new Query();
+    query.set('type', filter.type);
 
-    this.db.find('items', query, null, null, (error, result) => {
+    this.db.find('items', query.value(), null, null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -223,11 +227,10 @@ export class Repository {
   };
 
   getItem(filter, callback) {
-    var query = {
-      _id: filter.id ? DB.ObjectId(filter.id) : undefined
-    };
+    var query = new Query();
+    query.set('_id', filter.id, DB.ObjectId.bind(this));
 
-    this.db.findOne('items', query, null, (error, result) => {
+    this.db.findOne('items', query.value(), null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -252,6 +255,9 @@ export class Repository {
   };
 
   updateItem(id, change, callback) {
+    var query = new Query();
+    query.set('_id', id, DB.ObjectId.bind(this));
+
     var update = new Update();
     update.setOrUnset('title', change.title);
     update.setOrUnset('description', change.description);
@@ -267,7 +273,7 @@ export class Repository {
     update.addToSet('assignedUsers', change.assignedUsers_add, this.toRefArray.bind(this));
     update.removeFromSet('assignedUsers', change.assignedUsers_remove, this.toRefArray.bind(this));
 
-    this.db.findAndModify('items', {_id: DB.ObjectId(id)}, update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify('items', query.value(), update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -277,7 +283,10 @@ export class Repository {
   };
 
   deleteItem(id, callback) {
-    this.db.remove('items', {_id: DB.ObjectId(id)}, callback);
+    var query = new Query();
+    query.set('_id', id, DB.ObjectId.bind(this));
+
+    this.db.remove('items', query.value(), callback);
   };
 
   insertUserLog(userLog, callback) {
