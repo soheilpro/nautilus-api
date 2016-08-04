@@ -26,7 +26,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
       if (error)
         return callback(error);
 
-      var entities = _.map(result, this.documentToEntity, this);
+      var entities = result.map<TEntity>(this.documentToEntity.bind(this));
       callback(null, entities);
     });
   };
@@ -92,7 +92,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     if (!entities)
       return undefined;
 
-    var result = _.map(entities, this.toRef, this);
+    var result = entities.map<IDocument>(this.toRef.bind(this));
 
     if (result.length === 0)
       return undefined;
@@ -113,7 +113,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     if (!documents)
       return undefined;
 
-    var result = _.map(documents, this.fromRef, this);
+    var result = documents.map(this.fromRef.bind(this));
 
     if (result.length === 0)
       return undefined;
