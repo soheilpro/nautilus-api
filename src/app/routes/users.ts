@@ -7,7 +7,7 @@ var _ = require('underscore');
 
 var router = express.Router();
 
-router.get('/', (request, response, next) => {
+router.get('/', (request: any, response: any, next: any) => {
   var repository = new UserRepository();
 
   repository.getAll({}, (error: Error, users: IUser[]) => {
@@ -20,8 +20,8 @@ router.get('/', (request, response, next) => {
   });
 });
 
-router.post('/', (request, response, next) => {
-  var user : any = {};
+router.post('/', (request: any, response: any, next: any) => {
+  var user: IUser = {};
 
   if (request.param('username'))
     user.username = request.param('username');
@@ -44,9 +44,9 @@ router.post('/', (request, response, next) => {
   });
 });
 
-router.patch('/:userId', (request, response, next) => {
+router.patch('/:userId', (request: any, response: any, next: any) => {
   var repository = new UserRepository();
-  var change : any = {};
+  var change: IUserChange = {};
 
   if (request.param('username') !== undefined)
     change.username = request.param('username');
@@ -66,9 +66,5 @@ router.patch('/:userId', (request, response, next) => {
     });
   });
 });
-
-router.expandUser = (user, db, callback) => {
-  callback(user);
-}
 
 export = router;

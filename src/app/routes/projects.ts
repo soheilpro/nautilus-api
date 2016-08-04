@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 var router = express.Router();
 
-router.get('/', (request, response, next) => {
+router.get('/', (request: any, response: any, next: any) => {
   var repository = new ProjectRepository();
 
   repository.getAll({}, (error, projects) => {
@@ -19,8 +19,8 @@ router.get('/', (request, response, next) => {
   });
 });
 
-router.post('/', (request, response, next) => {
-  var project : any = {};
+router.post('/', (request: any, response: any, next: any) => {
+  var project: IProject = {};
 
   if (request.param('name'))
     project.name = request.param('name');
@@ -40,9 +40,9 @@ router.post('/', (request, response, next) => {
   });
 });
 
-router.patch('/:projectId', (request, response, next) => {
+router.patch('/:projectId', (request: any, response: any, next: any) => {
   var repository = new ProjectRepository();
-  var change : any = {};
+  var change: IProjectChange = {};
 
   if (request.param('name') !== undefined)
     change.name = request.param('name');
@@ -59,9 +59,5 @@ router.patch('/:projectId', (request, response, next) => {
     });
   });
 });
-
-router.expandProject = (project, repository, callback) => {
-  callback(project);
-}
 
 export = router;

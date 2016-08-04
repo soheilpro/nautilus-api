@@ -2,7 +2,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
     "sourceMap": true,
     "rootDir": "app",
     "outDir": "out"

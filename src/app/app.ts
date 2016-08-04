@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var debug = require('debug')('nautilus-api');
 
-passport.use(new passportHTTP.BasicStrategy((username, password, callback) => {
+passport.use(new passportHTTP.BasicStrategy((username: string, password: string, callback: (error: Error, user?: Object) => void) => {
   var sessionRepository = new SessionRepository();
 
   sessionRepository.get({ id: username }, (error, session) => {
@@ -36,13 +36,13 @@ app.use('/states', require('./routes/states'));
 app.use('/projects', require('./routes/projects'));
 app.use('/items', require('./routes/items'));
 
-app.use((request, response, next) => {
-  var error : any = new Error('Not Found');
+app.use((request: any, response: any, next: any) => {
+  var error: any = new Error('Not Found');
   error.status = 404;
   next(error);
 });
 
-app.use((error, request, response, next) => {
+app.use((error: any, request: any, response: any, next: any) => {
   debug(error.stack);
   response.status(error.status || 500);
   response.end();

@@ -1,5 +1,5 @@
 interface ISession extends IEntity {
-  user: IEntity;
+  user?: IEntity;
 }
 
 interface ISessionFilter extends IFilter {

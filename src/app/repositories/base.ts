@@ -22,7 +22,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
   getAll(filter: TFilter, callback: IGetAllCallback<TEntity>) {
     var query = this.filterToQuery(filter);
 
-    this.db.find(this.collectionName(), query.value(), null, null, (error, result) => {
+    this.db.find<TDocument>(this.collectionName(), query.value(), null, null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -34,7 +34,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
   get(filter: TFilter, callback: IGetCallback<TEntity>) {
     var query = this.filterToQuery(filter);
 
-    this.db.findOne(this.collectionName(), query.value(), null, (error, result) => {
+    this.db.findOne<TDocument>(this.collectionName(), query.value(), null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -63,11 +63,11 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     var query = this.filterToQuery(filter);
     var update = this.changeToUpdate(change);
 
-    this.db.findAndModify(this.collectionName(), query.value(), update.value(), {new: true}, (error, result) => {
+    this.db.findAndModify<TDocument>(this.collectionName(), query.value(), update.value(), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
-      var entity = this.documentToEntity(result.value);
+      var entity = this.documentToEntity(result);
       callback(null, entity);
     });
   };

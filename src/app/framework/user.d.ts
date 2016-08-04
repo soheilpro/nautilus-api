@@ -1,7 +1,7 @@
 interface IUser extends IEntity {
-  username: string;
-  passwordHash: string;
-  name: string;
+  username?: string;
+  passwordHash?: string;
+  name?: string;
 }
 
 interface IUserFilter extends IFilter {

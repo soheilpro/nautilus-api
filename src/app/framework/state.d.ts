@@ -1,7 +1,7 @@
 interface IState extends IEntity {
-  title: string;
-  type: string;
-  color: string;
+  title?: string;
+  type?: string;
+  color?: string;
 }
 
 interface IStateFilter extends IFilter {

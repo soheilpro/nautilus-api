@@ -9,7 +9,7 @@ var _ = require('underscore');
 
 var router = express.Router();
 
-router.get('/:sessionId', (request, response, next) => {
+router.get('/:sessionId', (request: any, response: any, next: any) => {
   var repository = new SessionRepository();
 
   repository.get({ id: request.param('sessionId') }, (error, session) => {
@@ -29,7 +29,7 @@ router.get('/:sessionId', (request, response, next) => {
   });
 });
 
-router.post('/', (request, response, next) => {
+router.post('/', (request: any, response: any, next: any) => {
   var username = request.param('username');
   var password = request.param('password');
 
@@ -63,9 +63,5 @@ router.post('/', (request, response, next) => {
     });
   });
 });
-
-router.expandSession = (session, repository, callback) => {
-  callback(session);
-}
 
 export = router;

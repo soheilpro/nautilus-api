@@ -4,13 +4,13 @@ var mongodb = require('mongodb');
 var _ = require('underscore');
 
 export class DB {
-  private static _db
+  private static _db: any;
 
-  opendb(callback) {
+  opendb(callback: (error: Error, db?: any) => void): void {
     if (DB._db)
       return callback(null, DB._db);
 
-    mongodb.MongoClient.connect(config.get('db'), (error, db) => {
+    mongodb.MongoClient.connect(config.get('db'), (error: Error, db?: any) => {
       if (error)
         return callback(error);
 
@@ -20,12 +20,12 @@ export class DB {
     });
   }
 
-  collection(collectionName, callback) {
+  collection(collectionName: string, callback: (error: Error, collection?: any, finalizer?: () => void) => void): void {
     this.opendb((error, db) => {
       if (error)
         return callback(error);
 
-      db.collection(collectionName, (error, collection) => {
+      db.collection(collectionName, (error: Error, collection: any) => {
         if (error)
           return callback(error);
 
@@ -34,12 +34,12 @@ export class DB {
     });
   }
 
-  insert(collectionName, document, callback) {
+  insert<TDocument>(collectionName: string, document: TDocument, callback: (error: Error) => void) {
     this.collection(collectionName, (error, collection, finalizer) => {
       if (error)
         return callback(error);
 
-      collection.insert(document, (error) => {
+      collection.insert(document, (error: Error) => {
         finalizer();
 
         if (callback)
@@ -48,38 +48,12 @@ export class DB {
     });
   }
 
-  update(collectionName, query, document, options, callback) {
+  update(collectionName: string, query: Object, update: Object, options: Object, callback: (error: Error) => void) {
     this.collection(collectionName, (error, collection, finalizer) => {
       if (error)
         return callback(error);
 
-      collection.update(query, document, options, (error, result) => {
-        finalizer();
-
-        if (callback)
-          callback(error, result);
-      });
-    });
-  }
-
-  findAndModify(collectionName, query, document, options, callback) {
-    this.collection(collectionName, (error, collection, finalizer) => {
-      if (error)
-        return callback(error);
-
-      collection.findAndModify(query, [], document, options, (error, result) => {
-        finalizer();
-        callback(error, result);
-      });
-    });
-  }
-
-  remove(collectionName, query, callback) {
-    this.collection(collectionName, (error, collection, finalizer) => {
-      if (error)
-        return callback(error);
-
-      collection.remove(query, (error) => {
+      collection.update(query, update, options, (error: Error) => {
         finalizer();
 
         if (callback)
@@ -88,63 +62,77 @@ export class DB {
     });
   }
 
-  find(collectionName, query, fields, options, callback) {
+  findAndModify<TDocument>(collectionName: string, query: Object, update: Object, options: Object, callback: (error: Error, result?: TDocument) => void) {
     this.collection(collectionName, (error, collection, finalizer) => {
       if (error)
         return callback(error);
 
-      collection.find(query, fields || {}, options).toArray((error, result) => {
+      collection.findAndModify(query, [], update, options, (error: Error, result: {value: TDocument}) => {
+        finalizer();
+        callback(error, result.value);
+      });
+    });
+  }
+
+  remove(collectionName: string, query: Object, callback: (error: Error) => void) {
+    this.collection(collectionName, (error, collection, finalizer) => {
+      if (error)
+        return callback(error);
+
+      collection.remove(query, (error: Error) => {
+        finalizer();
+
+        if (callback)
+          callback(error);
+      });
+    });
+  }
+
+  find<TDocument>(collectionName: string, query: Object, fields: Object, options: Object, callback: (error: Error, result?: TDocument[]) => void) {
+    this.collection(collectionName, (error, collection, finalizer) => {
+      if (error)
+        return callback(error);
+
+      collection.find(query, fields || {}, options).toArray((error: Error, result: TDocument[]) => {
         finalizer();
         callback(error, result);
       });
     });
   }
 
-  findOne(collectionName, query, fields, callback) {
+  findOne<TDocument>(collectionName: string, query: Object, fields: Object, callback: (error: Error, result?: TDocument) => void) {
     this.collection(collectionName, (error, collection, finalizer) => {
       if (error)
         return callback(error);
 
-      collection.findOne(query, fields || {}, (error, result) => {
+      collection.findOne(query, fields || {}, (error: Error, result: TDocument) => {
         finalizer();
         callback(error, result);
       });
     });
   }
 
-  count(collectionName, query, callback) {
+  count(collectionName: string, query: Object, callback: (error: Error, count?: number) => void) {
     this.collection(collectionName, (error, collection, finalizer) => {
       if (error)
         return callback(error);
 
-      collection.count(query, (error, count) => {
+      collection.count(query, (error: Error, count: number) => {
         finalizer();
         callback(error, count);
       });
     });
   }
 
-  group(collectionName, keys, condition, initial, reduce, callback) {
-    this.collection(collectionName, (error, collection, finalizer) => {
-      if (error)
-        return callback(error);
-
-      collection.group(keys, condition, initial, reduce, null, true, {}, (error, result) => {
-        finalizer();
-        callback(error, result);
-      });
-    });
-  }
-
-  static ObjectId(id) {
+  static ObjectId(id: string): Object {
     return mongodb.ObjectId(id);
   }
 }
 
 export class Query {
-  private fields = {};
+  private fields: {[key: string]: any} = {};
 
-  set(key, value, map?) {
+  set(key: string, value: any, map?: (value: any) => any) {
     if (value === undefined)
       return;
 
@@ -157,12 +145,12 @@ export class Query {
 }
 
 export class Update {
-  private $set = {};
-  private $unset = { __noop__: '' };
-  private $addToSet = {};
-  private $pull = {};
+  private $set: {[key: string]: any} = {};
+  private $unset: {[key: string]: any} = { __noop__: '' };
+  private $addToSet: {[key: string]: any} = {};
+  private $pull: {[key: string]: any} = {};
 
-  setOrUnset(key, value, map?) {
+  setOrUnset(key: string, value: any, map?: (value: any) => any) {
     if (value === undefined)
       return;
 
@@ -172,14 +160,14 @@ export class Update {
       this.$unset[key] = '';
   };
 
-  addToSet(key, value, map?) {
+  addToSet(key: string, value: any, map?: (value: any) => any) {
     if (value === undefined)
       return;
 
     this.$addToSet[key] = { $each: map ? map(value) : value };
   };
 
-  removeFromSet(key, value, map?) {
+  removeFromSet(key: string, value: any, map?: (value: any) => any) {
     if (value === undefined)
       return;
 
@@ -189,7 +177,7 @@ export class Update {
   value() {
     var result = _.clone(this);
 
-    _.each(result, (value, key) => {
+    _.each(result, (value: any, key: string) => {
       if (_.isEmpty(result[key]))
         delete result[key];
     });

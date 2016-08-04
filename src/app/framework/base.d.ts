@@ -1,5 +1,5 @@
 interface IEntity {
-  id: string;
+  id?: string;
 }
 
 interface IFilter {
@@ -30,9 +30,9 @@ interface IDeleteCallback {
 }
 
 interface IRepository<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange> {
-  getAll(filter: TFilter, callback: IGetAllCallback<TEntity>);
-  get(filter: TFilter, callback: IGetCallback<TEntity>);
-  insert(entity: TEntity, callback: IInsertCallback<TEntity>);
-  update(id: string, change: TChange, callback: IUpdateCallback<TEntity>)
-  delete(id: string, callback: IDeleteCallback)
+  getAll(filter: TFilter, callback: IGetAllCallback<TEntity>): void;
+  get(filter: TFilter, callback: IGetCallback<TEntity>): void;
+  insert(entity: TEntity, callback: IInsertCallback<TEntity>): void;
+  update(id: string, change: TChange, callback: IUpdateCallback<TEntity>): void
+  delete(id: string, callback: IDeleteCallback): void
 }

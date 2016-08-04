@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 var router = express.Router();
 
-router.get('/', (request, response, next) => {
+router.get('/', (request: any, response: any, next: any) => {
   var repository = new StateRepository();
 
   repository.getAll({}, (error, states) => {
@@ -19,8 +19,8 @@ router.get('/', (request, response, next) => {
   });
 });
 
-router.post('/', (request, response, next) => {
-  var state : any = {};
+router.post('/', (request: any, response: any, next: any) => {
+  var state: IState = {};
 
   if (request.param('title'))
     state.title = request.param('title');
@@ -43,9 +43,9 @@ router.post('/', (request, response, next) => {
   });
 });
 
-router.patch('/:stateId', (request, response, next) => {
+router.patch('/:stateId', (request: any, response: any, next: any) => {
   var repository = new StateRepository();
-  var change : any = {};
+  var change: IStateChange = {};
 
   if (request.param('title') !== undefined)
     change.title = request.param('title');
@@ -65,9 +65,5 @@ router.patch('/:stateId', (request, response, next) => {
     });
   });
 });
-
-router.expandState = (state, repository, callback) => {
-  callback(state);
-}
 
 export = router;

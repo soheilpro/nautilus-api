@@ -1,12 +1,12 @@
 interface IItem extends IEntity {
-  type: string;
-  title: string;
-  description: string;
-  state: IEntity;
-  project: IEntity;
-  subItems: IEntity[];
-  prerequisiteItems: IEntity[];
-  assignedUsers: IEntity[];
+  type?: string;
+  title?: string;
+  description?: string;
+  state?: IEntity;
+  project?: IEntity;
+  subItems?: IEntity[];
+  prerequisiteItems?: IEntity[];
+  assignedUsers?: IEntity[];
 }
 
 interface IItemFilter extends IFilter {

@@ -7,7 +7,7 @@ var _ = require('underscore');
 
 var router = express.Router();
 
-router.get('/', (request, response, next) => {
+router.get('/', (request: any, response: any, next: any) => {
   var repository = new ItemRepository();
 
   repository.getAll({ type: request.param('type') }, (error, items) => {
@@ -20,8 +20,8 @@ router.get('/', (request, response, next) => {
   });
 });
 
-router.post('/', (request, response, next) => {
-  var item : any = {};
+router.post('/', (request: any, response: any, next: any) => {
+  var item: IItem = {};
 
   if (request.param('type'))
     item.type = request.param('type');
@@ -40,17 +40,14 @@ router.post('/', (request, response, next) => {
   if (request.param('project_id'))
     item.project = { id: request.param('project_id') };
 
-  if (request.param('tags'))
-    item.tags = request.param('tags').split(' ');
-
   if (request.param('prerequisite_item_ids'))
-    item.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), (id) => { return { id: id }; });
+    item.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), (id: string) => { return { id: id }; });
 
   if (request.param('sub_item_ids'))
-    item.subItems = _.map(request.param('sub_item_ids').split(','), (id) => { return { id: id }; });
+    item.subItems = _.map(request.param('sub_item_ids').split(','), (id: string) => { return { id: id }; });
 
   if (request.param('assigned_user_ids'))
-    item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), (id) => { return { id: id }; });
+    item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), (id: string) => { return { id: id }; });
 
   var repository = new ItemRepository();
   var userLogRepository = new UserLogRepository();
@@ -59,8 +56,7 @@ router.post('/', (request, response, next) => {
     if (error)
       return next(error);
 
-    var userLog = {
-      id: undefined,
+    var userLog: IUserLog = {
       dateTime: new Date(),
       user: request.user.user,
       action: 'items.insert',
@@ -80,7 +76,7 @@ router.post('/', (request, response, next) => {
   });
 });
 
-router.patch('/:itemId', (request, response, next) => {
+router.patch('/:itemId', (request: any, response: any, next: any) => {
   var repository = new ItemRepository();
 
   repository.get({ id: request.param('itemId') }, (error, item) => {
@@ -90,7 +86,7 @@ router.patch('/:itemId', (request, response, next) => {
     if (!item)
       return response.sendStatus(404);
 
-    var change : any = {};
+    var change: IItemChange = {};
 
     if (request.param('title') !== undefined)
       change.title = request.param('title');
@@ -110,51 +106,47 @@ router.patch('/:itemId', (request, response, next) => {
       else
         change.project = null;
 
-    if (request.param('tags') !== undefined)
-      change.tags = request.param('tags').split(' ');
-
     if (request.param('prerequisite_item_ids') !== undefined)
       if (request.param('prerequisite_item_ids'))
-        change.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), (id) => { return { id: id }; });
+        change.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), (id: string) => { return { id: id }; });
       else
         change.prerequisiteItems = null;
 
     if (request.param('add_prerequisite_item_ids'))
-      change.prerequisiteItems_add = _.map(request.param('add_prerequisite_item_ids').split(','), (id) => { return { id: id }; });
+      change.prerequisiteItems_add = _.map(request.param('add_prerequisite_item_ids').split(','), (id: string) => { return { id: id }; });
 
     if (request.param('remove_prerequisite_item_ids'))
-      change.prerequisiteItems_remove = _.map(request.param('remove_prerequisite_item_ids').split(','), (id) => { return { id: id }; });
+      change.prerequisiteItems_remove = _.map(request.param('remove_prerequisite_item_ids').split(','), (id: string) => { return { id: id }; });
 
     if (request.param('sub_item_ids') !== undefined)
       if (request.param('sub_item_ids'))
-        change.subItems = _.map(request.param('sub_item_ids').split(','), (id) => { return { id: id }; });
+        change.subItems = _.map(request.param('sub_item_ids').split(','), (id: string) => { return { id: id }; });
       else
         change.subItems = null;
 
     if (request.param('add_sub_item_ids'))
-      change.subItems_add = _.map(request.param('add_sub_item_ids').split(','), (id) => { return { id: id }; });
+      change.subItems_add = _.map(request.param('add_sub_item_ids').split(','), (id: string) => { return { id: id }; });
 
     if (request.param('remove_sub_item_ids'))
-      change.subItems_remove = _.map(request.param('remove_sub_item_ids').split(','), (id) => { return { id: id }; });
+      change.subItems_remove = _.map(request.param('remove_sub_item_ids').split(','), (id: string) => { return { id: id }; });
 
     if (request.param('assigned_user_ids') !== undefined)
       if (request.param('assigned_user_ids'))
-        change.assignedUsers = _.map(request.param('assigned_user_ids').split(','), (id) => { return { id: id }; });
+        change.assignedUsers = _.map(request.param('assigned_user_ids').split(','), (id: string) => { return { id: id }; });
       else
         change.assignedUsers = null;
 
     if (request.param('add_assigned_user_ids'))
-      change.assignedUsers_add = _.map(request.param('add_assigned_user_ids').split(','), (id) => { return { id: id }; });
+      change.assignedUsers_add = _.map(request.param('add_assigned_user_ids').split(','), (id: string) => { return { id: id }; });
 
     if (request.param('remove_assigned_user_ids'))
-      change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), (id) => { return { id: id }; });
+      change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), (id: string) => { return { id: id }; });
 
     repository.update(item.id, change, (error, item) => {
       if (error)
         return next(error);
 
-      var userLog = {
-        id: undefined,
+      var userLog: IUserLog = {
         dateTime: new Date(),
         user: request.user.user,
         action: 'items.update',
@@ -177,7 +169,7 @@ router.patch('/:itemId', (request, response, next) => {
   });
 });
 
-router.delete('/:itemId', (request, response, next) => {
+router.delete('/:itemId', (request: any, response: any, next: any) => {
   var repository = new ItemRepository();
 
   repository.get({ id: request.param('itemId') }, (error, item) => {
@@ -191,8 +183,7 @@ router.delete('/:itemId', (request, response, next) => {
       if (error)
         return next(error);
 
-      var userLog = {
-        id: undefined,
+      var userLog: IUserLog = {
         dateTime: new Date(),
         user: request.user.user,
         action: 'items.delete',
@@ -212,9 +203,5 @@ router.delete('/:itemId', (request, response, next) => {
     });
   });
 });
-
-router.expandItem = (item, repository, callback) => {
-  callback(item);
-}
 
 export = router;

@@ -1,8 +1,8 @@
 interface IUserLog extends IEntity {
-  dateTime: Date;
-  user: IEntity;
-  action: string;
-  params: any
+  dateTime?: Date;
+  user?: IEntity;
+  action?: string;
+  params?: any
 }
 
 interface IUserLogFilter extends IFilter {
