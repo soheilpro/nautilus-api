@@ -1,5 +1,3 @@
-/// <reference path="./typings/index.d.ts" />
-
 var path = require('path');
 var nconf = require('nconf');
 

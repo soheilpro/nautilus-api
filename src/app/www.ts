@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-/// <reference path="./typings/index.d.ts" />
-
 import config from './config';
 import app from './app';
 

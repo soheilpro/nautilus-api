@@ -1,5 +1,3 @@
-/// <reference path="./typings/index.d.ts" />
-
 import { SessionRepository } from './repositories/session';
 
 var express = require('express');
