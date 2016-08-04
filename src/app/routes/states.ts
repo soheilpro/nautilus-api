@@ -1,6 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
-
-import { Repository } from '../repository';
+import { StateRepository } from '../repositories/state';
 
 var express = require('express');
 var async = require('async');
@@ -9,9 +7,9 @@ var _ = require('underscore');
 var router = express.Router();
 
 router.get('/', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new StateRepository();
 
-  repository.getStates(null, (error, states) => {
+  repository.getAll({}, (error, states) => {
     if (error)
       return next(error);
 
@@ -33,9 +31,9 @@ router.post('/', (request, response, next) => {
   if (request.param('color'))
     state.color = request.param('color');
 
-  var repository = new Repository();
+  var repository = new StateRepository();
 
-  repository.insertState(state, (error, state) => {
+  repository.insert(state, (error, state) => {
     if (error)
       return next(error);
 
@@ -46,7 +44,7 @@ router.post('/', (request, response, next) => {
 });
 
 router.patch('/:stateId', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new StateRepository();
   var change : any = {};
 
   if (request.param('title') !== undefined)
@@ -58,7 +56,7 @@ router.patch('/:stateId', (request, response, next) => {
   if (request.param('color') !== undefined)
     change.color = request.param('color');
 
-  repository.updateState(request.param('stateId'), change, (error, state) => {
+  repository.update(request.param('stateId'), change, (error, state) => {
     if (error)
       return next(error);
 

@@ -1,6 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
-
-import { Repository } from '../repository';
+import { ProjectRepository } from '../repositories/project';
 
 var express = require('express');
 var async = require('async');
@@ -9,9 +7,9 @@ var _ = require('underscore');
 var router = express.Router();
 
 router.get('/', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new ProjectRepository();
 
-  repository.getProjects(null, (error, projects) => {
+  repository.getAll({}, (error, projects) => {
     if (error)
       return next(error);
 
@@ -30,9 +28,9 @@ router.post('/', (request, response, next) => {
   if (request.param('group'))
     project.group = request.param('group');
 
-  var repository = new Repository();
+  var repository = new ProjectRepository();
 
-  repository.insertProject(project, (error, project) => {
+  repository.insert(project, (error, project) => {
     if (error)
       return next(error);
 
@@ -43,7 +41,7 @@ router.post('/', (request, response, next) => {
 });
 
 router.patch('/:projectId', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new ProjectRepository();
   var change : any = {};
 
   if (request.param('name') !== undefined)
@@ -52,7 +50,7 @@ router.patch('/:projectId', (request, response, next) => {
   if (request.param('group') !== undefined)
     change.group = request.param('group');
 
-  repository.updateProject(request.param('projectId'), change, (error, project) => {
+  repository.update(request.param('projectId'), change, (error, project) => {
     if (error)
       return next(error);
 

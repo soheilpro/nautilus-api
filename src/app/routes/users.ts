@@ -1,6 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
-
-import { Repository } from '../repository';
+import { UserRepository } from '../repositories/user';
 
 var express = require('express');
 var async = require('async');
@@ -10,9 +8,9 @@ var _ = require('underscore');
 var router = express.Router();
 
 router.get('/', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new UserRepository();
 
-  repository.getUsers(null, (error, users) => {
+  repository.getAll({}, (error: Error, users: IUser[]) => {
     if (error)
       return next(error);
 
@@ -34,9 +32,9 @@ router.post('/', (request, response, next) => {
   if (request.param('name'))
     user.name = request.param('name');
 
-  var repository = new Repository();
+  var repository = new UserRepository();
 
-  repository.insertUser(user, (error, user) => {
+  repository.insert(user, (error, user) => {
     if (error)
       return next(error);
 
@@ -47,7 +45,7 @@ router.post('/', (request, response, next) => {
 });
 
 router.patch('/:userId', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new UserRepository();
   var change : any = {};
 
   if (request.param('username') !== undefined)
@@ -59,7 +57,7 @@ router.patch('/:userId', (request, response, next) => {
   if (request.param('name') !== undefined)
     change.name = request.param('name');
 
-  repository.updateUser(request.param('userId'), change, (error, user) => {
+  repository.update(request.param('userId'), change, (error, user) => {
     if (error)
       return next(error);
 

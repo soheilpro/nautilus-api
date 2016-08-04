@@ -1,6 +1,6 @@
 /// <reference path="./typings/index.d.ts" />
 
-import { Repository } from './repository';
+import { SessionRepository } from './repositories/session';
 
 var express = require('express');
 var passport = require('passport');
@@ -11,9 +11,9 @@ var cors = require('cors');
 var debug = require('debug')('nautilus-api');
 
 passport.use(new passportHTTP.BasicStrategy((username, password, callback) => {
-  var repository = new Repository();
+  var sessionRepository = new SessionRepository();
 
-  repository.getSession({ sessionId: username }, (error, session) => {
+  sessionRepository.get({ id: username }, (error, session) => {
     if (error)
       return callback(error);
 

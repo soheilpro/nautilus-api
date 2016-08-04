@@ -1,6 +1,5 @@
-/// <reference path="../typings/index.d.ts" />
-
-import { Repository } from '../repository';
+import { ItemRepository } from '../repositories/item';
+import { UserLogRepository } from '../repositories/user_log';
 
 var express = require('express');
 var async = require('async');
@@ -9,9 +8,9 @@ var _ = require('underscore');
 var router = express.Router();
 
 router.get('/', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new ItemRepository();
 
-  repository.getItems({ type: request.param('type') }, (error, items) => {
+  repository.getAll({ type: request.param('type') }, (error, items) => {
     if (error)
       return next(error);
 
@@ -53,13 +52,15 @@ router.post('/', (request, response, next) => {
   if (request.param('assigned_user_ids'))
     item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), (id) => { return { id: id }; });
 
-  var repository = new Repository();
+  var repository = new ItemRepository();
+  var userLogRepository = new UserLogRepository();
 
-  repository.insertItem(item, (error, item) => {
+  repository.insert(item, (error, item) => {
     if (error)
       return next(error);
 
     var userLog = {
+      id: undefined,
       dateTime: new Date(),
       user: request.user.user,
       action: 'items.insert',
@@ -68,7 +69,7 @@ router.post('/', (request, response, next) => {
       }
     };
 
-    repository.insertUserLog(userLog, (error) => {
+    userLogRepository.insert(userLog, (error) => {
       if (error)
         return next(error);
 
@@ -80,9 +81,9 @@ router.post('/', (request, response, next) => {
 });
 
 router.patch('/:itemId', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new ItemRepository();
 
-  repository.getItem({ id: request.param('itemId') }, (error, item) => {
+  repository.get({ id: request.param('itemId') }, (error, item) => {
     if (error)
       return next(error);
 
@@ -148,11 +149,12 @@ router.patch('/:itemId', (request, response, next) => {
     if (request.param('remove_assigned_user_ids'))
       change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), (id) => { return { id: id }; });
 
-    repository.updateItem(item.id, change, (error, item) => {
+    repository.update(item.id, change, (error, item) => {
       if (error)
         return next(error);
 
       var userLog = {
+        id: undefined,
         dateTime: new Date(),
         user: request.user.user,
         action: 'items.update',
@@ -161,7 +163,9 @@ router.patch('/:itemId', (request, response, next) => {
         }
       };
 
-      repository.insertUserLog(userLog, (error) => {
+      var userLogRepository = new UserLogRepository();
+
+      userLogRepository.insert(userLog, (error) => {
         if (error)
           return next(error);
 
@@ -174,20 +178,21 @@ router.patch('/:itemId', (request, response, next) => {
 });
 
 router.delete('/:itemId', (request, response, next) => {
-  var repository = new Repository();
+  var repository = new ItemRepository();
 
-  repository.getItem({ id: request.param('itemId') }, (error, item) => {
+  repository.get({ id: request.param('itemId') }, (error, item) => {
     if (error)
       return next(error);
 
     if (!item)
       return response.sendStatus(404);
 
-    repository.deleteItem(item.id, (error) => {
+    repository.delete(item.id, (error) => {
       if (error)
         return next(error);
 
       var userLog = {
+        id: undefined,
         dateTime: new Date(),
         user: request.user.user,
         action: 'items.delete',
@@ -196,7 +201,9 @@ router.delete('/:itemId', (request, response, next) => {
         }
       };
 
-      repository.insertUserLog(userLog, (error) => {
+      var userLogRepository = new UserLogRepository();
+
+      userLogRepository.insert(userLog, (error) => {
         if (error)
           return next(error);
 
