@@ -5,7 +5,8 @@
   "scripts": {
     "build": "$(npm bin)/tsc",
     "clean": "rm -rf ./out",
-    "start": "node ./out/www.js"
+    "start": "node ./out/www.js",
+    "watch": "nodemon ./out/www.js"
   },
   "dependencies": {
     "async": "^1.4.2",
