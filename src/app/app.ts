@@ -33,6 +33,8 @@ app.use('/sessions', require('./routes/sessions'));
 app.use(passport.authenticate('basic', { session: false }));
 app.use('/users', require('./routes/users'));
 app.use('/itemstates', require('./routes/item_states'));
+app.use('/itemtypes', require('./routes/item_types'));
+app.use('/itempriorities', require('./routes/item_priorities'));
 app.use('/projects', require('./routes/projects'));
 app.use('/items', require('./routes/items'));
 

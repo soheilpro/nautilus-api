@@ -2,10 +2,11 @@ import { DB, Query, Update } from '../db';
 import { BaseRepository, IDocument } from './base';
 
 interface IItemDocument extends IDocument {
-  type: string;
+  type: IDocument;
   title: string;
   description: string;
   state: IDocument;
+  priority: IDocument;
   project: IDocument;
   subItems: IDocument[];
   prerequisiteItems: IDocument[];
@@ -21,16 +22,18 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
   filterToQuery(filter: IItemFilter): Query {
     var query = new Query();
     query.set('_id', filter.id, DB.ObjectId.bind(this));
-    query.set('type', filter.type);
+    query.set('type._id', filter.type);
 
     return query;
   }
 
   changeToUpdate(change: IItemChange): Update {
     var update = new Update();
+    update.setOrUnset('type', change.type, this.toRef.bind(this));
     update.setOrUnset('title', change.title);
     update.setOrUnset('description', change.description);
     update.setOrUnset('state', change.state, this.toRef.bind(this));
+    update.setOrUnset('priority', change.priority, this.toRef.bind(this));
     update.setOrUnset('project', change.project, this.toRef.bind(this));
     update.setOrUnset('subItems', change.subItems, this.toRefArray.bind(this));
     update.addToSet('subItems', change.subItems_add, this.toRefArray.bind(this));
@@ -48,10 +51,11 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
   documentToEntity(document: IItemDocument): IItem {
     return {
       id: document._id.toString(),
-      type: document.type,
+      type: this.fromRef(document.type),
       title: document.title,
       description: document.description,
       state: this.fromRef(document.state),
+      priority: this.fromRef(document.priority),
       project: this.fromRef(document.project),
       subItems: this.fromRefArray(document.subItems),
       prerequisiteItems: this.fromRefArray(document.prerequisiteItems),
@@ -63,10 +67,11 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
   entityToDocument(entity: IItem): IItemDocument {
     return {
       _id: DB.ObjectId(entity.id),
-      type: entity.type,
+      type: this.toRef(entity.type),
       title: entity.title,
       description: entity.description,
       state: this.toRef(entity.state),
+      priority: this.toRef(entity.priority),
       project: this.toRef(entity.project),
       subItems: this.toRefArray(entity.subItems),
       prerequisiteItems: this.toRefArray(entity.prerequisiteItems),

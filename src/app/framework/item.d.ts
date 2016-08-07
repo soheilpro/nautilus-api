@@ -1,8 +1,9 @@
 interface IItem extends IEntity {
-  type?: string;
+  type?: IEntity;
   title?: string;
   description?: string;
   state?: IEntity;
+  priority?: IEntity;
   project?: IEntity;
   subItems?: IEntity[];
   prerequisiteItems?: IEntity[];
@@ -11,13 +12,15 @@ interface IItem extends IEntity {
 }
 
 interface IItemFilter extends IFilter {
-  type?: string;
+  type?: IEntity;
 }
 
 interface IItemChange extends IChange {
+  type?: IEntity;
   title?: string;
   description?: string;
   state?: IEntity;
+  priority?: IEntity;
   project?: IEntity;
   subItems?: IEntity[];
   subItems_add?: IEntity[];

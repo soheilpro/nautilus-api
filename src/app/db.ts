@@ -130,17 +130,15 @@ export class DB {
 }
 
 export class Query {
-  private fields: {[key: string]: any} = {};
-
   set(key: string, value: any, map?: (value: any) => any) {
     if (value === undefined)
       return;
 
-    this.fields[key] = map ? map(value) : value;
+    (this as any)[key] = map ? map(value) : value;
   };
 
   value() {
-    return this.fields;
+    return this;
   };
 }
 

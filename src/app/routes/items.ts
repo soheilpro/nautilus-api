@@ -10,7 +10,7 @@ var router = express.Router();
 router.get('/', (request: any, response: any, next: any) => {
   var repository = new ItemRepository();
 
-  repository.getAll({ type: request.param('type') }, (error, items) => {
+  repository.getAll({ type: objectFromId(request.param('type_id')) }, (error, items) => {
     if (error)
       return next(error);
 
@@ -24,10 +24,8 @@ router.post('/', (request: any, response: any, next: any) => {
   var item: IItem = {};
   item.creator = request.user.user;
 
-  if (request.param('type'))
-    item.type = request.param('type');
-  else
-    item.type = 'issue';
+  if (request.param('type_id'))
+    item.type = objectFromId(request.param('type_id'));
 
   if (request.param('title'))
     item.title = request.param('title');
@@ -37,6 +35,9 @@ router.post('/', (request: any, response: any, next: any) => {
 
   if (request.param('state_id'))
     item.state = objectFromId(request.param('state_id'));
+
+  if (request.param('priority_id'))
+    item.priority = objectFromId(request.param('priority_id'));
 
   if (request.param('project_id'))
     item.project = objectFromId(request.param('project_id'));
@@ -89,6 +90,12 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
 
     var change: IItemChange = {};
 
+    if (request.param('type_id') !== undefined)
+      if (request.param('type_id'))
+        change.type = objectFromId(request.param('type_id'));
+      else
+        change.type = null;
+
     if (request.param('title') !== undefined)
       change.title = request.param('title');
 
@@ -100,6 +107,12 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
         change.state = objectFromId(request.param('state_id'));
       else
         change.state = null;
+
+    if (request.param('priority_id') !== undefined)
+      if (request.param('priority_id'))
+        change.priority = objectFromId(request.param('priority_id'));
+      else
+        change.priority = null;
 
     if (request.param('project_id') !== undefined)
       if (request.param('project_id'))
