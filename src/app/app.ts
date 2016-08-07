@@ -32,7 +32,7 @@ app.use(passport.initialize());
 app.use('/sessions', require('./routes/sessions'));
 app.use(passport.authenticate('basic', { session: false }));
 app.use('/users', require('./routes/users'));
-app.use('/states', require('./routes/states'));
+app.use('/itemstates', require('./routes/item_states'));
 app.use('/projects', require('./routes/projects'));
 app.use('/items', require('./routes/items'));
 

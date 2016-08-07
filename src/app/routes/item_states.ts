@@ -1,4 +1,4 @@
-import { StateRepository } from '../repositories/state';
+import { ItemStateRepository } from '../repositories/item_state';
 
 var express = require('express');
 var async = require('async');
@@ -7,7 +7,7 @@ var _ = require('underscore');
 var router = express.Router();
 
 router.get('/', (request: any, response: any, next: any) => {
-  var repository = new StateRepository();
+  var repository = new ItemStateRepository();
 
   repository.getAll({}, (error, states) => {
     if (error)
@@ -20,7 +20,7 @@ router.get('/', (request: any, response: any, next: any) => {
 });
 
 router.post('/', (request: any, response: any, next: any) => {
-  var state: IState = {};
+  var state: IItemState = {};
 
   if (request.param('title'))
     state.title = request.param('title');
@@ -31,7 +31,7 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('color'))
     state.color = request.param('color');
 
-  var repository = new StateRepository();
+  var repository = new ItemStateRepository();
 
   repository.insert(state, (error, state) => {
     if (error)
@@ -44,8 +44,8 @@ router.post('/', (request: any, response: any, next: any) => {
 });
 
 router.patch('/:stateId', (request: any, response: any, next: any) => {
-  var repository = new StateRepository();
-  var change: IStateChange = {};
+  var repository = new ItemStateRepository();
+  var change: IItemStateChange = {};
 
   if (request.param('title') !== undefined)
     change.title = request.param('title');

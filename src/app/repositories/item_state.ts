@@ -1,25 +1,25 @@
 import { DB, Query, Update } from '../db';
 import { BaseRepository, IDocument } from './base';
 
-interface IStateDocument extends IDocument {
+interface IItemStateDocument extends IDocument {
   title: string;
   type: string;
   color: string;
 }
 
-export class StateRepository extends BaseRepository<IState, IStateFilter, IStateChange, IStateDocument> {
+export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFilter, IItemStateChange, IItemStateDocument> {
   collectionName(): string {
-    return 'states';
+    return 'item_states';
   }
 
-  filterToQuery(filter: IStateFilter): Query {
+  filterToQuery(filter: IItemStateFilter): Query {
     var query = new Query();
     query.set('_id', filter.id, DB.ObjectId.bind(this));
 
     return query;
   }
 
-  changeToUpdate(change: IStateChange): Update {
+  changeToUpdate(change: IItemStateChange): Update {
     var update = new Update();
     update.setOrUnset('title', change.title);
     update.setOrUnset('type', change.type);
@@ -28,7 +28,7 @@ export class StateRepository extends BaseRepository<IState, IStateFilter, IState
     return update;
   }
 
-  documentToEntity(document: IStateDocument): IState {
+  documentToEntity(document: IItemStateDocument): IItemState {
     return {
       id: document._id.toString(),
       title: document.title,
@@ -37,7 +37,7 @@ export class StateRepository extends BaseRepository<IState, IStateFilter, IState
     };
   }
 
-  entityToDocument(entity: IState): IStateDocument {
+  entityToDocument(entity: IItemState): IItemStateDocument {
     return {
       _id: DB.ObjectId(entity.id),
       title: entity.title,
