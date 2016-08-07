@@ -22,6 +22,7 @@ router.get('/', (request: any, response: any, next: any) => {
 
 router.post('/', (request: any, response: any, next: any) => {
   var item: IItem = {};
+  item.creator = request.user.user;
 
   if (request.param('type'))
     item.type = request.param('type');

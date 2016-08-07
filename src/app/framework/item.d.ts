@@ -7,6 +7,7 @@ interface IItem extends IEntity {
   subItems?: IEntity[];
   prerequisiteItems?: IEntity[];
   assignedUsers?: IEntity[];
+  creator?: IEntity;
 }
 
 interface IItemFilter extends IFilter {
