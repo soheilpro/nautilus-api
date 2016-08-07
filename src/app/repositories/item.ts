@@ -21,8 +21,8 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
 
   filterToQuery(filter: IItemFilter): Query {
     var query = new Query();
-    query.set('_id', filter.id, DB.ObjectId.bind(this));
-    query.set('type._id', filter.type);
+    query.set('_id', filter, this.toObjectId.bind(this));
+    query.set('type._id', filter.type, this.toObjectId.bind(this));
 
     return query;
   }

@@ -14,7 +14,7 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
 
   filterToQuery(filter: IItemStateFilter): Query {
     var query = new Query();
-    query.set('_id', filter.id, DB.ObjectId.bind(this));
+    query.set('_id', filter, this.toObjectId.bind(this));
 
     return query;
   }

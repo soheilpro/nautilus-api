@@ -13,7 +13,7 @@ export class ProjectRepository extends BaseRepository<IProject, IProjectFilter, 
 
   filterToQuery(filter: IProjectFilter): Query {
     var query = new Query();
-    query.set('_id', filter.id, DB.ObjectId.bind(this));
+    query.set('_id', filter, this.toObjectId.bind(this));
 
     return query;
   }

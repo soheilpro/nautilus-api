@@ -14,7 +14,7 @@ export class UserRepository extends BaseRepository<IUser, IUserFilter, IUserChan
 
   filterToQuery(filter: IUserFilter): Query {
     var query = new Query();
-    query.set('_id', filter.id, DB.ObjectId.bind(this));
+    query.set('_id', filter, this.toObjectId.bind(this));
     query.set('username', filter.username);
 
     return query;

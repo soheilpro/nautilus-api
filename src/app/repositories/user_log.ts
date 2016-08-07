@@ -15,7 +15,7 @@ export class UserLogRepository extends BaseRepository<IUserLog, IUserLogFilter, 
 
   filterToQuery(filter: IUserLogFilter): Query {
     var query = new Query();
-    query.set('_id', filter.id, DB.ObjectId.bind(this));
+    query.set('_id', filter, this.toObjectId.bind(this));
 
     return query;
   }

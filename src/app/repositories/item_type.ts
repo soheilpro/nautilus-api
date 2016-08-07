@@ -13,7 +13,7 @@ export class ItemTypeRepository extends BaseRepository<IItemType, IItemTypeFilte
 
   filterToQuery(filter: IItemTypeFilter): Query {
     var query = new Query();
-    query.set('_id', filter.id, DB.ObjectId.bind(this));
+    query.set('_id', filter, this.toObjectId.bind(this));
 
     return query;
   }
