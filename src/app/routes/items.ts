@@ -42,6 +42,9 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('project_id'))
     item.project = objectFromId(request.param('project_id'));
 
+  if (request.param('area_id'))
+    item.area = objectFromId(request.param('area_id'));
+
   if (request.param('prerequisite_item_ids'))
     item.prerequisiteItems = request.param('prerequisite_item_ids').split(',').map(objectFromId);
 
@@ -120,6 +123,12 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
         change.project = objectFromId(request.param('project_id'));
       else
         change.project = null;
+
+    if (request.param('area_id') !== undefined)
+      if (request.param('area_id'))
+        change.area = objectFromId(request.param('area_id'));
+      else
+        change.area = null;
 
     if (request.param('prerequisite_item_ids') !== undefined)
       if (request.param('prerequisite_item_ids'))
