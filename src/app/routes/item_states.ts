@@ -28,9 +28,6 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('type'))
     state.type = request.param('type');
 
-  if (request.param('color'))
-    state.color = request.param('color');
-
   var repository = new ItemStateRepository();
 
   repository.insert(state, (error, state) => {
@@ -52,9 +49,6 @@ router.patch('/:stateId', (request: any, response: any, next: any) => {
 
   if (request.param('type') !== undefined)
     change.type = request.param('type');
-
-  if (request.param('color') !== undefined)
-    change.color = request.param('color');
 
   repository.update(request.param('stateId'), change, (error, state) => {
     if (error)

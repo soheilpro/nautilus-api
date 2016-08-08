@@ -4,7 +4,6 @@ import { BaseRepository, IDocument } from './base';
 interface IItemStateDocument extends IDocument {
   title: string;
   type: string;
-  color: string;
 }
 
 export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFilter, IItemStateChange, IItemStateDocument> {
@@ -23,7 +22,6 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
     var update = new Update();
     update.setOrUnset('title', change.title);
     update.setOrUnset('type', change.type);
-    update.setOrUnset('color', change.color);
 
     return update;
   }
@@ -32,8 +30,7 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
     return {
       id: document._id.toString(),
       title: document.title,
-      type: document.type,
-      color: document.color
+      type: document.type
     };
   }
 
@@ -41,8 +38,7 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
     return {
       _id: DB.ObjectId(entity.id),
       title: entity.title,
-      type: entity.type,
-      color: entity.color,
+      type: entity.type
     };
   }
 }
