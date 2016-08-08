@@ -13,6 +13,8 @@ interface IItemDocument extends IDocument {
   prerequisiteItems: IDocument[];
   assignedUsers: IDocument[];
   creator: IDocument;
+  creationDateTime: Date;
+  modificationDateTime: Date;
 }
 
 export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChange, IItemDocument> {
@@ -45,6 +47,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
     update.setOrUnset('assignedUsers', change.assignedUsers, this.toRefArray.bind(this));
     update.addToSet('assignedUsers', change.assignedUsers_add, this.toRefArray.bind(this));
     update.removeFromSet('assignedUsers', change.assignedUsers_remove, this.toRefArray.bind(this));
+    update.setOrUnset('modificationDateTime', change.modificationDateTime);
 
     return update;
   }
@@ -62,7 +65,9 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       subItems: this.fromRefArray(document.subItems),
       prerequisiteItems: this.fromRefArray(document.prerequisiteItems),
       assignedUsers: this.fromRefArray(document.assignedUsers),
-      creator: this.fromRef(document.creator)
+      creator: this.fromRef(document.creator),
+      creationDateTime: document.creationDateTime,
+      modificationDateTime: document.modificationDateTime
     };
   }
 
@@ -79,7 +84,9 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       subItems: this.toRefArray(entity.subItems),
       prerequisiteItems: this.toRefArray(entity.prerequisiteItems),
       assignedUsers: this.toRefArray(entity.assignedUsers),
-      creator: this.toRef(entity.creator)
+      creator: this.toRef(entity.creator),
+      creationDateTime: entity.creationDateTime,
+      modificationDateTime: entity.modificationDateTime
     };
   }
 
@@ -89,7 +96,15 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
         return callback(error);
 
       entity.sid = value.toString();
+      entity.creationDateTime = new Date();
+
       super.insert(entity, callback);
     });
+  }
+
+  update(id: string, change: IItemChange, callback: IUpdateCallback<IItem>) {
+    change.modificationDateTime = new Date();
+
+    super.update(id, change, callback);
   }
 }
