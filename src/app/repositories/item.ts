@@ -2,6 +2,7 @@ import { DB, Query, Update } from '../db';
 import { BaseRepository, IDocument } from './base';
 
 interface IItemDocument extends IDocument {
+  sid: string;
   type: IDocument;
   title: string;
   description: string;
@@ -51,6 +52,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
   documentToEntity(document: IItemDocument): IItem {
     return {
       id: document._id.toString(),
+      sid: document.sid,
       type: this.fromRef(document.type),
       title: document.title,
       description: document.description,
@@ -67,6 +69,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
   entityToDocument(entity: IItem): IItemDocument {
     return {
       _id: DB.ObjectId(entity.id),
+      sid: entity.sid,
       type: this.toRef(entity.type),
       title: entity.title,
       description: entity.description,
@@ -78,5 +81,15 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       assignedUsers: this.toRefArray(entity.assignedUsers),
       creator: this.toRef(entity.creator)
     };
+  }
+
+  insert(entity: IItem, callback: IInsertCallback<IItem>) {
+    super.getNextCounter('items', (error, value) => {
+      if (error)
+        return callback(error);
+
+      entity.sid = value.toString();
+      super.insert(entity, callback);
+    });
   }
 }

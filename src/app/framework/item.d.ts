@@ -1,4 +1,5 @@
 interface IItem extends IEntity {
+  sid?: string;
   type?: IEntity;
   title?: string;
   description?: string;

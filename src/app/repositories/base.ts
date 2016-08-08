@@ -4,6 +4,15 @@ export interface IDocument {
   _id: any;
 }
 
+interface ICounterDocument extends IDocument {
+  name: string;
+  value: number;
+}
+
+interface IGetNextCounterCallback {
+  (error: Error, value?: number): any
+}
+
 var _ = require('underscore');
 
 export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TDocument extends IDocument> implements IRepository<TEntity, TFilter, TChange> {
@@ -77,6 +86,18 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     var query = this.filterToQuery(filter);
 
     this.db.remove(this.collectionName(), query.value(), callback);
+  }
+
+  protected getNextCounter(name: string, callback: IGetNextCounterCallback) {
+    var query = { name: name };
+    var update = { $inc: { value: 1 } };
+
+    this.db.findAndModify<ICounterDocument>('counters', query, update, {new: true}, (error, result) => {
+      if (error)
+        return callback(error);
+
+      callback(null, result.value);
+    });
   }
 
   protected toRef(entity: IEntity): IDocument {
