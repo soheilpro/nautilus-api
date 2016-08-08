@@ -5,6 +5,7 @@ interface IUserLogDocument extends IDocument {
   dateTime: Date;
   user: IDocument;
   action: string;
+  item: IDocument;
   params: any
 }
 
@@ -32,6 +33,7 @@ export class UserLogRepository extends BaseRepository<IUserLog, IUserLogFilter, 
       dateTime: document.dateTime,
       user: this.fromRef(document.user),
       action: document.action,
+      item: this.fromRef(document.item),
       params: document.params
     };
   }
@@ -42,6 +44,7 @@ export class UserLogRepository extends BaseRepository<IUserLog, IUserLogFilter, 
       dateTime: entity.dateTime,
       user: this.toRef(entity.user),
       action: entity.action,
+      item: this.toRef(entity.item),
       params: entity.params
     };
   }

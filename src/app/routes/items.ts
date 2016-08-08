@@ -62,6 +62,7 @@ router.post('/', (request: any, response: any, next: any) => {
       dateTime: new Date(),
       user: request.user.user,
       action: 'items.insert',
+      item: item,
       params: {
         item: item
       }
@@ -164,8 +165,9 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
         dateTime: new Date(),
         user: request.user.user,
         action: 'items.update',
+        item: item,
         params: {
-          item: item
+          change: change
         }
       };
 
@@ -201,9 +203,7 @@ router.delete('/:itemId', (request: any, response: any, next: any) => {
         dateTime: new Date(),
         user: request.user.user,
         action: 'items.delete',
-        params: {
-          item: item
-        }
+        item: item
       };
 
       var userLogRepository = new UserLogRepository();
