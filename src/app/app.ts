@@ -11,7 +11,7 @@ var debug = require('debug')('nautilus-api');
 passport.use(new passportHTTP.BasicStrategy((username: string, password: string, callback: (error: Error, user?: Object) => void) => {
   var sessionRepository = new SessionRepository();
 
-  sessionRepository.get({ id: username }, (error, session) => {
+  sessionRepository.get({ accessToken: username }, (error, session) => {
     if (error)
       return callback(error);
 

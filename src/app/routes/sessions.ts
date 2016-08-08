@@ -9,26 +9,6 @@ var _ = require('underscore');
 
 var router = express.Router();
 
-router.get('/:sessionId', (request: any, response: any, next: any) => {
-  var repository = new SessionRepository();
-
-  repository.get({ id: request.param('sessionId') }, (error, session) => {
-    if (error)
-      return next(error);
-
-    if (!session) {
-      var httpError: any = new Error();
-      httpError.status = 404;
-
-      return next(httpError);
-    }
-
-    response.json({
-      data: session
-    });
-  });
-});
-
 router.post('/', (request: any, response: any, next: any) => {
   var username = request.param('username');
   var password = request.param('password');
@@ -47,7 +27,7 @@ router.post('/', (request: any, response: any, next: any) => {
     }
 
     var session = {
-      id: uuid.v4().replace(/-/g, ''),
+      accessToken: uuid.v4().replace(/-/g, ''),
       user: user
     };
 

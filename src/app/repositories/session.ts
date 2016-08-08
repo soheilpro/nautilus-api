@@ -2,6 +2,7 @@ import { DB, Query, Update } from '../db';
 import { BaseRepository, IDocument } from './base';
 
 interface ISessionDocument extends IDocument {
+  accessToken: string;
   user: IDocument;
 }
 
@@ -12,7 +13,8 @@ export class SessionRepository extends BaseRepository<ISession, ISessionFilter, 
 
   filterToQuery(filter: ISessionFilter): Query {
     var query = new Query();
-    query.set('_id', filter.id);
+    query.set('_id', filter, this.toObjectId.bind(this));
+    query.set('accessToken', filter.accessToken);
 
     return query;
   }
@@ -25,14 +27,16 @@ export class SessionRepository extends BaseRepository<ISession, ISessionFilter, 
 
   documentToEntity(document: ISessionDocument): ISession {
     return {
-      id: document._id,
+      id: document._id.toString(),
+      accessToken: document.accessToken,
       user: this.fromRef(document.user)
     };
   }
 
   entityToDocument(entity: ISession): ISessionDocument {
     return {
-      _id: entity.id,
+      _id: DB.ObjectId(entity.id),
+      accessToken: entity.accessToken,
       user: this.toRef(entity.user)
     };
   }
