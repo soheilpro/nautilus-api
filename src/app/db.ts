@@ -138,7 +138,14 @@ export class Query {
   };
 
   value() {
-    return this;
+    var result = _.clone(this);
+
+    _.each(result, (value: any, key: string) => {
+      if (_.isEmpty(result[key]))
+        delete result[key];
+    });
+
+    return result;
   };
 }
 
