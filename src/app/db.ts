@@ -39,7 +39,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.insert(document, (error: Error) => {
+      collection.insert(this.cleanUp(document), (error: Error) => {
         finalizer();
 
         if (callback)
@@ -53,7 +53,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.update(query, update, options, (error: Error) => {
+      collection.update(this.cleanUp(query), this.cleanUp(update), options, (error: Error) => {
         finalizer();
 
         if (callback)
@@ -67,9 +67,11 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.findAndModify(query, [], update, options, (error: Error, result: {value: TDocument}) => {
+      collection.findAndModify(this.cleanUp(query), [], this.cleanUp(update), options, (error: Error, result: {value: TDocument}) => {
         finalizer();
-        callback(error, result.value);
+
+        if (callback)
+          callback(error, result ? result.value : null);
       });
     });
   }
@@ -79,7 +81,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.remove(query, (error: Error) => {
+      collection.remove(this.cleanUp(query), (error: Error) => {
         finalizer();
 
         if (callback)
@@ -93,7 +95,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.find(query, fields || {}, options).toArray((error: Error, result: TDocument[]) => {
+      collection.find(this.cleanUp(query), fields || {}, options).toArray((error: Error, result: TDocument[]) => {
         finalizer();
         callback(error, result);
       });
@@ -105,7 +107,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.findOne(query, fields || {}, (error: Error, result: TDocument) => {
+      collection.findOne(this.cleanUp(query), fields || {}, (error: Error, result: TDocument) => {
         finalizer();
         callback(error, result);
       });
@@ -117,11 +119,22 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.count(query, (error: Error, count: number) => {
+      collection.count(this.cleanUp(query), (error: Error, count: number) => {
         finalizer();
         callback(error, count);
       });
     });
+  }
+
+  private cleanUp<T>(object: T): T {
+    var result = _.clone(object);
+
+    _.each(result, (value: any, key: string) => {
+      if (_.isEmpty(result[key]))
+        delete result[key];
+    });
+
+    return result;
   }
 
   static ObjectId(id: string): Object {
@@ -135,17 +148,6 @@ export class Query {
       return;
 
     (this as any)[key] = map ? map(value) : value;
-  };
-
-  value() {
-    var result = _.clone(this);
-
-    _.each(result, (value: any, key: string) => {
-      if (_.isEmpty(result[key]))
-        delete result[key];
-    });
-
-    return result;
   };
 }
 
@@ -177,16 +179,5 @@ export class Update {
       return;
 
     this.$pull[key] = { $in: map ? map(value) : value };
-  };
-
-  value() {
-    var result = _.clone(this);
-
-    _.each(result, (value: any, key: string) => {
-      if (_.isEmpty(result[key]))
-        delete result[key];
-    });
-
-    return result;
   };
 }
