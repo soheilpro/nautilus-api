@@ -10,7 +10,7 @@ export class DB {
     if (DB._db)
       return callback(null, DB._db);
 
-    mongodb.MongoClient.connect(config.get('db'), (error: Error, db?: any) => {
+    mongodb.MongoClient.connect(config.get('NAUTILUS_API_DB_ADDRESS'), (error: Error, db?: any) => {
       if (error)
         return callback(error);
 

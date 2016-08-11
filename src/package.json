@@ -6,7 +6,7 @@
     "build": "$(npm bin)/tsc",
     "clean": "rm -rf ./out",
     "start": "node ./out/www.js",
-    "watch": "nodemon ./out/www.js"
+    "watch": "nodemon -e ts -x 'npm run build && npm run start'"
   },
   "dependencies": {
     "async": "^1.4.2",

@@ -3,11 +3,10 @@ FROM node:latest
 RUN mkdir -p /usr/app
 COPY . /usr/app
 
-WORKDIR /usr/app/src
+WORKDIR /usr/app
 
-RUN npm install
-RUN npm run build
+RUN ./run.sh install
+RUN ./run.sh build
 
-EXPOSE 3000
-
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT ["/usr/app/run.sh"]
+CMD ["start"]
