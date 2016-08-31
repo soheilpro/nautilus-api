@@ -7,6 +7,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var debug = require('debug')('nautilus-api');
+var compression = require('compression');
 
 passport.use(new passportHTTP.BasicStrategy((username: string, password: string, callback: (error: Error, user?: Object) => void) => {
   var sessionRepository = new SessionRepository();
@@ -23,6 +24,7 @@ passport.use(new passportHTTP.BasicStrategy((username: string, password: string,
 }));
 
 var app = express();
+app.use(compression())
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
