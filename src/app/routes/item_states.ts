@@ -1,4 +1,5 @@
 import { ItemStateRepository } from '../repositories/item_state';
+import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
 
 var express = require('express');
 var async = require('async');
@@ -20,6 +21,9 @@ router.get('/', (request: any, response: any, next: any) => {
 });
 
 router.post('/', (request: any, response: any, next: any) => {
+  if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
+    return response.sendStatus(403);
+
   var state: IItemState = {};
 
   if (request.param('title'))
@@ -41,6 +45,9 @@ router.post('/', (request: any, response: any, next: any) => {
 });
 
 router.patch('/:stateId', (request: any, response: any, next: any) => {
+  if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
+    return response.sendStatus(403);
+
   var repository = new ItemStateRepository();
   var change: IItemStateChange = {};
 

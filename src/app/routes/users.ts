@@ -1,4 +1,5 @@
 import { UserRepository } from '../repositories/user';
+import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
 
 var express = require('express');
 var async = require('async');
@@ -20,7 +21,22 @@ router.get('/', (request: any, response: any, next: any) => {
   });
 });
 
+router.get('/:userId/permissions', (request: any, response: any, next: any) => {
+  if (request.param('userId') !== request.user.user.id) {
+    response.status(403);
+    response.end();
+    return;
+  }
+
+  response.json({
+    data: request.user.permissions
+  });
+});
+
 router.post('/', (request: any, response: any, next: any) => {
+  if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
+    return response.sendStatus(403);
+
   var user: IUser = {};
 
   if (request.param('username'))
@@ -45,6 +61,9 @@ router.post('/', (request: any, response: any, next: any) => {
 });
 
 router.patch('/:userId', (request: any, response: any, next: any) => {
+  if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
+    return response.sendStatus(403);
+
   var repository = new UserRepository();
   var change: IUserChange = {};
 

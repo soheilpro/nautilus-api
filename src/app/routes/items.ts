@@ -1,5 +1,6 @@
 import { ItemRepository } from '../repositories/item';
 import { UserLogRepository } from '../repositories/user_log';
+import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
 
 var express = require('express');
 var async = require('async');
@@ -13,6 +14,13 @@ router.get('/', (request: any, response: any, next: any) => {
   repository.getAll({ type: objectFromId(request.param('type_id')) }, (error, items) => {
     if (error)
       return next(error);
+
+    items = items.filter(item => {
+      if (item.project)
+        return UserPermissionHelper.hasPermission(request.user.permissions, item.project, 'view');
+
+      return item.creator.id === request.user.user.id;
+    });
 
     response.json({
       data: items
@@ -54,6 +62,10 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('assigned_user_ids'))
     item.assignedUsers = request.param('assigned_user_ids').split(',').map(objectFromId);
 
+  if (item.project)
+    if (!UserPermissionHelper.hasPermission(request.user.permissions, item.project, 'update'))
+      return response.sendStatus(403);
+
   var repository = new ItemRepository();
   var userLogRepository = new UserLogRepository();
 
@@ -91,6 +103,10 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
 
     if (!item)
       return response.sendStatus(404);
+
+    if (item.project)
+      if (!UserPermissionHelper.hasPermission(request.user.permissions, item.project, 'update'))
+        return response.sendStatus(403);
 
     var change: IItemChange = {};
 
@@ -165,6 +181,10 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
 
     if (request.param('remove_assigned_user_ids'))
       change.assignedUsers_remove = request.param('remove_assigned_user_ids').split(',').map(objectFromId);
+
+    if (change.project)
+      if (!UserPermissionHelper.hasPermission(request.user.permissions, change.project, 'update'))
+        return response.sendStatus(403);
 
     repository.update(item.id, change, (error, item) => {
       if (error)

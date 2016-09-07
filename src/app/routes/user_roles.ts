@@ -1,4 +1,4 @@
-import { ItemAreaRepository } from '../repositories/item_area';
+import { UserRoleRepository } from '../repositories/user_role';
 import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
 
 var express = require('express');
@@ -8,14 +8,14 @@ var _ = require('underscore');
 var router = express.Router();
 
 router.get('/', (request: any, response: any, next: any) => {
-  var repository = new ItemAreaRepository();
+  var repository = new UserRoleRepository();
 
-  repository.getAll({}, (error, areas) => {
+  repository.getAll({}, (error, userRoles) => {
     if (error)
       return next(error);
 
     response.json({
-      data: areas
+      data: userRoles
     });
   });
 });
@@ -24,35 +24,41 @@ router.post('/', (request: any, response: any, next: any) => {
   if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
     return response.sendStatus(403);
 
-  var area: IItemArea = {};
+  var userRole: IUserRole = {};
 
-  if (request.param('title'))
-    area.title = request.param('title');
+  if (request.param('user_id'))
+    userRole.user = objectFromId(request.param('user_id'));
 
   if (request.param('project_id'))
-    area.project = objectFromId(request.param('project_id'));
+    userRole.project = objectFromId(request.param('project_id'));
 
-  var repository = new ItemAreaRepository();
+  if (request.param('name'))
+    userRole.name = request.param('name');
 
-  repository.insert(area, (error, area) => {
+  var repository = new UserRoleRepository();
+
+  repository.insert(userRole, (error, userRole) => {
     if (error)
       return next(error);
 
     response.json({
-      data: area
+      data: userRole
     });
   });
 });
 
-router.patch('/:areaId', (request: any, response: any, next: any) => {
+router.patch('/:userRoleId', (request: any, response: any, next: any) => {
   if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
     return response.sendStatus(403);
 
-  var repository = new ItemAreaRepository();
-  var change: IItemAreaChange = {};
+  var repository = new UserRoleRepository();
+  var change: IUserRoleChange = {};
 
-  if (request.param('title') !== undefined)
-    change.title = request.param('title');
+  if (request.param('user_id') !== undefined)
+    if (request.param('user_id'))
+      change.user = objectFromId(request.param('user_id'));
+    else
+      change.user = null;
 
   if (request.param('project_id') !== undefined)
     if (request.param('project_id'))
@@ -60,12 +66,15 @@ router.patch('/:areaId', (request: any, response: any, next: any) => {
     else
       change.project = null;
 
-  repository.update(request.param('areaId'), change, (error, area) => {
+  if (request.param('name') !== undefined)
+    change.name = request.param('name');
+
+  repository.update(request.param('userRoleId'), change, (error, userRole) => {
     if (error)
       return next(error);
 
     response.json({
-      data: area
+      data: userRole
     });
   });
 });

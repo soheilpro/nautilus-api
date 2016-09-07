@@ -1,4 +1,5 @@
 import { SessionRepository } from './repositories/session';
+import { UserPermissionHelper } from './helpers/user_permission';
 
 var express = require('express');
 var passport = require('passport');
@@ -33,7 +34,20 @@ app.use(passport.initialize());
 
 app.use('/sessions', require('./routes/sessions'));
 app.use(passport.authenticate('basic', { session: false }));
+
+app.use((request: any, response: any, next: any) => {
+  UserPermissionHelper.getUserPermissions(request.user.user, (error, permissions) => {
+    if (error)
+      return next(error);
+
+    request.user.permissions = permissions;
+
+    next();
+  });
+});
+
 app.use('/users', require('./routes/users'));
+app.use('/userroles', require('./routes/user_roles'));
 app.use('/itemareas', require('./routes/item_areas'));
 app.use('/itemstates', require('./routes/item_states'));
 app.use('/itemtypes', require('./routes/item_types'));

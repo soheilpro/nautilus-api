@@ -1,4 +1,5 @@
 import { ProjectRepository } from '../repositories/project';
+import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
 
 var express = require('express');
 var async = require('async');
@@ -13,6 +14,8 @@ router.get('/', (request: any, response: any, next: any) => {
     if (error)
       return next(error);
 
+    projects = projects.filter(project => UserPermissionHelper.hasPermission(request.user.permissions, project, 'view'));
+
     response.json({
       data: projects
     });
@@ -20,6 +23,9 @@ router.get('/', (request: any, response: any, next: any) => {
 });
 
 router.post('/', (request: any, response: any, next: any) => {
+  if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
+    return response.sendStatus(403);
+
   var project: IProject = {};
 
   if (request.param('name'))
@@ -41,6 +47,9 @@ router.post('/', (request: any, response: any, next: any) => {
 });
 
 router.patch('/:projectId', (request: any, response: any, next: any) => {
+  if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
+    return response.sendStatus(403);
+
   var repository = new ProjectRepository();
   var change: IProjectChange = {};
 
