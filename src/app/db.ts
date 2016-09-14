@@ -130,7 +130,9 @@ export class DB {
     var result = _.clone(object);
 
     _.each(result, (value: any, key: string) => {
-      if (_.isEmpty(result[key]))
+      var value = result[key];
+
+      if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
         delete result[key];
     });
 
