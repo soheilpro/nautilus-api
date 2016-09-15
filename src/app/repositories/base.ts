@@ -1,22 +1,9 @@
-import { DB, Query, Update } from '../db';
-
-export interface IDocument {
-  _id: any;
-}
-
-interface ICounterDocument extends IDocument {
-  name: string;
-  value: number;
-}
-
-interface IGetNextCounterCallback {
-  (error: Error, value?: number): any
-}
+import { DB, IDocument } from '../db';
 
 var _ = require('underscore');
 
 export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TDocument extends IDocument> implements IRepository<TEntity, TFilter, TChange> {
-  private db: DB;
+  protected db: DB;
 
   constructor() {
     this.db = new DB();
@@ -31,7 +18,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
   getAll(filter: TFilter, callback: IGetAllCallback<TEntity>) {
     var query = this.filterToQuery(filter);
 
-    this.db.find<TDocument>(this.collectionName(), query, null, null, (error, result) => {
+    this.db.find<TDocument>(this.collectionName(), this.cleanUp(query), null, null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -43,7 +30,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
   get(filter: TFilter, callback: IGetCallback<TEntity>) {
     var query = this.filterToQuery(filter);
 
-    this.db.findOne<TDocument>(this.collectionName(), query, null, (error, result) => {
+    this.db.findOne<TDocument>(this.collectionName(), this.cleanUp(query), null, (error, result) => {
       if (error)
         return callback(error);
 
@@ -58,7 +45,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
   insert(entity: TEntity, callback: IInsertCallback<TEntity>) {
     var document = this.entityToDocument(entity);
 
-    this.db.insert(this.collectionName(), document, (error) => {
+    this.db.insert(this.collectionName(), this.cleanUp(document), (error) => {
       if (error)
         return callback(error);
 
@@ -72,7 +59,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     var query = this.filterToQuery(filter);
     var update = this.changeToUpdate(change);
 
-    this.db.findAndModify<TDocument>(this.collectionName(), query, update, {new: true}, (error, result) => {
+    this.db.findAndModify<TDocument>(this.collectionName(), this.cleanUp(query), this.cleanUp(update), {new: true}, (error, result) => {
       if (error)
         return callback(error);
 
@@ -86,18 +73,6 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     var query = this.filterToQuery(filter);
 
     this.db.remove(this.collectionName(), query, callback);
-  }
-
-  protected getNextCounter(name: string, callback: IGetNextCounterCallback) {
-    var query = { name: name };
-    var update = { $inc: { value: 1 } };
-
-    this.db.findAndModify<ICounterDocument>('counters', query, update, {new: true}, (error, result) => {
-      if (error)
-        return callback(error);
-
-      callback(null, result.value);
-    });
   }
 
   protected toRef(entity: IEntity): IDocument {
@@ -151,4 +126,57 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
 
     return DB.ObjectId(object.id);
   }
+
+  private cleanUp<T>(object: T): T {
+    var result = _.clone(object);
+
+    _.each(result, (value: any, key: string) => {
+      var value = result[key];
+
+      if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
+        delete result[key];
+    });
+
+    return result;
+  }
+}
+
+export class Query {
+  set(key: string, value: any, map?: (value: any) => any) {
+    if (value === undefined)
+      return;
+
+    (this as any)[key] = map ? map(value) : value;
+  };
+}
+
+export class Update {
+  private $set: {[key: string]: any} = {};
+  private $unset: {[key: string]: any} = { __noop__: '' };
+  private $addToSet: {[key: string]: any} = {};
+  private $pull: {[key: string]: any} = {};
+
+  setOrUnset(key: string, value: any, map?: (value: any) => any) {
+    if (value === undefined)
+      return;
+
+    if (value)
+      this.$set[key] = map ? map(value) : value;
+    else
+      this.$unset[key] = '';
+  };
+
+  addToSet(key: string, value: any, map?: (value: any) => any) {
+    if (value === undefined)
+      return;
+
+    this.$addToSet[key] = { $each: map ? map(value) : value };
+  };
+
+  removeFromSet(key: string, value: any, map?: (value: any) => any) {
+    if (value === undefined)
+      return;
+
+    this.$pull[key] = { $in: map ? map(value) : value };
+  };
 }

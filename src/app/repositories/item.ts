@@ -1,5 +1,5 @@
-import { DB, Query, Update } from '../db';
-import { BaseRepository, IDocument } from './base';
+import { DB, IDocument } from '../db';
+import { BaseRepository, Query, Update } from './base';
 
 interface IItemDocument extends IDocument {
   sid: string;
@@ -95,7 +95,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
   }
 
   insert(entity: IItem, callback: IInsertCallback<IItem>) {
-    super.getNextCounter('items', (error, value) => {
+    this.db.counter('items', (error, value) => {
       if (error)
         return callback(error);
 

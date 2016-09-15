@@ -1,5 +1,5 @@
-import { DB, Query, Update } from '../db';
-import { BaseRepository, IDocument } from './base';
+import { DB, IDocument } from '../db';
+import { BaseRepository, Query, Update } from './base';
 
 interface IUserLogDocument extends IDocument {
   dateTime: Date;

@@ -3,6 +3,19 @@ import config from './config';
 var mongodb = require('mongodb');
 var _ = require('underscore');
 
+export interface IDocument {
+  _id: any;
+}
+
+interface ICounterDocument extends IDocument {
+  name: string;
+  value: number;
+}
+
+interface ICounterCallback {
+  (error: Error, value?: number): any
+}
+
 export class DB {
   private static _db: any;
 
@@ -39,7 +52,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.insert(this.cleanUp(document), (error: Error) => {
+      collection.insert(document, (error: Error) => {
         finalizer();
 
         if (callback)
@@ -53,7 +66,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.update(this.cleanUp(query), this.cleanUp(update), options, (error: Error) => {
+      collection.update(query, update, options, (error: Error) => {
         finalizer();
 
         if (callback)
@@ -67,7 +80,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.findAndModify(this.cleanUp(query), [], this.cleanUp(update), options, (error: Error, result: {value: TDocument}) => {
+      collection.findAndModify(query, [], update, options, (error: Error, result: {value: TDocument}) => {
         finalizer();
 
         if (callback)
@@ -81,7 +94,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.remove(this.cleanUp(query), (error: Error) => {
+      collection.remove(query, (error: Error) => {
         finalizer();
 
         if (callback)
@@ -95,7 +108,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.find(this.cleanUp(query), fields || {}, options).toArray((error: Error, result: TDocument[]) => {
+      collection.find(query, fields || {}, options).toArray((error: Error, result: TDocument[]) => {
         finalizer();
         callback(error, result);
       });
@@ -107,7 +120,7 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.findOne(this.cleanUp(query), fields || {}, (error: Error, result: TDocument) => {
+      collection.findOne(query, fields || {}, (error: Error, result: TDocument) => {
         finalizer();
         callback(error, result);
       });
@@ -119,67 +132,26 @@ export class DB {
       if (error)
         return callback(error);
 
-      collection.count(this.cleanUp(query), (error: Error, count: number) => {
+      collection.count(query, (error: Error, count: number) => {
         finalizer();
         callback(error, count);
       });
     });
   }
 
-  private cleanUp<T>(object: T): T {
-    var result = _.clone(object);
+  counter(name: string, callback: ICounterCallback) {
+    var query = { name: name };
+    var update = { $inc: { value: 1 } };
 
-    _.each(result, (value: any, key: string) => {
-      var value = result[key];
+    this.findAndModify<ICounterDocument>('counters', query, update, {new: true}, (error, result) => {
+      if (error)
+        return callback(error);
 
-      if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
-        delete result[key];
+      callback(null, result.value);
     });
-
-    return result;
   }
 
   static ObjectId(id: string): Object {
     return mongodb.ObjectId(id);
   }
-}
-
-export class Query {
-  set(key: string, value: any, map?: (value: any) => any) {
-    if (value === undefined)
-      return;
-
-    (this as any)[key] = map ? map(value) : value;
-  };
-}
-
-export class Update {
-  private $set: {[key: string]: any} = {};
-  private $unset: {[key: string]: any} = { __noop__: '' };
-  private $addToSet: {[key: string]: any} = {};
-  private $pull: {[key: string]: any} = {};
-
-  setOrUnset(key: string, value: any, map?: (value: any) => any) {
-    if (value === undefined)
-      return;
-
-    if (value)
-      this.$set[key] = map ? map(value) : value;
-    else
-      this.$unset[key] = '';
-  };
-
-  addToSet(key: string, value: any, map?: (value: any) => any) {
-    if (value === undefined)
-      return;
-
-    this.$addToSet[key] = { $each: map ? map(value) : value };
-  };
-
-  removeFromSet(key: string, value: any, map?: (value: any) => any) {
-    if (value === undefined)
-      return;
-
-    this.$pull[key] = { $in: map ? map(value) : value };
-  };
 }
