@@ -11,8 +11,6 @@ interface IItem extends IEntity {
   prerequisiteItems?: IEntity[];
   assignedUsers?: IEntity[];
   creator?: IEntity;
-  creationDateTime?: Date;
-  modificationDateTime?: Date;
 }
 
 interface IItemFilter extends IFilter {
@@ -36,7 +34,6 @@ interface IItemChange extends IChange {
   assignedUsers?: IEntity[];
   assignedUsers_add?: IEntity[];
   assignedUsers_remove?: IEntity[];
-  modificationDateTime?: Date;
 }
 
 interface IItemRepository extends IRepository<IItem, IItemFilter, IItemChange> {
