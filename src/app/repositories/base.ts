@@ -1,5 +1,16 @@
 import { DB, IDocument } from '../db';
 
+export interface IMetaDocument {
+  _id: any;
+  meta?: {
+    version?: number,
+    state?: number,
+    insertDateTime?: Date,
+    updateDateTime?: Date,
+    deleteDateTime?: Date,
+  }
+}
+
 var _ = require('underscore');
 
 export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TDocument extends IDocument> implements IRepository<TEntity, TFilter, TChange> {
@@ -17,6 +28,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
 
   getAll(filter: TFilter, callback: IGetAllCallback<TEntity>) {
     var query = this.filterToQuery(filter);
+    query.set('meta.state', { $lte: 1 });
 
     this.db.find<TDocument>(this.collectionName(), this.cleanUp(query), null, null, (error, result) => {
       if (error)
@@ -29,6 +41,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
 
   get(filter: TFilter, callback: IGetCallback<TEntity>) {
     var query = this.filterToQuery(filter);
+    query.set('meta.state', { $lte: 1 });
 
     this.db.findOne<TDocument>(this.collectionName(), this.cleanUp(query), null, (error, result) => {
       if (error)
@@ -45,12 +58,23 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
   insert(entity: TEntity, callback: IInsertCallback<TEntity>) {
     var document = this.entityToDocument(entity);
 
-    this.db.insert(this.collectionName(), this.cleanUp(document), (error) => {
+    this.db.counter('_version', (error, version) => {
       if (error)
         return callback(error);
 
-      var entity = this.documentToEntity(document);
-      callback(null, entity);
+      (document as IMetaDocument).meta = {
+        version: version,
+        state: 0,
+        insertDateTime: new Date()
+      };
+
+      this.db.insert(this.collectionName(), this.cleanUp(document), (error) => {
+        if (error)
+          return callback(error);
+
+        var entity = this.documentToEntity(document);
+        callback(null, entity);
+      });
     });
   };
 
@@ -59,12 +83,21 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     var query = this.filterToQuery(filter);
     var update = this.changeToUpdate(change);
 
-    this.db.findAndModify<TDocument>(this.collectionName(), this.cleanUp(query), this.cleanUp(update), {new: true}, (error, result) => {
+    this.db.counter('_version', (error, version) => {
       if (error)
         return callback(error);
 
-      var entity = this.documentToEntity(result);
-      callback(null, entity);
+      update.setOrUnset('meta.version', version);
+      update.setOrUnset('meta.state', 1);
+      update.setOrUnset('meta.updateDateTime', new Date());
+
+      this.db.findAndModify<TDocument>(this.collectionName(), this.cleanUp(query), this.cleanUp(update), {new: true}, (error, result) => {
+        if (error)
+          return callback(error);
+
+        var entity = this.documentToEntity(result);
+        callback(null, entity);
+      });
     });
   };
 
@@ -72,7 +105,23 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     var filter: any = { id: id }; // TS bug?
     var query = this.filterToQuery(filter);
 
-    this.db.remove(this.collectionName(), query, callback);
+    this.db.counter('_version', (error, version) => {
+      if (error)
+        return callback(error);
+
+      var update = new Update();
+      update.setOrUnset('meta.version', version);
+      update.setOrUnset('meta.state', 2);
+      update.setOrUnset('meta.deleteDateTime', new Date());
+
+      this.db.findAndModify<TDocument>(this.collectionName(), this.cleanUp(query), this.cleanUp(update), {new: true}, (error, result) => {
+        if (error)
+          return callback(error);
+
+        var entity = this.documentToEntity(result);
+        callback(null);
+      });
+    });
   }
 
   protected toRef(entity: IEntity): IDocument {
