@@ -3,6 +3,7 @@ import { BaseRepository, Query, Update } from './base';
 
 interface IItemDocument extends IDocument {
   sid: string;
+  kind: string;
   type: IDocument;
   title: string;
   description: string;
@@ -24,7 +25,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
   filterToQuery(filter: IItemFilter): Query {
     var query = new Query();
     query.set('_id', filter, this.toObjectId.bind(this));
-    query.set('type._id', filter.type, this.toObjectId.bind(this));
+    query.set('kind', filter.kind);
 
     return query;
   }
@@ -48,6 +49,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
     return {
       id: document._id.toString(),
       sid: document.sid,
+      kind: document.kind,
       type: this.fromRef(document.type),
       title: document.title,
       description: document.description,
@@ -66,6 +68,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
     return {
       _id: DB.ObjectId(entity.id),
       sid: entity.sid,
+      kind: entity.kind,
       type: this.toRef(entity.type),
       title: entity.title,
       description: entity.description,

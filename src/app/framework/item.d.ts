@@ -1,5 +1,6 @@
 interface IItem extends IEntity {
   sid?: string;
+  kind?: string;
   type?: IEntity;
   title?: string;
   description?: string;
@@ -14,7 +15,7 @@ interface IItem extends IEntity {
 }
 
 interface IItemFilter extends IFilter {
-  type?: IEntity;
+  kind?: string;
 }
 
 interface IItemChange extends IChange {

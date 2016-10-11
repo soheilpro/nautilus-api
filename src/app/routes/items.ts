@@ -11,7 +11,7 @@ var router = express.Router();
 router.get('/', (request: any, response: any, next: any) => {
   var repository = new ItemRepository();
 
-  repository.getAll({ type: objectFromId(request.param('type_id')) }, (error, items) => {
+  repository.getAll({ kind: request.param('kind') }, (error, items) => {
     if (error)
       return next(error);
 
@@ -31,6 +31,11 @@ router.get('/', (request: any, response: any, next: any) => {
 router.post('/', (request: any, response: any, next: any) => {
   var item: IItem = {};
   item.createdBy = request.user.user;
+
+  if (!request.param('kind'))
+    return response.sendStatus(422);
+
+  item.kind = request.param('kind');
 
   if (request.param('type_id'))
     item.type = objectFromId(request.param('type_id'));

@@ -26,6 +26,9 @@ router.post('/', (request: any, response: any, next: any) => {
 
   var type: IItemType = {};
 
+  if (request.param('item_kind'))
+    type.itemKind = request.param('item_kind');
+
   if (request.param('title'))
     type.title = request.param('title');
 
@@ -53,6 +56,9 @@ router.patch('/:typeId', (request: any, response: any, next: any) => {
 
   var repository = new ItemTypeRepository();
   var change: IItemTypeChange = {};
+
+  if (request.param('item_kind') !== undefined)
+    change.itemKind = request.param('item_kind');
 
   if (request.param('title') !== undefined)
     change.title = request.param('title');

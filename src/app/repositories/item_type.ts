@@ -2,6 +2,7 @@ import { DB, IDocument } from '../db';
 import { BaseRepository, Query, Update } from './base';
 
 interface IItemTypeDocument extends IDocument {
+  itemKind: string;
   title: string;
   key: string;
   order: number;
@@ -21,6 +22,7 @@ export class ItemTypeRepository extends BaseRepository<IItemType, IItemTypeFilte
 
   changeToUpdate(change: IItemTypeChange): Update {
     var update = new Update();
+    update.setOrUnset('itemKind', change.itemKind);
     update.setOrUnset('title', change.title);
     update.setOrUnset('key', change.key);
 
@@ -30,6 +32,7 @@ export class ItemTypeRepository extends BaseRepository<IItemType, IItemTypeFilte
   documentToEntity(document: IItemTypeDocument): IItemType {
     return {
       id: document._id.toString(),
+      itemKind: document.itemKind,
       title: document.title,
       key: document.key,
       order: document.order
@@ -39,6 +42,7 @@ export class ItemTypeRepository extends BaseRepository<IItemType, IItemTypeFilte
   entityToDocument(entity: IItemType): IItemTypeDocument {
     return {
       _id: DB.ObjectId(entity.id),
+      itemKind: entity.itemKind,
       title: entity.title,
       key: entity.key,
       order: entity.order

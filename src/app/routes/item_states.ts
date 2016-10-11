@@ -26,6 +26,9 @@ router.post('/', (request: any, response: any, next: any) => {
 
   var state: IItemState = {};
 
+  if (request.param('item_kind'))
+    state.itemKind = request.param('item_kind');
+
   if (request.param('title'))
     state.title = request.param('title');
 
@@ -53,6 +56,9 @@ router.patch('/:stateId', (request: any, response: any, next: any) => {
 
   var repository = new ItemStateRepository();
   var change: IItemStateChange = {};
+
+  if (request.param('item_kind') !== undefined)
+    change.itemKind = request.param('item_kind');
 
   if (request.param('title') !== undefined)
     change.title = request.param('title');
