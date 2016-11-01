@@ -7,7 +7,7 @@ interface IItem extends IEntity {
   priority?: IEntity;
   project?: IEntity;
   area?: IEntity;
-  subItems?: IEntity[];
+  parent?: IEntity;
   prerequisiteItems?: IEntity[];
   assignedUsers?: IEntity[];
   creator?: IEntity;
@@ -25,9 +25,7 @@ interface IItemChange extends IChange {
   priority?: IEntity;
   project?: IEntity;
   area?: IEntity;
-  subItems?: IEntity[];
-  subItems_add?: IEntity[];
-  subItems_remove?: IEntity[];
+  parent?: IEntity;
   prerequisiteItems?: IEntity[];
   prerequisiteItems_add?: IEntity[];
   prerequisiteItems_remove?: IEntity[];

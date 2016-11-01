@@ -53,11 +53,11 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('area_id'))
     item.area = objectFromId(request.param('area_id'));
 
+  if (request.param('parent_id'))
+    item.parent = objectFromId(request.param('parent_id'));
+
   if (request.param('prerequisite_item_ids'))
     item.prerequisiteItems = request.param('prerequisite_item_ids').split(',').map(objectFromId);
-
-  if (request.param('sub_item_ids'))
-    item.subItems = request.param('sub_item_ids').split(',').map(objectFromId);
 
   if (request.param('assigned_user_ids'))
     item.assignedUsers = request.param('assigned_user_ids').split(',').map(objectFromId);
@@ -146,6 +146,12 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
       else
         change.area = null;
 
+    if (request.param('parent_id') !== undefined)
+      if (request.param('parent_id'))
+        change.parent = objectFromId(request.param('parent_id'));
+      else
+        change.parent = null;
+
     if (request.param('prerequisite_item_ids') !== undefined)
       if (request.param('prerequisite_item_ids'))
         change.prerequisiteItems = request.param('prerequisite_item_ids').split(',').map(objectFromId);
@@ -157,18 +163,6 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
 
     if (request.param('remove_prerequisite_item_ids'))
       change.prerequisiteItems_remove = request.param('remove_prerequisite_item_ids').split(',').map(objectFromId);
-
-    if (request.param('sub_item_ids') !== undefined)
-      if (request.param('sub_item_ids'))
-        change.subItems = request.param('sub_item_ids').split(',').map(objectFromId);
-      else
-        change.subItems = null;
-
-    if (request.param('add_sub_item_ids'))
-      change.subItems_add = request.param('add_sub_item_ids').split(',').map(objectFromId);
-
-    if (request.param('remove_sub_item_ids'))
-      change.subItems_remove = request.param('remove_sub_item_ids').split(',').map(objectFromId);
 
     if (request.param('assigned_user_ids') !== undefined)
       if (request.param('assigned_user_ids'))
