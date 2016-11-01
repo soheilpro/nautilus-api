@@ -9,7 +9,6 @@ interface IItemDocument extends IDocument {
   state: IDocument;
   priority: IDocument;
   project: IDocument;
-  area: IDocument;
   parent: IDocument;
   prerequisiteItems: IDocument[];
   assignedUsers: IDocument[];
@@ -37,7 +36,6 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
     update.setOrUnset('state', change.state, this.toRef.bind(this));
     update.setOrUnset('priority', change.priority, this.toRef.bind(this));
     update.setOrUnset('project', change.project, this.toRef.bind(this));
-    update.setOrUnset('area', change.area, this.toRef.bind(this));
     update.setOrUnset('parent', change.parent, this.toRef.bind(this));
     update.setOrUnset('prerequisiteItems', change.prerequisiteItems, this.toRefArray.bind(this));
     update.addToSet('prerequisiteItems', change.prerequisiteItems_add, this.toRefArray.bind(this));
@@ -59,7 +57,6 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       state: this.fromRef(document.state),
       priority: this.fromRef(document.priority),
       project: this.fromRef(document.project),
-      area: this.fromRef(document.area),
       parent: this.fromRef(document.parent),
       prerequisiteItems: this.fromRefArray(document.prerequisiteItems),
       assignedUsers: this.fromRefArray(document.assignedUsers),
@@ -77,7 +74,6 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       state: this.toRef(entity.state),
       priority: this.toRef(entity.priority),
       project: this.toRef(entity.project),
-      area: this.toRef(entity.area),
       parent: this.toRef(entity.parent),
       prerequisiteItems: this.toRefArray(entity.prerequisiteItems),
       assignedUsers: this.toRefArray(entity.assignedUsers),

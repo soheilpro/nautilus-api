@@ -48,7 +48,6 @@ app.use((request: any, response: any, next: any) => {
 
 app.use('/users', require('./routes/users'));
 app.use('/userroles', require('./routes/user_roles'));
-app.use('/itemareas', require('./routes/item_areas'));
 app.use('/itemstates', require('./routes/item_states'));
 app.use('/itemtypes', require('./routes/item_types'));
 app.use('/itempriorities', require('./routes/item_priorities'));
