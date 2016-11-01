@@ -3,7 +3,7 @@ import { BaseRepository, Query, Update } from './base';
 
 interface IItemStateDocument extends IDocument {
   title: string;
-  type: string;
+  key: string;
 }
 
 export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFilter, IItemStateChange, IItemStateDocument> {
@@ -21,7 +21,7 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
   changeToUpdate(change: IItemStateChange): Update {
     var update = new Update();
     update.setOrUnset('title', change.title);
-    update.setOrUnset('type', change.type);
+    update.setOrUnset('key', change.key);
 
     return update;
   }
@@ -30,7 +30,7 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
     return {
       id: document._id.toString(),
       title: document.title,
-      type: document.type
+      key: document.key
     };
   }
 
@@ -38,7 +38,7 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
     return {
       _id: DB.ObjectId(entity.id),
       title: entity.title,
-      type: entity.type
+      key: entity.key
     };
   }
 }

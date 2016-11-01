@@ -29,8 +29,8 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('title'))
     state.title = request.param('title');
 
-  if (request.param('type'))
-    state.type = request.param('type');
+  if (request.param('key'))
+    state.key = request.param('key');
 
   var repository = new ItemStateRepository();
 
@@ -54,8 +54,8 @@ router.patch('/:stateId', (request: any, response: any, next: any) => {
   if (request.param('title') !== undefined)
     change.title = request.param('title');
 
-  if (request.param('type') !== undefined)
-    change.type = request.param('type');
+  if (request.param('key') !== undefined)
+    change.key = request.param('key');
 
   repository.update(request.param('stateId'), change, (error, state) => {
     if (error)
