@@ -56,8 +56,8 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('prerequisite_item_ids'))
     item.prerequisiteItems = request.param('prerequisite_item_ids').split(',').map(objectFromId);
 
-  if (request.param('assigned_user_ids'))
-    item.assignedUsers = request.param('assigned_user_ids').split(',').map(objectFromId);
+  if (request.param('assigned_to_id'))
+    item.assignedTo = objectFromId(request.param('assigned_to_id'));
 
   if (item.project)
     if (!UserPermissionHelper.hasPermission(request.user.permissions, item.project, 'update'))
@@ -155,17 +155,11 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
     if (request.param('remove_prerequisite_item_ids'))
       change.prerequisiteItems_remove = request.param('remove_prerequisite_item_ids').split(',').map(objectFromId);
 
-    if (request.param('assigned_user_ids') !== undefined)
-      if (request.param('assigned_user_ids'))
-        change.assignedUsers = request.param('assigned_user_ids').split(',').map(objectFromId);
+    if (request.param('assigned_to_id') !== undefined)
+      if (request.param('assigned_to_id'))
+        change.assignedTo = objectFromId(request.param('assigned_to_id'));
       else
-        change.assignedUsers = null;
-
-    if (request.param('add_assigned_user_ids'))
-      change.assignedUsers_add = request.param('add_assigned_user_ids').split(',').map(objectFromId);
-
-    if (request.param('remove_assigned_user_ids'))
-      change.assignedUsers_remove = request.param('remove_assigned_user_ids').split(',').map(objectFromId);
+        change.assignedTo = null;
 
     if (change.project)
       if (!UserPermissionHelper.hasPermission(request.user.permissions, change.project, 'update'))

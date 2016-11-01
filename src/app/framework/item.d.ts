@@ -8,7 +8,7 @@ interface IItem extends IEntity {
   project?: IEntity;
   parent?: IEntity;
   prerequisiteItems?: IEntity[];
-  assignedUsers?: IEntity[];
+  assignedTo?: IEntity;
   creator?: IEntity;
 }
 
@@ -27,9 +27,7 @@ interface IItemChange extends IChange {
   prerequisiteItems?: IEntity[];
   prerequisiteItems_add?: IEntity[];
   prerequisiteItems_remove?: IEntity[];
-  assignedUsers?: IEntity[];
-  assignedUsers_add?: IEntity[];
-  assignedUsers_remove?: IEntity[];
+  assignedTo?: IEntity;
 }
 
 interface IItemRepository extends IRepository<IItem, IItemFilter, IItemChange> {

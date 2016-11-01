@@ -11,7 +11,7 @@ interface IItemDocument extends IDocument {
   project: IDocument;
   parent: IDocument;
   prerequisiteItems: IDocument[];
-  assignedUsers: IDocument[];
+  assignedTo: IDocument;
   creator: IDocument;
 }
 
@@ -40,9 +40,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
     update.setOrUnset('prerequisiteItems', change.prerequisiteItems, this.toRefArray.bind(this));
     update.addToSet('prerequisiteItems', change.prerequisiteItems_add, this.toRefArray.bind(this));
     update.removeFromSet('prerequisiteItems', change.prerequisiteItems_remove, this.toRefArray.bind(this));
-    update.setOrUnset('assignedUsers', change.assignedUsers, this.toRefArray.bind(this));
-    update.addToSet('assignedUsers', change.assignedUsers_add, this.toRefArray.bind(this));
-    update.removeFromSet('assignedUsers', change.assignedUsers_remove, this.toRefArray.bind(this));
+    update.setOrUnset('assignedTo', change.assignedTo, this.toRef.bind(this));
 
     return update;
   }
@@ -59,7 +57,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       project: this.fromRef(document.project),
       parent: this.fromRef(document.parent),
       prerequisiteItems: this.fromRefArray(document.prerequisiteItems),
-      assignedUsers: this.fromRefArray(document.assignedUsers),
+      assignedTo: this.fromRef(document.assignedTo),
       creator: this.fromRef(document.creator),
     };
   }
@@ -76,7 +74,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       project: this.toRef(entity.project),
       parent: this.toRef(entity.parent),
       prerequisiteItems: this.toRefArray(entity.prerequisiteItems),
-      assignedUsers: this.toRefArray(entity.assignedUsers),
+      assignedTo: this.toRef(entity.assignedTo),
       creator: this.toRef(entity.creator),
     };
   }
