@@ -19,7 +19,7 @@ router.get('/', (request: any, response: any, next: any) => {
       if (item.project)
         return UserPermissionHelper.hasPermission(request.user.permissions, item.project, 'view');
 
-      return item.creator.id === request.user.user.id;
+      return item.createdBy.id === request.user.user.id;
     });
 
     response.json({
@@ -30,7 +30,7 @@ router.get('/', (request: any, response: any, next: any) => {
 
 router.post('/', (request: any, response: any, next: any) => {
   var item: IItem = {};
-  item.creator = request.user.user;
+  item.createdBy = request.user.user;
 
   if (request.param('type_id'))
     item.type = objectFromId(request.param('type_id'));
