@@ -13,6 +13,7 @@ interface IItemDocument extends IDocument {
   prerequisiteItems: IDocument[];
   assignedTo: IDocument;
   createdBy: IDocument;
+  modifiedBy: IDocument;
 }
 
 export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChange, IItemDocument> {
@@ -59,6 +60,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       prerequisiteItems: this.fromRefArray(document.prerequisiteItems),
       assignedTo: this.fromRef(document.assignedTo),
       createdBy: this.fromRef(document.createdBy),
+      modifiedBy: this.fromRef(document.modifiedBy)
     };
   }
 
@@ -76,6 +78,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       prerequisiteItems: this.toRefArray(entity.prerequisiteItems),
       assignedTo: this.toRef(entity.assignedTo),
       createdBy: this.toRef(entity.createdBy),
+      modifiedBy: this.toRef(entity.modifiedBy)
     };
   }
 

@@ -10,6 +10,7 @@ interface IItem extends IEntity {
   prerequisiteItems?: IEntity[];
   assignedTo?: IEntity;
   createdBy?: IEntity;
+  modifiedBy?: IEntity;
 }
 
 interface IItemFilter extends IFilter {
@@ -28,6 +29,7 @@ interface IItemChange extends IChange {
   prerequisiteItems_add?: IEntity[];
   prerequisiteItems_remove?: IEntity[];
   assignedTo?: IEntity;
+  modifiedBy?: IEntity;
 }
 
 interface IItemRepository extends IRepository<IItem, IItemFilter, IItemChange> {

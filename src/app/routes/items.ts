@@ -165,6 +165,8 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
       if (!UserPermissionHelper.hasPermission(request.user.permissions, change.project, 'update'))
         return response.sendStatus(403);
 
+    change.modifiedBy = request.user.user;
+
     repository.update(item.id, change, (error, item) => {
       if (error)
         return next(error);
