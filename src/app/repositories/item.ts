@@ -8,6 +8,7 @@ interface IItemDocument extends IDocument {
   description: string;
   state: IDocument;
   priority: IDocument;
+  tags?: string[];
   project: IDocument;
   parent: IDocument;
   assignedTo: IDocument;
@@ -35,6 +36,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
     update.setOrUnset('description', change.description);
     update.setOrUnset('state', change.state, this.toRef.bind(this));
     update.setOrUnset('priority', change.priority, this.toRef.bind(this));
+    update.setOrUnset('tags', change.tags);
     update.setOrUnset('project', change.project, this.toRef.bind(this));
     update.setOrUnset('parent', change.parent, this.toRef.bind(this));
     update.setOrUnset('assignedTo', change.assignedTo, this.toRef.bind(this));
@@ -51,6 +53,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       description: document.description,
       state: this.fromRef(document.state),
       priority: this.fromRef(document.priority),
+      tags: document.tags,
       project: this.fromRef(document.project),
       parent: this.fromRef(document.parent),
       assignedTo: this.fromRef(document.assignedTo),
@@ -68,6 +71,7 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       description: entity.description,
       state: this.toRef(entity.state),
       priority: this.toRef(entity.priority),
+      tags: entity.tags,
       project: this.toRef(entity.project),
       parent: this.toRef(entity.parent),
       assignedTo: this.toRef(entity.assignedTo),

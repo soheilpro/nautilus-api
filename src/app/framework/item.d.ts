@@ -5,6 +5,7 @@ interface IItem extends IEntity {
   description?: string;
   state?: IEntity;
   priority?: IEntity;
+  tags?: string[];
   project?: IEntity;
   parent?: IEntity;
   assignedTo?: IEntity;
@@ -22,6 +23,7 @@ interface IItemChange extends IChange {
   description?: string;
   state?: IEntity;
   priority?: IEntity;
+  tags?: string[];
   project?: IEntity;
   parent?: IEntity;
   assignedTo?: IEntity;

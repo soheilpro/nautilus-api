@@ -47,6 +47,9 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('priority_id'))
     item.priority = objectFromId(request.param('priority_id'));
 
+  if (request.param('tags'))
+    item.tags = request.param('tags').split(' ');
+
   if (request.param('project_id'))
     item.project = objectFromId(request.param('project_id'));
 
@@ -127,6 +130,12 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
         change.priority = objectFromId(request.param('priority_id'));
       else
         change.priority = null;
+
+    if (request.param('tags') !== undefined)
+      if (request.param('tags'))
+        change.tags = request.param('tags').split(' ');
+      else
+        change.tags = null;
 
     if (request.param('project_id') !== undefined)
       if (request.param('project_id'))
