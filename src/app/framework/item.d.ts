@@ -7,7 +7,6 @@ interface IItem extends IEntity {
   priority?: IEntity;
   project?: IEntity;
   parent?: IEntity;
-  prerequisiteItems?: IEntity[];
   assignedTo?: IEntity;
   createdBy?: IEntity;
   modifiedBy?: IEntity;
@@ -25,9 +24,6 @@ interface IItemChange extends IChange {
   priority?: IEntity;
   project?: IEntity;
   parent?: IEntity;
-  prerequisiteItems?: IEntity[];
-  prerequisiteItems_add?: IEntity[];
-  prerequisiteItems_remove?: IEntity[];
   assignedTo?: IEntity;
   modifiedBy?: IEntity;
 }

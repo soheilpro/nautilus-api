@@ -10,7 +10,6 @@ interface IItemDocument extends IDocument {
   priority: IDocument;
   project: IDocument;
   parent: IDocument;
-  prerequisiteItems: IDocument[];
   assignedTo: IDocument;
   createdBy: IDocument;
   modifiedBy: IDocument;
@@ -38,9 +37,6 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
     update.setOrUnset('priority', change.priority, this.toRef.bind(this));
     update.setOrUnset('project', change.project, this.toRef.bind(this));
     update.setOrUnset('parent', change.parent, this.toRef.bind(this));
-    update.setOrUnset('prerequisiteItems', change.prerequisiteItems, this.toRefArray.bind(this));
-    update.addToSet('prerequisiteItems', change.prerequisiteItems_add, this.toRefArray.bind(this));
-    update.removeFromSet('prerequisiteItems', change.prerequisiteItems_remove, this.toRefArray.bind(this));
     update.setOrUnset('assignedTo', change.assignedTo, this.toRef.bind(this));
 
     return update;
@@ -57,7 +53,6 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       priority: this.fromRef(document.priority),
       project: this.fromRef(document.project),
       parent: this.fromRef(document.parent),
-      prerequisiteItems: this.fromRefArray(document.prerequisiteItems),
       assignedTo: this.fromRef(document.assignedTo),
       createdBy: this.fromRef(document.createdBy),
       modifiedBy: this.fromRef(document.modifiedBy)
@@ -75,7 +70,6 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       priority: this.toRef(entity.priority),
       project: this.toRef(entity.project),
       parent: this.toRef(entity.parent),
-      prerequisiteItems: this.toRefArray(entity.prerequisiteItems),
       assignedTo: this.toRef(entity.assignedTo),
       createdBy: this.toRef(entity.createdBy),
       modifiedBy: this.toRef(entity.modifiedBy)

@@ -53,9 +53,6 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('parent_id'))
     item.parent = objectFromId(request.param('parent_id'));
 
-  if (request.param('prerequisite_item_ids'))
-    item.prerequisiteItems = request.param('prerequisite_item_ids').split(',').map(objectFromId);
-
   if (request.param('assigned_to_id'))
     item.assignedTo = objectFromId(request.param('assigned_to_id'));
 
@@ -143,17 +140,6 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
       else
         change.parent = null;
 
-    if (request.param('prerequisite_item_ids') !== undefined)
-      if (request.param('prerequisite_item_ids'))
-        change.prerequisiteItems = request.param('prerequisite_item_ids').split(',').map(objectFromId);
-      else
-        change.prerequisiteItems = null;
-
-    if (request.param('add_prerequisite_item_ids'))
-      change.prerequisiteItems_add = request.param('add_prerequisite_item_ids').split(',').map(objectFromId);
-
-    if (request.param('remove_prerequisite_item_ids'))
-      change.prerequisiteItems_remove = request.param('remove_prerequisite_item_ids').split(',').map(objectFromId);
 
     if (request.param('assigned_to_id') !== undefined)
       if (request.param('assigned_to_id'))
