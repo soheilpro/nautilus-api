@@ -32,6 +32,9 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('key'))
     priority.key = request.param('key');
 
+  if (request.param('order'))
+    priority.order = parseInt(request.param('order'), 10);
+
   var repository = new ItemPriorityRepository();
 
   repository.insert(priority, (error, priority) => {
@@ -56,6 +59,9 @@ router.patch('/:priorityId', (request: any, response: any, next: any) => {
 
   if (request.param('key') !== undefined)
     change.key = request.param('key');
+
+  if (request.param('order') !== undefined)
+    change.order = parseInt(request.param('order'), 10);
 
   repository.update(request.param('priorityId'), change, (error, priority) => {
     if (error)

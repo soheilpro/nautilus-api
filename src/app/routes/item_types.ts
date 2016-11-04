@@ -32,6 +32,9 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('key'))
     type.key = request.param('key');
 
+  if (request.param('order'))
+    type.order = parseInt(request.param('order'), 10);
+
   var repository = new ItemTypeRepository();
 
   repository.insert(type, (error, type) => {
@@ -56,6 +59,9 @@ router.patch('/:typeId', (request: any, response: any, next: any) => {
 
   if (request.param('key') !== undefined)
     change.key = request.param('key');
+
+  if (request.param('order') !== undefined)
+    change.order = parseInt(request.param('order'), 10);
 
   repository.update(request.param('typeId'), change, (error, type) => {
     if (error)

@@ -4,6 +4,7 @@ import { BaseRepository, Query, Update } from './base';
 interface IItemStateDocument extends IDocument {
   title: string;
   key: string;
+  order: number;
 }
 
 export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFilter, IItemStateChange, IItemStateDocument> {
@@ -30,7 +31,8 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
     return {
       id: document._id.toString(),
       title: document.title,
-      key: document.key
+      key: document.key,
+      order: document.order
     };
   }
 
@@ -38,7 +40,8 @@ export class ItemStateRepository extends BaseRepository<IItemState, IItemStateFi
     return {
       _id: DB.ObjectId(entity.id),
       title: entity.title,
-      key: entity.key
+      key: entity.key,
+      order: entity.order
     };
   }
 }

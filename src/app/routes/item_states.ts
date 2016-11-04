@@ -32,6 +32,9 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('key'))
     state.key = request.param('key');
 
+  if (request.param('order'))
+    state.order = parseInt(request.param('order'), 10);
+
   var repository = new ItemStateRepository();
 
   repository.insert(state, (error, state) => {
@@ -56,6 +59,9 @@ router.patch('/:stateId', (request: any, response: any, next: any) => {
 
   if (request.param('key') !== undefined)
     change.key = request.param('key');
+
+  if (request.param('order') !== undefined)
+    change.order = parseInt(request.param('order'), 10);
 
   repository.update(request.param('stateId'), change, (error, state) => {
     if (error)
