@@ -5,6 +5,7 @@ interface IUserDocument extends IDocument {
   username: string;
   passwordHash: string;
   name: string;
+  email: string;
 }
 
 export class UserRepository extends BaseRepository<IUser, IUserFilter, IUserChange, IUserDocument> {
@@ -25,6 +26,7 @@ export class UserRepository extends BaseRepository<IUser, IUserFilter, IUserChan
     update.setOrUnset('username', change.username);
     update.setOrUnset('passwordHash', change.passwordHash);
     update.setOrUnset('name', change.name);
+    update.setOrUnset('email', change.email);
 
     return update;
   }
@@ -34,7 +36,8 @@ export class UserRepository extends BaseRepository<IUser, IUserFilter, IUserChan
       id: document._id.toString(),
       username: document.username,
       passwordHash: document.passwordHash,
-      name: document.name
+      name: document.name,
+      email: document.email
     };
   }
 
@@ -43,7 +46,8 @@ export class UserRepository extends BaseRepository<IUser, IUserFilter, IUserChan
       _id: DB.ObjectId(entity.id),
       username: entity.username,
       passwordHash: entity.passwordHash,
-      name: entity.name
+      name: entity.name,
+      email: entity.email
     };
   }
 }

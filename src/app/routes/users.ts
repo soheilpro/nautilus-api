@@ -48,6 +48,9 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('name'))
     user.name = request.param('name');
 
+  if (request.param('email'))
+    user.email = request.param('email');
+
   var repository = new UserRepository();
 
   repository.insert(user, (error, user) => {
@@ -75,6 +78,9 @@ router.patch('/:userId', (request: any, response: any, next: any) => {
 
   if (request.param('name') !== undefined)
     change.name = request.param('name');
+
+  if (request.param('email') !== undefined)
+    change.email = request.param('email');
 
   repository.update(request.param('userId'), change, (error, user) => {
     if (error)
