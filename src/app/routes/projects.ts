@@ -31,8 +31,8 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('name'))
     project.name = request.param('name');
 
-  if (request.param('group'))
-    project.group = request.param('group');
+  if (request.param('tags'))
+    project.tags = request.param('tags').split(' ');
 
   var repository = new ProjectRepository();
 
@@ -56,8 +56,11 @@ router.patch('/:projectId', (request: any, response: any, next: any) => {
   if (request.param('name') !== undefined)
     change.name = request.param('name');
 
-  if (request.param('group') !== undefined)
-    change.group = request.param('group');
+  if (request.param('tags') !== undefined)
+    if (request.param('tags'))
+      change.tags = request.param('tags').split(' ');
+    else
+      change.tags = null;
 
   repository.update(request.param('projectId'), change, (error, project) => {
     if (error)

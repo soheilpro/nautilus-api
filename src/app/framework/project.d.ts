@@ -1,6 +1,6 @@
 interface IProject extends IEntity {
   name?: string;
-  group?: string;
+  tags?: string[];
 }
 
 interface IProjectFilter extends IFilter {
@@ -8,7 +8,7 @@ interface IProjectFilter extends IFilter {
 
 interface IProjectChange extends IChange {
   name?: string;
-  group?: string;
+  tags?: string[];
 }
 
 interface IProjectRepository extends IRepository<IProject, IProjectFilter, IProjectChange> {
