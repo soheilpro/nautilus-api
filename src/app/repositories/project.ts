@@ -3,6 +3,7 @@ import { BaseRepository, Query, Update } from './base';
 
 interface IProjectDocument extends IDocument {
   name: string;
+  description: string;
   tags?: string[];
 }
 
@@ -21,6 +22,7 @@ export class ProjectRepository extends BaseRepository<IProject, IProjectFilter, 
   changeToUpdate(change: IProjectChange): Update {
     var update = new Update();
     update.setOrUnset('name', change.name);
+    update.setOrUnset('description', change.description);
     update.setOrUnset('tags', change.tags);
 
     return update;
@@ -30,6 +32,7 @@ export class ProjectRepository extends BaseRepository<IProject, IProjectFilter, 
     return {
       id: document._id.toString(),
       name: document.name,
+      description: document.description,
       tags: document.tags
     };
   }
@@ -38,6 +41,7 @@ export class ProjectRepository extends BaseRepository<IProject, IProjectFilter, 
     return {
       _id: DB.ObjectId(entity.id),
       name: entity.name,
+      description: entity.description,
       tags: entity.tags
     };
   }

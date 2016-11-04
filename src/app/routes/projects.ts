@@ -31,6 +31,9 @@ router.post('/', (request: any, response: any, next: any) => {
   if (request.param('name'))
     project.name = request.param('name');
 
+  if (request.param('description'))
+    project.description = request.param('description');
+
   if (request.param('tags'))
     project.tags = request.param('tags').split(' ');
 
@@ -55,6 +58,9 @@ router.patch('/:projectId', (request: any, response: any, next: any) => {
 
   if (request.param('name') !== undefined)
     change.name = request.param('name');
+
+  if (request.param('description') !== undefined)
+    change.description = request.param('description');
 
   if (request.param('tags') !== undefined)
     if (request.param('tags'))
