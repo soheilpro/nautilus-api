@@ -1,7 +1,7 @@
-import { DB, IDocument } from '../db';
-import { BaseRepository, Query, Update } from './base';
+import { DB } from '../db';
+import { BaseRepository, Query, Update, IMetaDocument } from './base';
 
-interface IProjectDocument extends IDocument {
+interface IProjectDocument extends IMetaDocument {
   name: string;
   description: string;
   tags?: string[];
@@ -33,7 +33,8 @@ export class ProjectRepository extends BaseRepository<IProject, IProjectFilter, 
       id: document._id.toString(),
       name: document.name,
       description: document.description,
-      tags: document.tags
+      tags: document.tags,
+      meta: document.meta,
     };
   }
 

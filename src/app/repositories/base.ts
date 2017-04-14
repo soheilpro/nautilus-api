@@ -1,6 +1,6 @@
 import { DB, IDocument } from '../db';
 
-export interface IMetaDocument {
+export interface IMetaDocument extends IDocument {
   _id: any;
   meta?: {
     version?: number,

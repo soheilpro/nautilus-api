@@ -1,7 +1,7 @@
-import { DB, IDocument } from '../db';
-import { BaseRepository, Query, Update } from './base';
+import { DB } from '../db';
+import { BaseRepository, Query, Update, IMetaDocument } from './base';
 
-interface IItemTypeDocument extends IDocument {
+interface IItemTypeDocument extends IMetaDocument {
   itemKind: string;
   title: string;
   key: string;
@@ -35,7 +35,8 @@ export class ItemTypeRepository extends BaseRepository<IItemType, IItemTypeFilte
       itemKind: document.itemKind,
       title: document.title,
       key: document.key,
-      order: document.order
+      order: document.order,
+      meta: document.meta,
     };
   }
 

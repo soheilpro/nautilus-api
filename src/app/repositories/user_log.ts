@@ -1,7 +1,7 @@
 import { DB, IDocument } from '../db';
-import { BaseRepository, Query, Update } from './base';
+import { BaseRepository, Query, Update, IMetaDocument } from './base';
 
-interface IUserLogDocument extends IDocument {
+interface IUserLogDocument extends IMetaDocument {
   dateTime: Date;
   user: IDocument;
   action: string;
@@ -34,7 +34,8 @@ export class UserLogRepository extends BaseRepository<IUserLog, IUserLogFilter, 
       user: this.fromRef(document.user),
       action: document.action,
       item: this.fromRef(document.item),
-      params: document.params
+      params: document.params,
+      meta: document.meta,
     };
   }
 

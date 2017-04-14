@@ -1,7 +1,7 @@
-import { DB, IDocument } from '../db';
-import { BaseRepository, Query, Update } from './base';
+import { DB } from '../db';
+import { BaseRepository, Query, Update, IMetaDocument } from './base';
 
-interface IUserDocument extends IDocument {
+interface IUserDocument extends IMetaDocument {
   username: string;
   passwordHash: string;
   name: string;
@@ -37,7 +37,8 @@ export class UserRepository extends BaseRepository<IUser, IUserFilter, IUserChan
       username: document.username,
       passwordHash: document.passwordHash,
       name: document.name,
-      email: document.email
+      email: document.email,
+      meta: document.meta,
     };
   }
 

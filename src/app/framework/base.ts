@@ -1,5 +1,18 @@
+enum MetaState {
+  Inserted = 0,
+  Updated = 1,
+  Deleted = 2,
+}
+
 interface IEntity {
   id?: string;
+  meta?: {
+    version?: number,
+    state?: MetaState,
+    insertDateTime?: Date,
+    updateDateTime?: Date,
+    deleteDateTime?: Date,
+  }
 }
 
 interface IFilter {

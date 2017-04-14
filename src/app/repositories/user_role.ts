@@ -1,7 +1,7 @@
 import { DB, IDocument } from '../db';
-import { BaseRepository, Query, Update } from './base';
+import { BaseRepository, Query, Update, IMetaDocument } from './base';
 
-interface IUserRoleDocument extends IDocument {
+interface IUserRoleDocument extends IMetaDocument {
   user: IDocument;
   project: IDocument;
   name: string;
@@ -35,7 +35,8 @@ export class UserRoleRepository extends BaseRepository<IUserRole, IUserRoleFilte
       id: document._id.toString(),
       user: this.fromRef(document.user),
       project: this.fromRef(document.project),
-      name: document.name
+      name: document.name,
+      meta: document.meta,
     };
   }
 

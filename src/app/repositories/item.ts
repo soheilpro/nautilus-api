@@ -1,7 +1,7 @@
 import { DB, IDocument } from '../db';
-import { BaseRepository, Query, Update } from './base';
+import { BaseRepository, Query, Update, IMetaDocument } from './base';
 
-interface IItemDocument extends IDocument {
+interface IItemDocument extends IMetaDocument {
   sid: string;
   kind: string;
   type: IDocument;
@@ -60,7 +60,8 @@ export class ItemRepository extends BaseRepository<IItem, IItemFilter, IItemChan
       parent: this.fromRef(document.parent),
       assignedTo: this.fromRef(document.assignedTo),
       createdBy: this.fromRef(document.createdBy),
-      modifiedBy: this.fromRef(document.modifiedBy)
+      modifiedBy: this.fromRef(document.modifiedBy),
+      meta: document.meta,
     };
   }
 
