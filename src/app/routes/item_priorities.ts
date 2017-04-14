@@ -26,6 +26,9 @@ router.post('/', (request: any, response: any, next: any) => {
 
   var priority: IItemPriority = {};
 
+  if (request.param('item_kind'))
+    priority.itemKind = request.param('item_kind');
+
   if (request.param('title'))
     priority.title = request.param('title');
 
@@ -53,6 +56,9 @@ router.patch('/:priorityId', (request: any, response: any, next: any) => {
 
   var repository = new ItemPriorityRepository();
   var change: IItemPriorityChange = {};
+
+  if (request.param('item_kind') !== undefined)
+    change.itemKind = request.param('item_kind');
 
   if (request.param('title') !== undefined)
     change.title = request.param('title');
