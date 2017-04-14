@@ -10,12 +10,12 @@ var router = express.Router();
 router.get('/', (request: any, response: any, next: any) => {
   var repository = new ItemStateRepository();
 
-  repository.getAll({}, (error, states) => {
+  repository.getAll({}, (error, itemStates) => {
     if (error)
       return next(error);
 
     response.json({
-      data: states
+      data: itemStates
     });
   });
 });
@@ -24,28 +24,28 @@ router.post('/', (request: any, response: any, next: any) => {
   if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
     return response.sendStatus(403);
 
-  var state: IItemState = {};
+  var itemState: IItemState = {};
 
   if (request.param('item_kind'))
-    state.itemKind = request.param('item_kind');
+    itemState.itemKind = request.param('item_kind');
 
   if (request.param('title'))
-    state.title = request.param('title');
+    itemState.title = request.param('title');
 
   if (request.param('key'))
-    state.key = request.param('key');
+    itemState.key = request.param('key');
 
   if (request.param('order'))
-    state.order = parseInt(request.param('order'), 10);
+    itemState.order = parseInt(request.param('order'), 10);
 
   var repository = new ItemStateRepository();
 
-  repository.insert(state, (error, state) => {
+  repository.insert(itemState, (error, itemState) => {
     if (error)
       return next(error);
 
     response.json({
-      data: state
+      data: itemState
     });
   });
 });
@@ -69,12 +69,12 @@ router.patch('/:stateId', (request: any, response: any, next: any) => {
   if (request.param('order') !== undefined)
     change.order = parseInt(request.param('order'), 10);
 
-  repository.update(request.param('stateId'), change, (error, state) => {
+  repository.update(request.param('stateId'), change, (error, itemState) => {
     if (error)
       return next(error);
 
     response.json({
-      data: state
+      data: itemState
     });
   });
 });
