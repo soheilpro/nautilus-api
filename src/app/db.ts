@@ -139,6 +139,20 @@ export class DB {
     });
   }
 
+  drop(collectionName: string, callback: (error: Error) => void): void {
+    this.collection(collectionName, (error, collection, finalizer) => {
+      if (error)
+        return callback(error);
+
+      collection.drop((error: Error) => {
+        finalizer();
+
+        if (callback)
+          callback(error);
+      });
+    });
+  }
+
   counter(name: string, callback: ICounterCallback) {
     var query = { name: name };
     var update = { $inc: { value: 1 } };
