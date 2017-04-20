@@ -19,6 +19,10 @@ case "$COMMAND" in
     (cd ./src && npm run clean)
     ;;
 
+  update)
+    (cd ./src && npm run update)
+    ;;
+
   start)
     (cd ./src && npm run start)
     ;;
@@ -33,6 +37,7 @@ case "$COMMAND" in
     echo "  $(basename "$0") install"
     echo "  $(basename "$0") build"
     echo "  $(basename "$0") clean"
+    echo "  $(basename "$0") update"
     echo "  $(basename "$0") start"
     echo "  $(basename "$0") watch"
     exit 1

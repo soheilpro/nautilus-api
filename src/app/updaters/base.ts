@@ -46,7 +46,7 @@ export abstract class BaseUpdater implements IUpdater {
           if (error)
             return callback(error);
 
-          console.log('Updated database to version ' + targetVersion);
+          console.log('Updated database to version ' + targetVersion + '.');
 
           callback(null);
         });

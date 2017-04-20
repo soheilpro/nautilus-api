@@ -5,6 +5,7 @@
   "scripts": {
     "build": "buno tsc",
     "clean": "rm -rf ./out",
+    "update": "buno 'tsc && node ./out/update.js'",
     "start": "node ./out/www.js",
     "watch": "nodemon -e ts -x 'npm run build && npm run start'"
   },
