@@ -1,4 +1,5 @@
 import { ItemRepository } from '../repositories/item';
+import { ItemRelationshipRepository } from '../repositories/item_relationship';
 import { UserLogRepository } from '../repositories/user_log';
 import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
 
@@ -22,9 +23,26 @@ router.get('/', (request: any, response: any, next: any) => {
       return item.createdBy.id === request.user.user.id;
     });
 
-    response.json({
-      data: items
-    });
+    if (request.param('supplement') == 'relationships') {
+      var itemRelationshipRepository = new ItemRelationshipRepository();
+
+      itemRelationshipRepository.getAll({ items: items }, (error, itemRelationships) => {
+        if (error)
+          return next(error);
+
+        response.json({
+          data: items,
+          supplements: {
+            relationships: itemRelationships,
+          }
+        });
+      });
+    }
+    else {
+      response.json({
+        data: items,
+      });
+    }
   });
 });
 
@@ -57,9 +75,6 @@ router.post('/', (request: any, response: any, next: any) => {
 
   if (request.param('project_id'))
     item.project = objectFromId(request.param('project_id'));
-
-  if (request.param('parent_id'))
-    item.parent = objectFromId(request.param('parent_id'));
 
   if (request.param('assigned_to_id'))
     item.assignedTo = objectFromId(request.param('assigned_to_id'));
@@ -147,13 +162,6 @@ router.patch('/:itemId', (request: any, response: any, next: any) => {
         change.project = objectFromId(request.param('project_id'));
       else
         change.project = null;
-
-    if (request.param('parent_id') !== undefined)
-      if (request.param('parent_id'))
-        change.parent = objectFromId(request.param('parent_id'));
-      else
-        change.parent = null;
-
 
     if (request.param('assigned_to_id') !== undefined)
       if (request.param('assigned_to_id'))

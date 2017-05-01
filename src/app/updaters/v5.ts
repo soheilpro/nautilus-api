@@ -204,57 +204,43 @@ export class v5 extends BaseUpdater {
           return callback(error);
 
         async.each(items, (item: any, callback: (error: Error) => void) => {
-          var query = {
-            _id: item._id,
-          };
-
-          if (item.type && item.type._id.equals(DB.ObjectId('57a96acce84e8b000f80bde4'))) { // Milestone
-            let update = {
-              $set: {
-                'kind': 'milestone',
-              },
-              $unset: {
-                'type': '',
-              },
-            };
-
-            this.db.update('items', query, update, {}, callback);
-          }
-          else {
-            let update = {
-              $set: {
-                'kind': 'issue',
-              },
-            };
-
-            this.db.update('items', query, update, {}, callback);
-          }
-        }, callback);
-      });
-    });
-
-    tasks.push((callback: (error: Error) => void) => {
-      var query = {};
-
-      this.db.find<IDocument>('items', query, {}, {}, (error, items) => {
-        if (error)
-          return callback(error);
-
-        async.each(items, (item: any, callback: (error: Error) => void) => {
           async.each(item.subItems, (subItem: any, callback: (error: Error) => void) => {
-            var query = {
-              _id: subItem._id,
-            };
-
-            var update = {
-              $set: {
-                'parent': {
+            if (isMilestone(item)) {
+              var relationship = {
+                item1: {
+                  _id: subItem._id,
+                },
+                item2: {
                   _id: item._id,
                 },
-              },
-            };
+                type: 'milestone',
+                meta: {
+                  version: 0,
+                  state: 1,
+                  insertDateTime: new Date(),
+                },
+              };
 
-            this.db.update('items', query, update, {}, callback);
+              this.db.insert('item_relationships', relationship, callback);
+            }
+            else {
+              var relationship = {
+                item1: {
+                  _id: subItem._id,
+                },
+                item2: {
+                  _id: item._id,
+                },
+                type: 'parent',
+                meta: {
+                  version: 0,
+                  state: 1,
+                  insertDateTime: new Date(),
+                },
+              };
+
+              this.db.insert('item_relationships', relationship, callback);
+            }
           }, callback);
         }, callback);
       });
@@ -272,6 +258,51 @@ export class v5 extends BaseUpdater {
       this.db.update('items', query, update, { multi: true }, callback);
     });
 
+    tasks.push((callback: (error: Error) => void) => {
+      var query = {};
+
+      this.db.find<IDocument>('items', query, {}, {}, (error, items) => {
+        if (error)
+          return callback(error);
+
+        async.each(items, (item: any, callback: (error: Error) => void) => {
+          if (isMilestone(item)) {
+            var query = {
+              _id: item._id,
+            };
+
+            let update = {
+              $set: {
+                'kind': 'milestone',
+              },
+              $unset: {
+                'type': '',
+              },
+            };
+
+            this.db.update('items', query, update, {}, callback);
+          }
+          else {
+            var query = {
+              _id: item._id,
+            };
+
+            let update = {
+              $set: {
+                'kind': 'issue',
+              },
+            };
+
+            this.db.update('items', query, update, {}, callback);
+          }
+        }, callback);
+      });
+    });
+
     return tasks;
   }
+}
+
+function isMilestone(item: any) {
+  return (item.type && item.type._id.equals(DB.ObjectId('57a96acce84e8b000f80bde4')));
 }

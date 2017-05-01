@@ -53,6 +53,7 @@ app.use('/itemtypes', require('./routes/item_types'));
 app.use('/itempriorities', require('./routes/item_priorities'));
 app.use('/projects', require('./routes/projects'));
 app.use('/items', require('./routes/items'));
+app.use('/itemrelationships', require('./routes/item_relationships'));
 
 app.use((request: any, response: any, next: any) => {
   var error: any = new Error('Not Found');

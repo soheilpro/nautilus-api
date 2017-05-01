@@ -8,7 +8,6 @@ interface IItem extends IEntity {
   priority?: IEntity;
   tags?: string[];
   project?: IEntity;
-  parent?: IEntity;
   assignedTo?: IEntity;
   createdBy?: IEntity;
   modifiedBy?: IEntity;
@@ -26,7 +25,6 @@ interface IItemChange extends IChange {
   priority?: IEntity;
   tags?: string[];
   project?: IEntity;
-  parent?: IEntity;
   assignedTo?: IEntity;
   modifiedBy?: IEntity;
 }

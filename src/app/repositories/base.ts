@@ -166,7 +166,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
     return result;
   }
 
-  protected toObjectId(object: { id: string}): any {
+  protected toObjectId(object: { id: string }): any {
     if (!object)
       return undefined;
 
