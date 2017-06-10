@@ -8,9 +8,6 @@ var _ = require('underscore');
 var router = express.Router();
 
 router.post('/', (request: any, response: any, next: any) => {
-  if (!UserPermissionHelper.hasPermission(request.user.permissions, null, 'admin'))
-    return response.sendStatus(403);
-
   var itemRelationship: IItemRelationship = {};
 
   if (request.param('item1_id'))
