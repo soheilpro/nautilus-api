@@ -26,6 +26,7 @@
     "underscore": "~1.8.2"
   },
   "devDependencies": {
+    "@types/mongodb": "^2.2.4",
     "@types/node": "^7.0.29",
     "buno": "^1.0.0",
     "typescript": "^2.3.4"
