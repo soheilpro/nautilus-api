@@ -1,10 +1,8 @@
 import { UserRepository } from '../repositories/user';
-import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
+import { UserPermissionHelper } from '../helpers/user_permission';
 
 var express = require('express');
-var async = require('async');
 var bcrypt = require('bcryptjs');
-var _ = require('underscore');
 
 var router = express.Router();
 

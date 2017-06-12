@@ -5,9 +5,9 @@
   "scripts": {
     "build": "buno tsc",
     "clean": "rm -rf ./out",
-    "update": "buno 'tsc && node ./out/update.js'",
     "start": "node ./out/www.js",
-    "watch": "nodemon -e ts -x 'npm run build && npm run start'"
+    "update": "node ./out/update.js'",
+    "watch": "tsc --watch"
   },
   "dependencies": {
     "async": "^1.4.2",
@@ -23,11 +23,11 @@
     "node-uuid": "~1.4.2",
     "passport": "^0.2.2",
     "passport-http": "^0.2.2",
-    "typescript": "^2.0.6",
     "underscore": "~1.8.2"
   },
   "devDependencies": {
+    "@types/node": "^7.0.29",
     "buno": "^1.0.0",
-    "nodemon": "^1.11.0"
+    "typescript": "^2.3.4"
   }
 }

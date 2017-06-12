@@ -118,7 +118,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TFilter extends IF
         if (error)
           return callback(error);
 
-        var entity = this.documentToEntity(result);
+        this.documentToEntity(result);
         callback(null);
       });
     });

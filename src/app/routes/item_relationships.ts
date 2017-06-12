@@ -1,9 +1,6 @@
 import { ItemRelationshipRepository } from '../repositories/item_relationship';
-import { IUserPermission, UserPermissionHelper } from '../helpers/user_permission';
 
 var express = require('express');
-var async = require('async');
-var _ = require('underscore');
 
 var router = express.Router();
 

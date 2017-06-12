@@ -1,7 +1,6 @@
 import config from './config';
 
 var mongodb = require('mongodb');
-var _ = require('underscore');
 
 export interface IDocument {
   _id: any;

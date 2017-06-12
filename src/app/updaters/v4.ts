@@ -1,7 +1,4 @@
 import { BaseUpdater } from './base'
-import { IDocument } from '../db'
-
-var async = require('async');
 
 export class v4 extends BaseUpdater {
   getVersion(): number {

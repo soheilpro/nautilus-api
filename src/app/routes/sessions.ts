@@ -2,10 +2,8 @@ import { SessionRepository } from '../repositories/session';
 import { UserRepository } from '../repositories/user';
 
 var express = require('express');
-var async = require('async');
 var bcrypt = require('bcryptjs');
 var uuid = require('node-uuid');
-var _ = require('underscore');
 
 var router = express.Router();
 
