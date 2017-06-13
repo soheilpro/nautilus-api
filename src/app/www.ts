@@ -1,10 +1,22 @@
-#!/usr/bin/env node
+import * as restify from 'restify';
+import * as debugModule from 'debug';
+import UserRouter from './routers/user';
 
-import config from './config';
-import app from './app';
+const debug = debugModule('nautilus-web');
 
-var debug = require('debug')('nautilus-api');
+const server = restify.createServer();
+server.use(restify.authorizationParser());
+server.use(restify.queryParser());
+server.use(restify.bodyParser());
+server.use(restify.gzipResponse());
 
-var server = app.listen(config.get('NAUTILUS_API_PORT'), () => {
-  debug('Nautilus API listening on port ' + server.address().port);
+const routers = [
+  new UserRouter(),
+];
+
+for (const router of routers)
+  router.register(server);
+
+server.listen(8080, () => {
+  debug(`Nautilus API listening on port ${server.address().port}`);
 });
