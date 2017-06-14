@@ -68,7 +68,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
   }
 
   private cleanUp<T extends object>(object: T): T {
-    const result = _.clone(object) as { [key: string]: any };
+    const result = _.clone(object) as IObject;
 
     _.each(result, (value: any, key: string) => {
       if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
@@ -120,7 +120,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     return result;
   }
 
-  protected toObjectId(object: IEntity): any {
+  protected toObjectId(object: IEntity): ObjectId {
     if (!object)
       return undefined;
 

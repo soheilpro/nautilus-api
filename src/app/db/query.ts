@@ -5,6 +5,6 @@ export class Query implements IQuery {
     if (value === undefined)
       return;
 
-    (this as any)[key] = map ? map(value) : value;
+    (this as IObject)[key] = map ? map(value) : value;
   }
 }

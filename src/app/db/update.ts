@@ -1,10 +1,10 @@
 import { IUpdate } from './iupdate';
 
 export class Update implements IUpdate {
-  private $set: {[key: string]: any} = {};
-  private $unset: {[key: string]: any} = { __noop__: '' };
-  private $addToSet: {[key: string]: any} = {};
-  private $pull: {[key: string]: any} = {};
+  private $set: IObject = {};
+  private $unset: IObject = { __noop__: '' };
+  private $addToSet: IObject = {};
+  private $pull: IObject = {};
 
   setOrUnset(key: string, value: any, map?: (value: any) => any) {
     if (value === undefined)

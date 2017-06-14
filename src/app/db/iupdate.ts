@@ -1,3 +1,2 @@
-export interface IUpdate {
-  [key: string]: any;
+export interface IUpdate extends IObject {
 }

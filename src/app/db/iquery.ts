@@ -1,3 +1,2 @@
-export interface IQuery {
-  [key: string]: any;
+export interface IQuery extends IObject {
 }
