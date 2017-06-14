@@ -3,6 +3,7 @@ export * from './idb';
 export * from './idocument';
 export * from './imeta-document';
 export * from './iquery';
+export * from './iupdate';
 export * from './meta-db';
 export * from './object-id';
 export * from './query';

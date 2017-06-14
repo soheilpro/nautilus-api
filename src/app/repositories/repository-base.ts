@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import { IEntity, IFilter, IChange, IRepository } from '../framework';
-import { IDB, IDocument, IQuery, ObjectId } from '../db';
+import { IDB, IDocument, IQuery, Query, IUpdate, Update, ObjectId } from '../db';
 
 export default abstract class RepositoryBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TDocument extends IDocument> implements IRepository<TEntity, TFilter, TChange> {
   constructor(private db: IDB) {
@@ -17,10 +17,6 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
   }
 
   abstract collectionName(): string;
-  abstract filterToQuery(filter: TFilter): IQuery;
-  abstract changeToUpdate(change: TChange): object;
-  abstract documentToEntity(document: TDocument): TEntity;
-  abstract entityToDocument(entity: TEntity): TDocument;
 
   async getAll(filter: TFilter) {
     const query = this.filterToQuery(filter);
@@ -67,18 +63,30 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     this.cleanUp(null);
   }
 
-  private cleanUp<T extends object>(object: T): T {
-    const result = _.clone(object) as IObject;
+  protected filterToQuery(filter: IFilter) {
+    const query = new Query();
+    query.set('_id', filter, this.toObjectId);
 
-    _.each(result, (value: any, key: string) => {
-      if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
-        delete result[key];
-    });
-
-    return result as T;
+    return query as IQuery;
   }
 
-  protected toRef(entity: IEntity): IDocument {
+  protected changeToUpdate(change: IChange) {
+    return new Update() as IUpdate;
+  }
+
+  protected documentToEntity(document: TDocument) {
+    return {
+      id: document._id.toString(),
+    } as TEntity;
+  }
+
+  protected entityToDocument(entity: TEntity) {
+    return {
+      _id: new ObjectId(entity.id),
+    } as TDocument;
+  }
+
+  protected toRef(entity: IEntity) {
     if (!entity)
       return undefined;
 
@@ -87,7 +95,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     };
   }
 
-  protected toRefArray(entities: IEntity[]): IDocument[] {
+  protected toRefArray(entities: IEntity[]) {
     if (!entities)
       return undefined;
 
@@ -99,16 +107,16 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     return result;
   }
 
-  protected fromRef(document: IDocument): IEntity {
+  protected fromRef(document: IDocument) {
     if (!document)
       return undefined;
 
     return {
-      id: document._id.toString()
+      id: document._id.toString(),
     };
   }
 
-  protected fromRefArray(documents: IDocument[]): IEntity[] {
+  protected fromRefArray(documents: IDocument[]) {
     if (!documents)
       return undefined;
 
@@ -120,7 +128,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     return result;
   }
 
-  protected toObjectId(object: IEntity): ObjectId {
+  protected toObjectId(object: IEntity) {
     if (!object)
       return undefined;
 
@@ -128,5 +136,16 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
       return undefined;
 
     return new ObjectId(object.id);
+  }
+
+  private cleanUp<T extends object>(object: T): T {
+    const result = _.clone(object) as IObject;
+
+    _.each(result, (value: any, key: string) => {
+      if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
+        delete result[key];
+    });
+
+    return result as T;
   }
 }

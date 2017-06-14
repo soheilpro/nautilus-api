@@ -1,5 +1,5 @@
 import { IUser, IUserFilter, IUserChange, IUserRepository } from '../../framework/user';
-import { IDB, Query, Update, ObjectId } from '../../db';
+import { IDB } from '../../db';
 import { IUserDocument } from './iuser-document';
 import RepositoryBase from '../repository-base';
 
@@ -8,20 +8,19 @@ export default class UserRepository extends RepositoryBase<IUser, IUserFilter, I
     super(db);
   }
 
-  collectionName(): string {
+  collectionName() {
     return 'users';
   }
 
   filterToQuery(filter: IUserFilter) {
-    const query = new Query();
-    query.set('_id', filter, this.toObjectId);
+    const query = super.filterToQuery(filter);
     query.set('username', filter.username);
 
     return query;
   }
 
-  changeToUpdate(change: IUserChange) {
-    const update = new Update();
+  changeToUpdate(change: IUserChange, ) {
+    const update = super.changeToUpdate(change);
     update.setOrUnset('username', change.username);
     update.setOrUnset('passwordHash', change.passwordHash);
     update.setOrUnset('name', change.name);
@@ -32,7 +31,7 @@ export default class UserRepository extends RepositoryBase<IUser, IUserFilter, I
 
   documentToEntity(document: IUserDocument) {
     return {
-      id: document._id.toString(),
+      ...super.documentToEntity(document),
       username: document.username,
       passwordHash: document.passwordHash,
       name: document.name,
@@ -43,11 +42,11 @@ export default class UserRepository extends RepositoryBase<IUser, IUserFilter, I
 
   entityToDocument(entity: IUser) {
     return {
-      _id: new ObjectId(entity.id),
+      ...super.entityToDocument(entity),
       username: entity.username,
       passwordHash: entity.passwordHash,
       name: entity.name,
-      email: entity.email
+      email: entity.email,
     };
   }
 }

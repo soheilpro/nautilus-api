@@ -13,7 +13,7 @@ export class MetaDB extends DB {
         'version': await this.nextVersion(),
         'state': 0,
         'insertDateTime': new Date(),
-      }
+      },
     };
 
     super.insert(collectionName, metaDocument);
