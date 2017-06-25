@@ -14,18 +14,18 @@
     "@types/debug": "0.0.29",
     "@types/restify": "^4.3.4",
     "debug": "~2.0.0",
-    "mongodb": "^2.2.28",
+    "mongodb": "^2.2.29",
     "nconf": "^0.7.2",
     "restify": "^4.3.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "@types/mongodb": "^2.2.4",
-    "@types/node": "^7.0.29",
+    "@types/mongodb": "^2.2.6",
+    "@types/node": "^7.0.32",
     "@types/underscore": "^1.8.1",
     "buno": "^1.0.0",
     "nodemon": "^1.11.0",
     "tslint": "^5.4.3",
-    "typescript": "^2.3.4"
+    "typescript": "^2.4.0"
   }
 }
