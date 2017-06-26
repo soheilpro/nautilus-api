@@ -1,6 +1,6 @@
 import { IDocument } from './idocument';
 
-export interface IMetaDocument extends IDocument {
+export interface IManagedDocument extends IDocument {
   meta?: {
     version?: number,
     state?: number,

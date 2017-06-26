@@ -3,7 +3,7 @@ import { IDB } from '../../db';
 import { IUserDocument } from './iuser-document';
 import RepositoryBase from '../repository-base';
 
-export default class UserRepository extends RepositoryBase<IUser, IUserFilter, IUserChange, IUserDocument> implements IUserRepository {
+export class UserRepository extends RepositoryBase<IUser, IUserFilter, IUserChange, IUserDocument> implements IUserRepository {
   constructor(db: IDB) {
     super(db);
   }
@@ -14,7 +14,6 @@ export default class UserRepository extends RepositoryBase<IUser, IUserFilter, I
 
   filterToQuery(filter: IUserFilter) {
     const query = super.filterToQuery(filter);
-    query.set('username', filter.username);
 
     return query;
   }

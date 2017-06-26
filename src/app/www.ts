@@ -1,6 +1,9 @@
 import * as restify from 'restify';
 import * as debugModule from 'debug';
-import UserRouter from './routers/user';
+import { DB } from './db';
+import { UserManager } from './managers';
+import { UserRepository } from './repositories';
+import { UserRouter } from './routers';
 
 const debug = debugModule('nautilus-web');
 
@@ -10,8 +13,12 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(restify.gzipResponse());
 
+const db = new DB('mongodb://localhost/nautilus');
+const userRepository = new UserRepository(db);
+const userManager = new UserManager(userRepository);
+
 const routers = [
-  new UserRouter(),
+  new UserRouter(userManager),
 ];
 
 for (const router of routers)

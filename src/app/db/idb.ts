@@ -1,12 +1,19 @@
+import { IDocument } from './idocument';
+import { IManagedDocument } from './imanaged-document';
 import { IQuery } from './iquery';
 import { IUpdate } from './iupdate';
 
 export interface IDB {
-  select<TDocument>(collectionName: string, query: IQuery): Promise<TDocument[]>;
-  selectOne<TDocument>(collectionName: string, query: IQuery): Promise<TDocument>;
+  select<TDocument extends IDocument>(collectionName: string, query: IQuery): Promise<TDocument[]>;
   count(collectionName: string, query: IQuery): Promise<number>;
-  insert<TDocument>(collectionName: string, document: TDocument): Promise<void>;
-  update<TDocument>(collectionName: string, query: IQuery, update: IUpdate): Promise<TDocument>;
+  insert<TDocument extends IDocument>(collectionName: string, document: IDocument): Promise<TDocument>;
+  update<TDocument extends IDocument>(collectionName: string, query: IQuery, update: IUpdate): Promise<TDocument>;
   delete(collectionName: string, query: IQuery): Promise<void>;
-  dropCollection(collectionName: string): Promise<void>;
+  drop(collectionName: string): Promise<void>;
+
+  selectManaged<TDocument extends IManagedDocument>(collectionName: string, query: IQuery): Promise<TDocument[]>;
+  countManaged(collectionName: string, query: IQuery): Promise<number>;
+  insertManaged<TDocument extends IManagedDocument>(collectionName: string, document: IDocument): Promise<TDocument>;
+  updateManaged<TDocument extends IManagedDocument>(collectionName: string, query: IQuery, update: IUpdate): Promise<TDocument>;
+  deleteManaged(collectionName: string, query: IQuery): Promise<void>;
 }

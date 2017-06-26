@@ -1,8 +1,7 @@
-import * as _ from 'underscore';
 import { IEntity, IFilter, IChange, IRepository } from '../framework';
-import { IDB, IDocument, IQuery, Query, IUpdate, Update, ObjectId } from '../db';
+import { IDB, IDocument, IManagedDocument, IQuery, Query, IUpdate, Update, ObjectId } from '../db';
 
-export default abstract class RepositoryBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TDocument extends IDocument> implements IRepository<TEntity, TFilter, TChange> {
+export default abstract class RepositoryBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TDocument extends IManagedDocument> implements IRepository<TEntity, TFilter, TChange> {
   constructor(private db: IDB) {
     this.collectionName = this.collectionName.bind(this);
     this.filterToQuery = this.filterToQuery.bind(this);
@@ -20,28 +19,32 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
 
   async getAll(filter: TFilter) {
     const query = this.filterToQuery(filter);
-    query['meta.state'] = { $lte: 1 };
 
-    const documents = await this.db.select<TDocument>(this.collectionName(), this.cleanUp(query));
+    const documents = await this.db.selectManaged<TDocument>(this.collectionName(), query);
 
     return documents.map(this.documentToEntity);
   }
 
   async get(filter: TFilter) {
     const query = this.filterToQuery(filter);
-    query['meta.state'] = { $lte: 1 };
 
-    const document = await this.db.selectOne<TDocument>(this.collectionName(), this.cleanUp(query));
+    const documents = await this.db.selectManaged<TDocument>(this.collectionName(), query);
 
-    return this.documentToEntity(document);
+    if (documents.length > 1)
+      throw new Error('The filter returned more than one result.');
+
+    if (documents.length === 0)
+      return null;
+
+    return this.documentToEntity(documents[0]);
   }
 
   async insert(entity: TEntity) {
     const document = this.entityToDocument(entity);
 
-    await this.db.insert<TDocument>(this.collectionName(), this.cleanUp(document));
+    const insertedDocument = await this.db.insertManaged<TDocument>(this.collectionName(), document);
 
-    return this.documentToEntity(document);
+    return this.documentToEntity(insertedDocument);
   }
 
   async update(id: string, change: TChange) {
@@ -49,7 +52,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     const query = this.filterToQuery(filter);
     const update = this.changeToUpdate(change);
 
-    const document = await this.db.update<TDocument>(this.collectionName(), this.cleanUp(query), this.cleanUp(update));
+    const document = await this.db.updateManaged<TDocument>(this.collectionName(), query, update);
 
     return this.documentToEntity(document);
   }
@@ -58,14 +61,12 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     const filter = { id: id } as TFilter;
     const query = this.filterToQuery(filter);
 
-    await this.db.delete(this.collectionName(), this.cleanUp(query));
-
-    this.cleanUp(null);
+    await this.db.deleteManaged(this.collectionName(), query);
   }
 
   protected filterToQuery(filter: IFilter) {
     const query = new Query();
-    query.set('_id', filter, this.toObjectId);
+    query.set('_id', filter.id, this.toObjectId);
 
     return query as IQuery;
   }
@@ -77,6 +78,13 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
   protected documentToEntity(document: TDocument) {
     return {
       id: document._id.toString(),
+      meta: {
+        version: document.meta.version,
+        state: document.meta.state,
+        insertDateTime: document.meta.insertDateTime,
+        updateDateTime: document.meta.updateDateTime,
+        deleteDateTime: document.meta.deleteDateTime,
+      },
     } as TEntity;
   }
 
@@ -128,24 +136,10 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     return result;
   }
 
-  protected toObjectId(object: IEntity) {
-    if (!object)
+  protected toObjectId(id: string) {
+    if (!id)
       return undefined;
 
-    if (!object.id)
-      return undefined;
-
-    return new ObjectId(object.id);
-  }
-
-  private cleanUp<T extends object>(object: T): T {
-    const result = _.clone(object) as IObject;
-
-    _.each(result, (value: any, key: string) => {
-      if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
-        delete result[key];
-    });
-
-    return result as T;
+    return new ObjectId(id);
   }
 }

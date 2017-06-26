@@ -1,6 +1,6 @@
-import { IMetaDocument } from '../../db';
+import { IManagedDocument } from '../../db';
 
-export interface IUserDocument extends IMetaDocument {
+export interface IUserDocument extends IManagedDocument {
   username: string;
   passwordHash: string;
   name: string;

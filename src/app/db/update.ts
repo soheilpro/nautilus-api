@@ -6,6 +6,11 @@ export class Update implements IUpdate {
   private $addToSet: IObject = {};
   private $pull: IObject = {};
 
+  constructor(update?: IUpdate) {
+    if (update)
+      Object.assign(this, update);
+  }
+
   setOrUnset(key: string, value: any, map?: (value: any) => any) {
     if (value === undefined)
       return;
