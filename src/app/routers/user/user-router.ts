@@ -4,7 +4,7 @@ import { IRequest } from '../../irequest';
 import { IUserModel } from './iuser-model';
 
 export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUserModel> {
-  constructor(userManager: IUserManager) {
+  constructor(private userManager: IUserManager) {
     super(userManager);
   }
 
@@ -22,6 +22,7 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
     return {
       ...super.entityFromRequest(request),
       username: request.params['username'],
+      passwordHash: this.userManager.hashPassword(request.params['password']),
       name: request.params['name'],
       email: request.params['email'],
     };
@@ -30,6 +31,7 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
   protected changeFromRequest(request: IRequest) {
     return {
       username: request.params['username'],
+      passwordHash: this.userManager.hashPassword(request.params['password']),
       name: request.params['name'],
       email: request.params['email'],
     };

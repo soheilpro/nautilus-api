@@ -82,7 +82,8 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
 
   protected async patchEntity(request: IRequest, response: IResponse) {
     const entityId = request.params['id'];
-    const entity = await this.manager.get(entityId);
+    const filter = { id: entityId } as TFilter;
+    const entity = await this.manager.get(filter);
 
     if (!entity)
       return response.send(new restify.NotFoundError());
@@ -99,7 +100,8 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
 
   protected async deleteEntity(request: IRequest, response: IResponse) {
     const entityId = request.params['id'];
-    const entity = await this.manager.get(entityId);
+    const filter = { id: entityId } as TFilter;
+    const entity = await this.manager.get(filter);
 
     if (!entity)
       return response.send(new restify.NotFoundError());
