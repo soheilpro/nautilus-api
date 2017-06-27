@@ -14,6 +14,7 @@ export class UserRepository extends RepositoryBase<IUser, IUserFilter, IUserChan
 
   filterToQuery(filter: IUserFilter) {
     const query = super.filterToQuery(filter);
+    query.set('username', filter.username);
 
     return query;
   }

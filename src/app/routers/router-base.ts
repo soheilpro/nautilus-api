@@ -1,6 +1,9 @@
 import * as restify from 'restify';
 import { IRouter } from '../irouter';
 import { IEntity, IFilter, IChange, IManager } from '../framework';
+import { IRequest } from '../irequest';
+import { IResponse } from '../iresponse';
+import { IRoute } from './iroute';
 import { IEntityModel } from './ientity-model';
 
 export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TEntityModel extends IEntityModel> implements IRouter {
@@ -12,9 +15,35 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     this.deleteEntity = this.deleteEntity.bind(this);
   }
 
-  abstract register(server: restify.Server): void;
+  register(server: restify.Server) {
+    for (const route of this.getRoutes())
+      (server as any)[route.method](route.url, this.authorize(route.permissions), route.handler);
+  }
 
-  protected async getEntities(request: restify.Request, response: restify.Response) {
+  abstract getRoutes(): IRoute[];
+
+  protected route(method: string, url: string, handler: restify.RequestHandler, permissions?: string[]) {
+    return {
+      method: method,
+      url: url,
+      handler: handler,
+      permissions: permissions,
+    };
+  }
+
+  private authorize(permissions?: string[]) {
+    return (request: IRequest, response: IResponse, next: restify.Next) => {
+      if (!request.user)
+        return response.send(new restify.UnauthorizedError());
+
+      if (permissions && permissions.length !== 0 && !permissions.every(permission => request.permissions.indexOf(permission) !== -1))
+        return response.send(new restify.ForbiddenError());
+
+      next();
+    };
+  }
+
+  protected async getEntities(request: IRequest, response: IResponse) {
     const filter = this.filterFromRequest(request);
     const entities = await this.manager.getAll(filter);
 
@@ -25,13 +54,13 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     });
   }
 
-  protected async getEntity(request: restify.Request, response: restify.Response) {
+  protected async getEntity(request: IRequest, response: IResponse) {
     const entityId = request.params['id'];
     const filter = { id: entityId } as TFilter;
     const entity = await this.manager.get(filter);
 
     if (!entity)
-      return response.send(404);
+      return response.send(new restify.NotFoundError());
 
     const data = this.entityToModel(entity);
 
@@ -40,7 +69,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     });
   }
 
-  protected async postEntity(request: restify.Request, response: restify.Response) {
+  protected async postEntity(request: IRequest, response: IResponse) {
     const entity = this.entityFromRequest(request);
 
     const insertedEntity = await this.manager.insert(entity);
@@ -51,12 +80,12 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     });
   }
 
-  protected async patchEntity(request: restify.Request, response: restify.Response) {
+  protected async patchEntity(request: IRequest, response: IResponse) {
     const entityId = request.params['id'];
     const entity = await this.manager.get(entityId);
 
     if (!entity)
-      return response.send(404);
+      return response.send(new restify.NotFoundError());
 
     const change = this.changeFromRequest(request);
 
@@ -68,27 +97,27 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     });
   }
 
-  protected async deleteEntity(request: restify.Request, response: restify.Response) {
+  protected async deleteEntity(request: IRequest, response: IResponse) {
     const entityId = request.params['id'];
     const entity = await this.manager.get(entityId);
 
     if (!entity)
-      return response.send(404);
+      return response.send(new restify.NotFoundError());
 
     await this.manager.delete(entity.id);
 
     response.send(200);
   }
 
-  protected filterFromRequest(request: restify.Request) {
+  protected filterFromRequest(request: IRequest) {
     return {} as TFilter;
   }
 
-  protected entityFromRequest(request: restify.Request) {
+  protected entityFromRequest(request: IRequest) {
     return {} as TEntity;
   }
 
-  protected changeFromRequest(request: restify.Request) {
+  protected changeFromRequest(request: IRequest) {
     return {} as TChange;
   }
 
