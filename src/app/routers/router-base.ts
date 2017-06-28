@@ -5,6 +5,8 @@ import { IRequest } from '../irequest';
 import { IResponse } from '../iresponse';
 import { IRoute } from './iroute';
 import { IEntityModel } from './ientity-model';
+import { IParams } from './iparams';
+import Params from './params';
 
 export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TEntityModel extends IEntityModel> implements IRouter {
   constructor(private manager: IManager<TEntity, TFilter, TChange>) {
@@ -44,7 +46,8 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async getEntities(request: IRequest, response: IResponse) {
-    const filter = this.filterFromRequest(request);
+    const params = new Params(request, response);
+    const filter = await this.filterFromParams(params);
     const entities = await this.manager.getAll(filter);
 
     const data = entities.map(entity => this.entityToModel(entity));
@@ -55,9 +58,8 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async getEntity(request: IRequest, response: IResponse) {
-    const entityId = request.params['id'];
-    const filter = { id: entityId } as TFilter;
-    const entity = await this.manager.get(filter);
+    const params = new Params(request, response);
+    const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
       return response.send(new restify.NotFoundError());
@@ -70,7 +72,8 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async postEntity(request: IRequest, response: IResponse) {
-    const entity = this.entityFromRequest(request);
+    const params = new Params(request, response);
+    const entity = await this.entityFromParams(params);
 
     const insertedEntity = await this.manager.insert(entity);
     const data = this.entityToModel(insertedEntity);
@@ -81,14 +84,13 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async patchEntity(request: IRequest, response: IResponse) {
-    const entityId = request.params['id'];
-    const filter = { id: entityId } as TFilter;
-    const entity = await this.manager.get(filter);
+    const params = new Params(request, response);
+    const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
       return response.send(new restify.NotFoundError());
 
-    const change = this.changeFromRequest(request);
+    const change = await this.changeFromParams(params);
 
     const updatedEntity = await this.manager.update(entity.id, change);
     const data = this.entityToModel(updatedEntity);
@@ -99,9 +101,8 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async deleteEntity(request: IRequest, response: IResponse) {
-    const entityId = request.params['id'];
-    const filter = { id: entityId } as TFilter;
-    const entity = await this.manager.get(filter);
+    const params = new Params(request, response);
+    const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
       return response.send(new restify.NotFoundError());
@@ -111,16 +112,16 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     response.send(200);
   }
 
-  protected filterFromRequest(request: IRequest) {
-    return {} as TFilter;
+  protected filterFromParams(params: IParams) {
+    return Promise.resolve({} as TFilter);
   }
 
-  protected entityFromRequest(request: IRequest) {
-    return {} as TEntity;
+  protected entityFromParams(params: IParams) {
+    return Promise.resolve({} as TEntity);
   }
 
-  protected changeFromRequest(request: IRequest) {
-    return {} as TChange;
+  protected changeFromParams(params: IParams) {
+    return Promise.resolve({} as TChange);
   }
 
   protected entityToModel(entity: TEntity) {
@@ -128,12 +129,6 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
       return undefined;
 
     return this.renderEntity(entity, true);
-  }
-
-  protected readEntity(id: string) {
-    return {
-      id: id,
-    };
   }
 
   protected renderEntity(entity: TEntity, includeMeta?: boolean) {

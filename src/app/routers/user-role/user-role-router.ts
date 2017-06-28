@@ -1,6 +1,7 @@
 import { RouterBase } from '../router-base';
 import { IUserRole, IUserRoleManager, IUserRoleFilter, IUserRoleChange } from '../../framework/user-role';
-import { IRequest } from '../../irequest';
+import { IParams } from '../iparams';
+import { NonEmptyRegEx } from '../params';
 import { IUserRoleModel } from './iuser-role-model';
 
 export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUserRoleChange, IUserRoleModel> {
@@ -18,21 +19,22 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
     ];
   }
 
-  entityFromRequest(request: IRequest) {
+  async entityFromParams(params: IParams) {
     return {
-      ...super.entityFromRequest(request),
-      user: this.readEntity(request.params['user_id']),
-      project: this.readEntity(request.params['project_id']),
-      name: request.params['name'],
+      ...await super.entityFromParams(params),
+      user: await params.readEntity('user_id', null),
+      project: await params.readEntity('project_id', null),
+      name: params.readString('name', { pattern: NonEmptyRegEx }),
     };
   }
 
-  protected changeFromRequest(request: IRequest) {
+  async changeFromParams(params: IParams) {
     return {
-      username: request.params['username'],
-      user: this.readEntity(request.params['user_id']),
-      project: this.readEntity(request.params['project_id']),
-      name: request.params['name'],
+      ...await super.changeFromParams(params),
+      username: params.readString('username'),
+      user: await params.readEntity('user_id', null),
+      project: await params.readEntity('project_id', null),
+      name: params.readString('name', { pattern: NonEmptyRegEx }),
     };
   }
 

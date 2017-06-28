@@ -1,7 +1,12 @@
 import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
-import { IRequest } from '../../irequest';
+import { IParams } from '../iparams';
+import { NonEmptyRegEx } from '../params';
 import { IUserModel } from './iuser-model';
+
+const UsernameRegEx = /[a-zA-Z][a-zA-Z0-9.]{1,}/;
+const PasswordRegEx = /\w{8,}/;
+const EMailRegEx = /\w+@\w+/;
 
 export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUserModel> {
   constructor(private userManager: IUserManager) {
@@ -18,22 +23,25 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
     ];
   }
 
-  entityFromRequest(request: IRequest) {
+  async entityFromParams(params: IParams) {
     return {
-      ...super.entityFromRequest(request),
-      username: request.params['username'],
-      passwordHash: this.userManager.hashPassword(request.params['password']),
-      name: request.params['name'],
-      email: request.params['email'],
+      ...await super.entityFromParams(params),
+      username: params.readString('username', { required: true, pattern: UsernameRegEx }),
+      passwordHash: this.userManager.hashPassword(params.readString('password', { required: true, pattern: PasswordRegEx })),
+      name: params.readString('name', { required: true, pattern: NonEmptyRegEx }),
+      email: params.readString('email', { required: true, pattern: EMailRegEx }),
     };
   }
 
-  protected changeFromRequest(request: IRequest) {
+  async changeFromParams(params: IParams) {
+    const password = params.readString('password', { pattern: PasswordRegEx });
+
     return {
-      username: request.params['username'],
-      passwordHash: this.userManager.hashPassword(request.params['password']),
-      name: request.params['name'],
-      email: request.params['email'],
+      ...await super.changeFromParams(params),
+      username: params.readString('username', { pattern: UsernameRegEx }),
+      passwordHash: password ? this.userManager.hashPassword(password) : undefined,
+      name: params.readString('name', { pattern: NonEmptyRegEx }),
+      email: params.readString('email', { pattern: EMailRegEx }),
     };
   }
 
