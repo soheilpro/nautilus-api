@@ -1,15 +1,10 @@
 import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
 import { IParams } from '../iparams';
-import { NonEmptyRegEx } from '../params';
 import { IUserModel } from './iuser-model';
 
-const UsernameRegEx = /[a-zA-Z][a-zA-Z0-9.]{1,}/;
-const PasswordRegEx = /\w{8,}/;
-const EMailRegEx = /\w+@\w+/;
-
 export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUserModel> {
-  constructor(private userManager: IUserManager) {
+  constructor(userManager: IUserManager) {
     super(userManager);
   }
 
@@ -26,22 +21,20 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
   async entityFromParams(params: IParams) {
     return {
       ...await super.entityFromParams(params),
-      username: params.readString('username', { required: true, pattern: UsernameRegEx }),
-      passwordHash: this.userManager.hashPassword(params.readString('password', { required: true, pattern: PasswordRegEx })),
-      name: params.readString('name', { required: true, pattern: NonEmptyRegEx }),
-      email: params.readString('email', { required: true, pattern: EMailRegEx }),
+      username: params.readString('username'),
+      password: params.readString('password'),
+      name: params.readString('name'),
+      email: params.readString('email'),
     };
   }
 
   async changeFromParams(params: IParams) {
-    const password = params.readString('password', { pattern: PasswordRegEx });
-
     return {
       ...await super.changeFromParams(params),
-      username: params.readString('username', { pattern: UsernameRegEx }),
-      passwordHash: password ? this.userManager.hashPassword(password) : undefined,
-      name: params.readString('name', { pattern: NonEmptyRegEx }),
-      email: params.readString('email', { pattern: EMailRegEx }),
+      username: params.readString('username'),
+      password: params.readString('password'),
+      name: params.readString('name'),
+      email: params.readString('email'),
     };
   }
 

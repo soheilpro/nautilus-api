@@ -12,13 +12,21 @@ export class UserRoleRepository extends RepositoryBase<IUserRole, IUserRoleFilte
     return 'user_roles';
   }
 
+  changeToUpdate(change: IUserRoleDocument) {
+    const update = super.changeToUpdate(change);
+    update.setOrUnset('user', change.user, this.toRef);
+    update.setOrUnset('project', change.project, this.toRef);
+    update.setOrUnset('name', change.name);
+
+    return update;
+  }
+
   documentToEntity(document: IUserRoleDocument) {
     return {
       ...super.documentToEntity(document),
       user: this.fromRef(document.user),
       project: this.fromRef(document.project),
       name: document.name,
-      meta: document.meta,
     };
   }
 

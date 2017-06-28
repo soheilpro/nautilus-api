@@ -1,4 +1,4 @@
-import { IEntity, IFilter, IChange, IManager, IRepository } from '../framework';
+import { IEntity, IFilter, IChange, IManager, IValidationError, IRepository } from '../framework';
 
 export default abstract class ManagerBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange> implements IManager<TEntity, TFilter, TChange> {
   constructor(private repository: IRepository<TEntity, TFilter, TChange>) {
@@ -22,5 +22,13 @@ export default abstract class ManagerBase<TEntity extends IEntity, TFilter exten
 
   delete(id: string) {
     return this.repository.delete(id);
+  }
+
+  validateEntity(entity: TEntity) {
+    return null as IValidationError;
+  }
+
+  validateChange(change: TChange) {
+    return null as IValidationError;
   }
 }

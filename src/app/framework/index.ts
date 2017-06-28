@@ -4,3 +4,4 @@ export * from './ientity';
 export * from './ifilter';
 export * from './imanager';
 export * from './irepository';
+export * from './ivalidation-error';

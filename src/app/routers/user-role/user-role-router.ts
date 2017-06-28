@@ -1,7 +1,6 @@
 import { RouterBase } from '../router-base';
 import { IUserRole, IUserRoleManager, IUserRoleFilter, IUserRoleChange } from '../../framework/user-role';
 import { IParams } from '../iparams';
-import { NonEmptyRegEx } from '../params';
 import { IUserRoleModel } from './iuser-role-model';
 
 export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUserRoleChange, IUserRoleModel> {
@@ -24,17 +23,16 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
       ...await super.entityFromParams(params),
       user: await params.readEntity('user_id', null),
       project: await params.readEntity('project_id', null),
-      name: params.readString('name', { pattern: NonEmptyRegEx }),
+      name: params.readString('name'),
     };
   }
 
   async changeFromParams(params: IParams) {
     return {
       ...await super.changeFromParams(params),
-      username: params.readString('username'),
       user: await params.readEntity('user_id', null),
       project: await params.readEntity('project_id', null),
-      name: params.readString('name', { pattern: NonEmptyRegEx }),
+      name: params.readString('name'),
     };
   }
 

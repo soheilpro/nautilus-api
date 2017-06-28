@@ -46,7 +46,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async getEntities(request: IRequest, response: IResponse) {
-    const params = new Params(request, response);
+    const params = new Params(request);
     const filter = await this.filterFromParams(params);
     const entities = await this.manager.getAll(filter);
 
@@ -58,7 +58,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async getEntity(request: IRequest, response: IResponse) {
-    const params = new Params(request, response);
+    const params = new Params(request);
     const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
@@ -72,8 +72,13 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async postEntity(request: IRequest, response: IResponse) {
-    const params = new Params(request, response);
+    const params = new Params(request);
     const entity = await this.entityFromParams(params);
+
+    const validationError = this.manager.validateEntity(entity);
+
+    if (validationError)
+      return response.send(new restify.UnprocessableEntityError(validationError.message));
 
     const insertedEntity = await this.manager.insert(entity);
     const data = this.entityToModel(insertedEntity);
@@ -84,13 +89,18 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async patchEntity(request: IRequest, response: IResponse) {
-    const params = new Params(request, response);
+    const params = new Params(request);
     const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
       return response.send(new restify.NotFoundError());
 
     const change = await this.changeFromParams(params);
+
+    const validationError = this.manager.validateChange(change);
+
+    if (validationError)
+      return response.send(new restify.UnprocessableEntityError(validationError.message));
 
     const updatedEntity = await this.manager.update(entity.id, change);
     const data = this.entityToModel(updatedEntity);
@@ -101,7 +111,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected async deleteEntity(request: IRequest, response: IResponse) {
-    const params = new Params(request, response);
+    const params = new Params(request);
     const entity = await params.readEntity('id', this.manager);
 
     if (!entity)

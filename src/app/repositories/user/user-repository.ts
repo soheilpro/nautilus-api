@@ -19,7 +19,7 @@ export class UserRepository extends RepositoryBase<IUser, IUserFilter, IUserChan
     return query;
   }
 
-  changeToUpdate(change: IUserChange, ) {
+  changeToUpdate(change: IUserChange) {
     const update = super.changeToUpdate(change);
     update.setOrUnset('username', change.username);
     update.setOrUnset('passwordHash', change.passwordHash);
