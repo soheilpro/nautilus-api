@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcryptjs';
-
 import { IUser, IUserFilter, IUserChange, IUserManager, IUserRepository } from '../../framework/user';
 import ManagerBase from '../manager-base';
 

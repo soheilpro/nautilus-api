@@ -37,7 +37,10 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
     };
   }
 
-  entityToModel(entity: IUser) {
+  entityToModel(entity: IUser): IUserModel {
+    if (!entity)
+      return undefined;
+
     return {
       ...super.entityToModel(entity),
       username: entity.username,

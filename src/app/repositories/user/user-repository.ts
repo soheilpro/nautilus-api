@@ -36,7 +36,6 @@ export class UserRepository extends RepositoryBase<IUser, IUserFilter, IUserChan
       passwordHash: document.passwordHash,
       name: document.name,
       email: document.email,
-      meta: document.meta,
     };
   }
 

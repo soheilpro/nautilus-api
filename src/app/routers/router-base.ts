@@ -124,19 +124,40 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   protected entityToModel(entity: TEntity) {
-    return {
-      id: entity.id,
-      meta: {
-        version: entity.meta.version,
-        state: entity.meta.state,
-        insertDateTime: this.dateTimeToTimestamp(entity.meta.insertDateTime),
-        updateDateTime: this.dateTimeToTimestamp(entity.meta.updateDateTime),
-        deleteDateTime: this.dateTimeToTimestamp(entity.meta.deleteDateTime),
-      },
-    } as TEntityModel;
+    if (!entity)
+      return undefined;
+
+    return this.renderEntity(entity, true);
   }
 
-  protected dateTimeToTimestamp(date: Date) {
+  protected readEntity(id: string) {
+    return {
+      id: id,
+    };
+  }
+
+  protected renderEntity(entity: TEntity, includeMeta?: boolean) {
+    if (!entity)
+      return undefined;
+
+    const result = {
+      id: entity.id,
+    } as TEntityModel;
+
+    if (includeMeta) {
+      result.meta = {
+        version: entity.meta.version,
+        state: entity.meta.state,
+        insertDateTime: this.renderDateTime(entity.meta.insertDateTime),
+        updateDateTime: this.renderDateTime(entity.meta.updateDateTime),
+        deleteDateTime: this.renderDateTime(entity.meta.deleteDateTime),
+      };
+    }
+
+    return result;
+  }
+
+  protected renderDateTime(date: Date) {
     if (!date)
       return undefined;
 
