@@ -1,24 +1,27 @@
 import * as restify from 'restify';
 import * as debugModule from 'debug';
 import { DB } from './db';
-import { UserManager, UserRoleManager } from './managers';
-import { UserRepository, UserRoleRepository } from './repositories';
+import { UserManager, ProjectManager, UserRoleManager } from './managers';
+import { UserRepository, ProjectRepository, UserRoleRepository } from './repositories';
 import { authenticator } from './plugins';
-import { UserRouter, UserRoleRouter } from './routers';
+import { UserRouter, ProjectRouter, UserRoleRouter } from './routers';
 
 const debug = debugModule('nautilus-web');
 
 const db = new DB('mongodb://localhost/nautilus');
 
 const userRepository = new UserRepository(db);
+const projectRepository = new ProjectRepository(db);
 const userRoleRepository = new UserRoleRepository(db);
 
 const userManager = new UserManager(userRepository);
+const projectManager = new ProjectManager(projectRepository);
 const userRoleManager = new UserRoleManager(userRoleRepository);
 
 const routers = [
   new UserRouter(userManager),
   new UserRoleRouter(userRoleManager),
+  new ProjectRouter(projectManager),
 ];
 
 const server = restify.createServer();

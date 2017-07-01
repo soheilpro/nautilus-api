@@ -8,13 +8,14 @@
     "lint": "tslint \"app/**/*.ts\"",
     "start": "node ./out/www.js",
     "update": "node ./out/update.js'",
+    "watch:app": "tsc --watch",
     "watch": "nodemon ./out/www.js"
   },
   "dependencies": {
     "@types/debug": "0.0.29",
     "@types/restify": "^4.3.4",
     "bcryptjs": "^2.4.3",
-    "debug": "~2.0.0",
+    "debug": "^2.0.0",
     "mongodb": "^2.2.29",
     "nconf": "^0.7.2",
     "restify": "^4.3.0",

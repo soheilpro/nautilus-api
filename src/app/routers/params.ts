@@ -7,7 +7,7 @@ export default class Params implements IParams {
   }
 
   readString(name: string) {
-    const value = this.request.params[name];
+    const value = this.request.params[name] as string;
 
     if (value === undefined)
       return undefined;
@@ -15,8 +15,22 @@ export default class Params implements IParams {
     return value;
   }
 
+  readStringArray(name: string) {
+    const value = this.request.params[name] as string;
+
+    if (value === undefined)
+      return undefined;
+
+    const items = value.split(' ').filter(item => !!item);
+
+    if (items.length === 0)
+      return null;
+
+    return items;
+  }
+
   async readEntity<TEntity extends IEntity>(name: string, manager: IManager<TEntity, any, any>) {
-    const id = this.request.params[name];
+    const id = this.request.params[name] as string;
 
     if (id === undefined)
       return undefined;
