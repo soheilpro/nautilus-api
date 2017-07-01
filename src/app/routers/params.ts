@@ -35,6 +35,9 @@ export default class Params implements IParams {
     if (id === undefined)
       return undefined;
 
+    if (!id)
+      return null;
+
     const filter = { id: id };
     const entity = await manager.get(filter);
 

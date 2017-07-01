@@ -1,10 +1,12 @@
 import { RouterBase } from '../router-base';
 import { IUserRole, IUserRoleManager, IUserRoleFilter, IUserRoleChange } from '../../framework/user-role';
+import { IUserManager } from '../../framework/user';
+import { IProjectManager } from '../../framework/project';
 import { IParams } from '../iparams';
 import { IUserRoleModel } from './iuser-role-model';
 
 export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUserRoleChange, IUserRoleModel> {
-  constructor(userRoleManager: IUserRoleManager) {
+  constructor(userRoleManager: IUserRoleManager, private userManager: IUserManager, private projectManager: IProjectManager) {
     super(userRoleManager);
   }
 
@@ -21,8 +23,8 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
   async entityFromParams(params: IParams) {
     return {
       ...await super.entityFromParams(params),
-      user: await params.readEntity('user_id', null),
-      project: await params.readEntity('project_id', null),
+      user: await params.readEntity('user_id', this.userManager),
+      project: await params.readEntity('project_id', this.projectManager),
       name: params.readString('name'),
     };
   }
@@ -30,8 +32,8 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
   async changeFromParams(params: IParams) {
     return {
       ...await super.changeFromParams(params),
-      user: await params.readEntity('user_id', null),
-      project: await params.readEntity('project_id', null),
+      user: await params.readEntity('user_id', this.userManager),
+      project: await params.readEntity('project_id', this.projectManager),
       name: params.readString('name'),
     };
   }

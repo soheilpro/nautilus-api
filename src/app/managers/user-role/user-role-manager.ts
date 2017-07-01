@@ -9,8 +9,17 @@ export class UserRoleManager extends ManagerBase<IUserRole, IUserRoleFilter, IUs
   }
 
   validateEntity(entity: IUserRole) {
-    // TODO: entity.user
-    // TODO: entity.project
+    if (entity.user === undefined)
+      return { message: 'Missing user.' };
+
+    if (entity.user === null)
+      return { message: 'Invalid user.' };
+
+    if (entity.project === undefined)
+      return { message: 'Missing project.' };
+
+    if (entity.project === null)
+      return { message: 'Invalid project.' };
 
     if (entity.name === undefined)
       return { message: 'Missing name.' };
@@ -22,8 +31,15 @@ export class UserRoleManager extends ManagerBase<IUserRole, IUserRoleFilter, IUs
   }
 
   validateChange(change: IUserRoleChange) {
-    // TODO: entity.user
-    // TODO: entity.project
+    if (change.user !== undefined) {
+      if (change.user === null)
+        return { message: 'Invalid user.' };
+    }
+
+    if (change.project !== undefined) {
+      if (change.project === null)
+        return { message: 'Invalid project.' };
+    }
 
     if (change.name !== undefined) {
       if (!NameRegEx.test(change.name))

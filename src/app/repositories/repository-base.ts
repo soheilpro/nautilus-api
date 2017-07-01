@@ -140,6 +140,9 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     if (!id)
       return undefined;
 
+    if (!ObjectId.isValid(id))
+      return new ObjectId(0);
+
     return new ObjectId(id);
   }
 }

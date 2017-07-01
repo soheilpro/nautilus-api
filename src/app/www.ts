@@ -20,7 +20,7 @@ const userRoleManager = new UserRoleManager(userRoleRepository);
 
 const routers = [
   new UserRouter(userManager),
-  new UserRoleRouter(userRoleManager),
+  new UserRoleRouter(userRoleManager, userManager, projectManager),
   new ProjectRouter(projectManager),
 ];
 
