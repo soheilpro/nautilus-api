@@ -90,7 +90,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
 
   protected entityToDocument(entity: TEntity) {
     return {
-      _id: new ObjectId(entity.id),
+      _id: this.toObjectId(entity.id),
     } as TDocument;
   }
 
@@ -99,7 +99,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
       return undefined;
 
     return {
-      _id: new ObjectId(entity.id),
+      _id: this.toObjectId(entity.id),
     };
   }
 
