@@ -10,11 +10,11 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
 
   getRoutes() {
     return [
-      this.route('get',   '/users',     this.getEntities,  ['users.read']),
-      this.route('get',   '/users/:id', this.getEntity,    ['users.read']),
-      this.route('post',  '/users',     this.postEntity,   ['users.write']),
-      this.route('patch', '/users/:id', this.patchEntity,  ['users.write']),
-      this.route('del',   '/users/:id', this.deleteEntity, ['users.write']),
+      this.protectedRoute('get',   '/users',     this.getEntities,  ['users.read']),
+      this.protectedRoute('get',   '/users/:id', this.getEntity,    ['users.read']),
+      this.protectedRoute('post',  '/users',     this.postEntity,   ['users.write']),
+      this.protectedRoute('patch', '/users/:id', this.patchEntity,  ['users.write']),
+      this.protectedRoute('del',   '/users/:id', this.deleteEntity, ['users.write']),
     ];
   }
 

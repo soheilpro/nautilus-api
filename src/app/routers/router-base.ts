@@ -19,27 +19,38 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
 
   register(server: restify.Server) {
     for (const route of this.getRoutes())
-      (server as any)[route.method](route.url, this.authorize(route.permissions), route.handler);
+      (server as any)[route.method](route.url, this.authorize(route.isProtected, route.permissions), route.handler);
   }
 
   abstract getRoutes(): IRoute[];
 
-  protected route(method: string, url: string, handler: restify.RequestHandler, permissions?: string[]) {
+  protected route(method: string, url: string, handler: restify.RequestHandler) {
     return {
       method: method,
       url: url,
       handler: handler,
+    };
+  }
+
+  protected protectedRoute(method: string, url: string, handler: restify.RequestHandler, permissions?: string[]) {
+    return {
+      method: method,
+      url: url,
+      handler: handler,
+      isProtected: true,
       permissions: permissions,
     };
   }
 
-  private authorize(permissions?: string[]) {
+  private authorize(isProtected: boolean, permissions?: string[]) {
     return (request: IRequest, response: IResponse, next: restify.Next) => {
-      if (!request.user)
-        return response.send(new restify.UnauthorizedError());
+      if (isProtected) {
+        if (!request.user)
+          return response.send(new restify.UnauthorizedError());
 
-      if (permissions && permissions.length !== 0 && !permissions.every(permission => request.permissions.indexOf(permission) !== -1))
-        return response.send(new restify.ForbiddenError());
+        if (permissions && permissions.length !== 0 && !permissions.every(permission => request.permissions.indexOf(permission) !== -1))
+          return response.send(new restify.ForbiddenError());
+      }
 
       next();
     };
@@ -83,6 +94,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     const insertedEntity = await this.manager.insert(entity);
     const data = this.entityToModel(insertedEntity);
 
+    response.status(201);
     response.send({
       data: data,
     });

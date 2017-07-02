@@ -10,11 +10,11 @@ export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProject
 
   getRoutes() {
     return [
-      this.route('get',   '/projects',     this.getEntities,  ['projects.read']),
-      this.route('get',   '/projects/:id', this.getEntity,    ['projects.read']),
-      this.route('post',  '/projects',     this.postEntity,   ['projects.write']),
-      this.route('patch', '/projects/:id', this.patchEntity,  ['projects.write']),
-      this.route('del',   '/projects/:id', this.deleteEntity, ['projects.write']),
+      this.protectedRoute('get',   '/projects',     this.getEntities,  ['projects.read']),
+      this.protectedRoute('get',   '/projects/:id', this.getEntity,    ['projects.read']),
+      this.protectedRoute('post',  '/projects',     this.postEntity,   ['projects.write']),
+      this.protectedRoute('patch', '/projects/:id', this.patchEntity,  ['projects.write']),
+      this.protectedRoute('del',   '/projects/:id', this.deleteEntity, ['projects.write']),
     ];
   }
 
