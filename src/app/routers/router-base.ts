@@ -3,6 +3,7 @@ import { IRouter } from '../irouter';
 import { IEntity, IFilter, IChange, IManager } from '../framework';
 import { IRequest } from '../irequest';
 import { IResponse } from '../iresponse';
+import { PermissionHelper } from '../security';
 import { IRoute } from './iroute';
 import { IEntityModel } from './ientity-model';
 import { IParams } from './iparams';
@@ -48,8 +49,9 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
         if (!request.user)
           return response.send(new restify.UnauthorizedError());
 
-        if (permissions && permissions.length !== 0 && !permissions.every(permission => request.permissions.indexOf(permission) !== -1))
-          return response.send(new restify.ForbiddenError());
+        if (permissions && permissions.length !== 0)
+          if (!permissions.every(permission => PermissionHelper.hasPermission(request.permissions, permission)))
+            return response.send(new restify.ForbiddenError());
       }
 
       next();
@@ -94,8 +96,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     const insertedEntity = await this.manager.insert(entity);
     const data = this.entityToModel(insertedEntity);
 
-    response.status(201);
-    response.send({
+    response.send(201, {
       data: data,
     });
   }

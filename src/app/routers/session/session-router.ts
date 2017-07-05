@@ -48,8 +48,7 @@ export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISession
     const insertedEntity = await this.sessionManager.insert(session);
     const data = this.entityToModel(insertedEntity);
 
-    response.status(201);
-    response.send({
+    response.send(201, {
       data: data,
     });
   }

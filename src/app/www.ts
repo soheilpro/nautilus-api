@@ -32,7 +32,7 @@ server.use(restify.authorizationParser());
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(restify.gzipResponse());
-server.use(authenticator(sessionManager));
+server.use(authenticator(sessionManager, userRoleManager, projectManager));
 
 for (const router of routers)
   router.register(server);
