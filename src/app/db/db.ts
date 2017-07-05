@@ -45,9 +45,7 @@ export class DB implements IDB {
     const db = await this.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
-    await collection.insertOne(this.cleanUp(document));
-
-    return document;
+    return (await collection.insertOne(this.cleanUp(document))).ops[0];
   }
 
   async update<TDocument extends IDocument>(collectionName: string, query: IQuery, update: IUpdate) {
