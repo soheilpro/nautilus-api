@@ -1,6 +1,7 @@
 import * as restify from 'restify';
 import * as debugModule from 'debug';
 import { DB } from './db';
+import { DateTimeService } from './services';
 import { UserManager, SessionManager, ProjectManager, UserRoleManager } from './managers';
 import { UserRepository, SessionRepository, ProjectRepository, UserRoleRepository } from './repositories';
 import { authenticator } from './plugins';
@@ -8,7 +9,8 @@ import { UserRouter, SessionRouter, ProjectRouter, UserRoleRouter } from './rout
 
 const debug = debugModule('nautilus-web');
 
-const db = new DB('mongodb://localhost/nautilus');
+const dateTimeService = new DateTimeService();
+const db = new DB('mongodb://localhost/nautilus', dateTimeService);
 
 const userRepository = new UserRepository(db);
 const sessionRepository = new SessionRepository(db);

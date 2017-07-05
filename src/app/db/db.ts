@@ -7,6 +7,7 @@ import { IQuery } from './iquery';
 import { IUpdate } from './iupdate';
 import { Update } from './update';
 import { ManagedDocumentState } from './managed-document-state';
+import { IDateTimeService } from '../framework/system';
 
 interface ICounterDocument extends IDocument {
   name: string;
@@ -16,7 +17,7 @@ interface ICounterDocument extends IDocument {
 export class DB implements IDB {
   private static _db: mongodb.Db;
 
-  constructor(private address: string) {
+  constructor(private address: string, private dateTimeService: IDateTimeService) {
   }
 
   private async getDB() {
@@ -94,7 +95,7 @@ export class DB implements IDB {
       meta: {
         version: await this.nextVersion(),
         state: ManagedDocumentState.Inserted,
-        insertDateTime: new Date(),
+        insertDateTime: this.dateTimeService.nowUTC(),
       },
     };
 
@@ -110,7 +111,7 @@ export class DB implements IDB {
     update = new Update(update);
     update.setOrUnset('meta.version', await this.nextVersion());
     update.setOrUnset('meta.state', ManagedDocumentState.Updated);
-    update.setOrUnset('meta.updateDateTime', new Date());
+    update.setOrUnset('meta.updateDateTime', this.dateTimeService.nowUTC());
 
     return (await this.update(collectionName, query, update)) as TDocument;
   }
@@ -124,7 +125,7 @@ export class DB implements IDB {
     const update = new Update();
     update.setOrUnset('meta.version', await this.nextVersion());
     update.setOrUnset('meta.state', ManagedDocumentState.Deleted);
-    update.setOrUnset('meta.deleteDateTime', new Date());
+    update.setOrUnset('meta.deleteDateTime', this.dateTimeService.nowUTC());
 
     await this.update(collectionName, query, update);
   }
