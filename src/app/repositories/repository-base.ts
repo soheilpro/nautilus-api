@@ -1,5 +1,6 @@
+import * as _ from 'underscore';
 import { IEntity, IFilter, IChange, IRepository } from '../framework';
-import { IDB, IDocument, IManagedDocument, IQuery, Query, IUpdate, Update, ObjectId } from '../db';
+import { IDB, IDocument, IManagedDocument, IUpdate, Update, ObjectId } from '../db';
 
 export default abstract class RepositoryBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TDocument extends IManagedDocument> implements IRepository<TEntity, TFilter, TChange> {
   constructor(private db: IDB) {
@@ -48,7 +49,7 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
   }
 
   async update(id: string, change: TChange) {
-    const filter = { id: id } as TFilter;
+    const filter = { id: id };
     const query = this.filterToQuery(filter);
     const update = this.changeToUpdate(change);
 
@@ -58,17 +59,36 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
   }
 
   async delete(id: string) {
-    const filter = { id: id } as TFilter;
+    const filter = { id: id };
     const query = this.filterToQuery(filter);
 
     await this.db.deleteManaged(this.collectionName(), query);
   }
 
-  protected filterToQuery(filter: IFilter) {
-    const query = new Query();
-    query.set('_id', filter.id, this.toObjectId);
+  private filterToQuery(filter: IFilter) {
+    const result = {} as TFilter;
 
-    return query as IQuery;
+    for (const key in filter) {
+      if (!filter.hasOwnProperty(key))
+        continue;
+
+      const value = filter[key];
+
+      if (key === 'id') {
+        result['_id'] = this.toObjectId(value);
+      }
+      else if (_.isArray(value)) {
+        result[key] = value.map(this.filterToQuery);
+      }
+      else if (_.isObject(value)) {
+        result[key] = this.filterToQuery(value);
+      }
+      else {
+        result[key] = value;
+      }
+    }
+
+    return result;
   }
 
   protected changeToUpdate(change: IChange) {

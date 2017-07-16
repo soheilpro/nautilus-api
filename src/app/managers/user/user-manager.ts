@@ -77,6 +77,25 @@ export class UserManager extends ManagerBase<IUser, IUserFilter, IUserChange> im
     return null;
   }
 
+  getEntityDuplicateCheckFilter(entity: IUser) {
+    return {
+      $or: [
+        { username: entity.username },
+        { email: entity.email },
+      ],
+    };
+  }
+
+  getChangeDuplicateCheckFilter(change: IUserChange) {
+    return {
+      $or: [
+        { id: 0 }, // noop
+        change.username !== undefined ? { username: change.username } : undefined,
+        change.email !== undefined ? { email: change.email } : undefined,
+      ],
+    };
+  }
+
   private hashPassword(password: string) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   }

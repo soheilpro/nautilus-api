@@ -1,3 +1,3 @@
 export interface IFilter {
-  id?: string;
+  [key: string]: any;
 }

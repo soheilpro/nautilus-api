@@ -11,4 +11,6 @@ export interface IManager<TEntity extends IEntity, TFilter extends IFilter, TCha
   delete(id: string): Promise<void>;
   validateEntity(entity: TEntity): IValidationError;
   validateChange(change: TChange): IValidationError;
+  getEntityDuplicateCheckFilter(entity: TEntity): TFilter;
+  getChangeDuplicateCheckFilter(change: TChange): TFilter;
 }

@@ -1,4 +1,6 @@
-import { IEntity, IFilter, IChange, IManager, IValidationError, IRepository } from '../framework';
+import * as _ from 'underscore';
+import { IEntity, IFilter, IChange, IManager, IValidationError, IRepository, DuplicateEntityError } from '../framework';
+import { ObjectHelper } from '../utilities';
 
 export default abstract class ManagerBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange> implements IManager<TEntity, TFilter, TChange> {
   constructor(private repository: IRepository<TEntity, TFilter, TChange>) {
@@ -12,11 +14,32 @@ export default abstract class ManagerBase<TEntity extends IEntity, TFilter exten
     return this.repository.get(filter);
   }
 
-  insert(entity: TEntity) {
+  async insert(entity: TEntity) {
+    const duplicateCheckFilter = ObjectHelper.cleanUp(this.getEntityDuplicateCheckFilter(entity));
+
+    if (duplicateCheckFilter && !_.isEmpty(duplicateCheckFilter)) {
+      const existingEntities = await this.repository.getAll(duplicateCheckFilter);
+
+      if (existingEntities.length !== 0)
+        throw new DuplicateEntityError();
+    }
+
     return this.repository.insert(entity);
   }
 
-  update(id: string, change: TChange) {
+  async update(id: string, change: TChange) {
+    const duplicateCheckFilter = ObjectHelper.cleanUpObject(this.getChangeDuplicateCheckFilter(change));
+
+    if (duplicateCheckFilter && !_.isEmpty(duplicateCheckFilter)) {
+      const existingEntities = await this.repository.getAll(duplicateCheckFilter);
+
+      if (existingEntities.length > 1)
+        throw new DuplicateEntityError();
+
+      if (existingEntities.length === 1 && existingEntities[0].id !== id)
+        throw new DuplicateEntityError();
+    }
+
     return this.repository.update(id, change);
   }
 
@@ -30,5 +53,13 @@ export default abstract class ManagerBase<TEntity extends IEntity, TFilter exten
 
   validateChange(change: TChange) {
     return null as IValidationError;
+  }
+
+  getEntityDuplicateCheckFilter(entity: TEntity) {
+    return null as TFilter;
+  }
+
+  getChangeDuplicateCheckFilter(change: TChange) {
+    return null as TFilter;
   }
 }

@@ -12,14 +12,6 @@ export class SessionRepository extends RepositoryBase<ISession, ISessionFilter, 
     return 'sessions';
   }
 
-  filterToQuery(filter: ISessionFilter) {
-    const query = super.filterToQuery(filter);
-    query.set('accessToken', filter.accessToken);
-    query.set('user', filter.user, this.toRef);
-
-    return query;
-  }
-
   documentToEntity(document: ISessionDocument) {
     return {
       ...super.documentToEntity(document),

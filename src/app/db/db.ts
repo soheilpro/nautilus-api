@@ -1,5 +1,6 @@
-import * as _ from 'underscore';
 import * as mongodb from 'mongodb';
+import { IDateTimeService } from '../framework/system';
+import { ObjectHelper } from '../utilities';
 import { IDB } from './idb';
 import { IDocument } from './idocument';
 import { IManagedDocument } from './imanaged-document';
@@ -7,7 +8,6 @@ import { IQuery } from './iquery';
 import { IUpdate } from './iupdate';
 import { Update } from './update';
 import { ManagedDocumentState } from './managed-document-state';
-import { IDateTimeService } from '../framework/system';
 
 interface ICounterDocument extends IDocument {
   name: string;
@@ -31,35 +31,35 @@ export class DB implements IDB {
     const db = await this.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
-    return await collection.find<TDocument>(this.cleanUp(query)).toArray();
+    return await collection.find<TDocument>(ObjectHelper.cleanUp(query)).toArray();
   }
 
   async count(collectionName: string, query: IQuery) {
     const db = await this.getDB();
     const collection = db.collection(collectionName);
 
-    return await collection.count(this.cleanUp(query));
+    return await collection.count(ObjectHelper.cleanUp(query));
   }
 
   async insert<TDocument extends IDocument>(collectionName: string, document: IDocument) {
     const db = await this.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
-    return (await collection.insertOne(this.cleanUp(document))).ops[0];
+    return (await collection.insertOne(ObjectHelper.cleanUp(document))).ops[0];
   }
 
   async update<TDocument extends IDocument>(collectionName: string, query: IQuery, update: IUpdate) {
     const db = await this.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
-    return (await collection.findOneAndUpdate(this.cleanUp(query), this.cleanUp(update), { returnOriginal: false })).value;
+    return (await collection.findOneAndUpdate(ObjectHelper.cleanUp(query), ObjectHelper.cleanUp(update), { returnOriginal: false })).value;
   }
 
   async delete(collectionName: string, query: IQuery) {
     const db = await this.getDB();
     const collection = db.collection(collectionName);
 
-    await collection.deleteMany(this.cleanUp(query));
+    await collection.deleteMany(ObjectHelper.cleanUp(query));
   }
 
   async drop(collectionName: string) {
@@ -139,16 +139,5 @@ export class DB implements IDB {
 
   private async nextVersion() {
     return await this.counter('_version');
-  }
-
-  private cleanUp<T extends object>(object: T): T {
-    const result = {...object as IObject};
-
-    _.each(result, (value: any, key: string) => {
-      if (value === undefined || (_.isObject(value) && _.isEmpty(value) && !_.isDate(value)))
-        delete result[key];
-    });
-
-    return result as T;
   }
 }

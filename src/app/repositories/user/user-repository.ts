@@ -12,13 +12,6 @@ export class UserRepository extends RepositoryBase<IUser, IUserFilter, IUserChan
     return 'users';
   }
 
-  filterToQuery(filter: IUserFilter) {
-    const query = super.filterToQuery(filter);
-    query.set('username', filter.username);
-
-    return query;
-  }
-
   changeToUpdate(change: IUserChange) {
     const update = super.changeToUpdate(change);
     update.setOrUnset('username', change.username);

@@ -1,6 +1,6 @@
 import * as restify from 'restify';
 import { IRouter } from '../irouter';
-import { IEntity, IFilter, IChange, IManager } from '../framework';
+import { IEntity, IFilter, IChange, IManager, DuplicateEntityError } from '../framework';
 import { IRequest } from '../irequest';
 import { IResponse } from '../iresponse';
 import { PermissionHelper } from '../security';
@@ -93,12 +93,20 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     if (validationError)
       return response.send(new restify.UnprocessableEntityError(validationError.message));
 
-    const insertedEntity = await this.manager.insert(entity);
-    const data = this.entityToModel(insertedEntity);
+    try {
+      const insertedEntity = await this.manager.insert(entity);
+      const data = this.entityToModel(insertedEntity);
 
-    response.send(201, {
-      data: data,
-    });
+      response.send(201, {
+        data: data,
+      });
+    }
+    catch (error) {
+      if (error instanceof DuplicateEntityError)
+        return response.send(new restify.UnprocessableEntityError('Duplicate entity.'));
+
+      throw error;
+    }
   }
 
   protected async patchEntity(request: IRequest, response: IResponse) {
@@ -115,12 +123,20 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     if (validationError)
       return response.send(new restify.UnprocessableEntityError(validationError.message));
 
-    const updatedEntity = await this.manager.update(entity.id, change);
-    const data = this.entityToModel(updatedEntity);
+    try {
+      const updatedEntity = await this.manager.update(entity.id, change);
+      const data = this.entityToModel(updatedEntity);
 
-    response.send({
-      data: data,
-    });
+      response.send({
+        data: data,
+      });
+    }
+    catch (error) {
+      if (error instanceof DuplicateEntityError)
+        return response.send(new restify.UnprocessableEntityError('Duplicate entity.'));
+
+      throw error;
+    }
   }
 
   protected async deleteEntity(request: IRequest, response: IResponse) {

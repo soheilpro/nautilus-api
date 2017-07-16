@@ -12,13 +12,6 @@ export class UserRoleRepository extends RepositoryBase<IUserRole, IUserRoleFilte
     return 'user_roles';
   }
 
-  filterToQuery(filter: IUserRoleFilter) {
-    const query = super.filterToQuery(filter);
-    query.set('user', filter.user, this.toRef);
-
-    return query;
-  }
-
   changeToUpdate(change: IUserRoleDocument) {
     const update = super.changeToUpdate(change);
     update.setOrUnset('user', change.user, this.toRef);
