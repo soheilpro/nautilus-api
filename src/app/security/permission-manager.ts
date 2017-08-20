@@ -13,12 +13,18 @@ export class PermissionManager {
   }
 
   private static * getPermissions(userRole: IUserRole, projects: IProject[]): IterableIterator<IPermission> {
+    yield { name: 'item-priorities.read'};
+    yield { name: 'item-states.read'};
+    yield { name: 'item-types.read'};
     yield { name: 'projects.read'};
     yield { name: 'user-roles.read'};
     yield { name: 'users.read'};
 
     switch (userRole.name) {
       case 'admin':
+        yield { name: 'item-priorities.write'};
+        yield { name: 'item-states.write'};
+        yield { name: 'item-types.write'};
         yield { name: 'projects.write'};
         yield { name: 'user-roles.write'};
         yield { name: 'users.write'};
