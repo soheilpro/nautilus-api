@@ -15,7 +15,7 @@ export class Update implements IUpdate {
     if (value === undefined)
       return;
 
-    if (value)
+    if (value !== undefined && value !== null)
       this.$set[key] = map ? map(value) : value;
     else
       this.$unset[key] = '';

@@ -15,6 +15,23 @@ export default class Params implements IParams {
     return value;
   }
 
+  readInt(name: string) {
+    const value = this.request.params[name] as string;
+
+    if (value === undefined)
+      return undefined;
+
+    // To handle all the edge cases of parsing an integer ('', '1.1', etc.),
+    // both these methods should return the same result
+    const num1 = Number(value);
+    const num2 = parseInt(value, 10);
+
+    if (num1 !== num2)
+      return NaN;
+
+    return num1;
+  }
+
   readStringArray(name: string) {
     const value = this.request.params[name] as string;
 
