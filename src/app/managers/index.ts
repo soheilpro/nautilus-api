@@ -1,3 +1,4 @@
+export * from './item';
 export * from './item-priority';
 export * from './item-state';
 export * from './item-type';

@@ -8,6 +8,8 @@ import { PermissionManager } from '../security';
 
 export function authenticator(sessionManager: ISessionManager, userRoleManager: IUserRoleManager, projectManager: IProjectManager) {
   return async (request: IRequest, response: IResponse, next: restify.Next) => {
+    request.permissions = [];
+
     if (request.authorization.basic) {
       const userId = request.authorization.basic.username;
       const accessToken = request.authorization.basic.password;

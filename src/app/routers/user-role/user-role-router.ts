@@ -2,6 +2,7 @@ import { RouterBase } from '../router-base';
 import { IUserRole, IUserRoleManager, IUserRoleFilter, IUserRoleChange } from '../../framework/user-role';
 import { IUserManager } from '../../framework/user';
 import { IProjectManager } from '../../framework/project';
+import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IUserRoleModel } from './iuser-role-model';
 
@@ -20,18 +21,18 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
     ];
   }
 
-  async entityFromParams(params: IParams) {
+  async entityFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.entityFromParams(params),
+      ...await super.entityFromParams(params, request),
       user: await params.readEntity('user_id', this.userManager),
       project: await params.readEntity('project_id', this.projectManager),
       name: params.readString('name'),
     };
   }
 
-  async changeFromParams(params: IParams) {
+  async changeFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.changeFromParams(params),
+      ...await super.changeFromParams(params, request),
       user: await params.readEntity('user_id', this.userManager),
       project: await params.readEntity('project_id', this.projectManager),
       name: params.readString('name'),

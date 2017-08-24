@@ -1,5 +1,6 @@
 import { RouterBase } from '../router-base';
 import { IProject, IProjectManager, IProjectFilter, IProjectChange } from '../../framework/project';
+import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IProjectModel } from './iproject-model';
 
@@ -18,18 +19,18 @@ export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProject
     ];
   }
 
-  async entityFromParams(params: IParams) {
+  async entityFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.entityFromParams(params),
+      ...await super.entityFromParams(params, request),
       name: params.readString('name'),
       description: params.readString('description'),
       tags: params.readStringArray('tags'),
     };
   }
 
-  async changeFromParams(params: IParams) {
+  async changeFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.changeFromParams(params),
+      ...await super.changeFromParams(params, request),
       name: params.readString('name'),
       description: params.readString('description'),
       tags: params.readStringArray('tags'),

@@ -1,5 +1,6 @@
 import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
+import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IUserModel } from './iuser-model';
 
@@ -18,9 +19,9 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
     ];
   }
 
-  async entityFromParams(params: IParams) {
+  async entityFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.entityFromParams(params),
+      ...await super.entityFromParams(params, request),
       username: params.readString('username'),
       password: params.readString('password'),
       name: params.readString('name'),
@@ -28,9 +29,9 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
     };
   }
 
-  async changeFromParams(params: IParams) {
+  async changeFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.changeFromParams(params),
+      ...await super.changeFromParams(params, request),
       username: params.readString('username'),
       password: params.readString('password'),
       name: params.readString('name'),

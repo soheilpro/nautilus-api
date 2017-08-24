@@ -1,5 +1,6 @@
 import { RouterBase } from '../router-base';
 import { IItemState, IItemStateManager, IItemStateFilter, IItemStateChange } from '../../framework/item-state';
+import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IItemStateModel } from './iitem-state-model';
 
@@ -10,17 +11,17 @@ export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, II
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/itemstates',     this.getEntities,  ['projects.read']),
-      this.protectedRoute('get',   '/itemstates/:id', this.getEntity,    ['projects.read']),
-      this.protectedRoute('post',  '/itemstates',     this.postEntity,   ['projects.write']),
-      this.protectedRoute('patch', '/itemstates/:id', this.patchEntity,  ['projects.write']),
-      this.protectedRoute('del',   '/itemstates/:id', this.deleteEntity, ['projects.write']),
+      this.protectedRoute('get',   '/itemstates',     this.getEntities,  ['item-states.read']),
+      this.protectedRoute('get',   '/itemstates/:id', this.getEntity,    ['item-states.read']),
+      this.protectedRoute('post',  '/itemstates',     this.postEntity,   ['item-states.write']),
+      this.protectedRoute('patch', '/itemstates/:id', this.patchEntity,  ['item-states.write']),
+      this.protectedRoute('del',   '/itemstates/:id', this.deleteEntity, ['item-states.write']),
     ];
   }
 
-  async entityFromParams(params: IParams) {
+  async entityFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.entityFromParams(params),
+      ...await super.entityFromParams(params, request),
       itemKind: params.readString('item_kind'),
       title: params.readString('title'),
       key: params.readString('key'),
@@ -28,9 +29,9 @@ export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, II
     };
   }
 
-  async changeFromParams(params: IParams) {
+  async changeFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.changeFromParams(params),
+      ...await super.changeFromParams(params, request),
       itemKind: params.readString('item_kind'),
       title: params.readString('title'),
       key: params.readString('key'),

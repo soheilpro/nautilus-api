@@ -1,5 +1,6 @@
 import { RouterBase } from '../router-base';
 import { IItemPriority, IItemPriorityManager, IItemPriorityFilter, IItemPriorityChange } from '../../framework/item-priority';
+import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IItemPriorityModel } from './iitem-priority-model';
 
@@ -10,17 +11,17 @@ export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityF
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/itempriorities',     this.getEntities,  ['projects.read']),
-      this.protectedRoute('get',   '/itempriorities/:id', this.getEntity,    ['projects.read']),
-      this.protectedRoute('post',  '/itempriorities',     this.postEntity,   ['projects.write']),
-      this.protectedRoute('patch', '/itempriorities/:id', this.patchEntity,  ['projects.write']),
-      this.protectedRoute('del',   '/itempriorities/:id', this.deleteEntity, ['projects.write']),
+      this.protectedRoute('get',   '/itempriorities',     this.getEntities,  ['item-priorities.read']),
+      this.protectedRoute('get',   '/itempriorities/:id', this.getEntity,    ['item-priorities.read']),
+      this.protectedRoute('post',  '/itempriorities',     this.postEntity,   ['item-priorities.write']),
+      this.protectedRoute('patch', '/itempriorities/:id', this.patchEntity,  ['item-priorities.write']),
+      this.protectedRoute('del',   '/itempriorities/:id', this.deleteEntity, ['item-priorities.write']),
     ];
   }
 
-  async entityFromParams(params: IParams) {
+  async entityFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.entityFromParams(params),
+      ...await super.entityFromParams(params, request),
       itemKind: params.readString('item_kind'),
       title: params.readString('title'),
       key: params.readString('key'),
@@ -28,9 +29,9 @@ export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityF
     };
   }
 
-  async changeFromParams(params: IParams) {
+  async changeFromParams(params: IParams, request: IRequest) {
     return {
-      ...await super.changeFromParams(params),
+      ...await super.changeFromParams(params, request),
       itemKind: params.readString('item_kind'),
       title: params.readString('title'),
       key: params.readString('key'),
