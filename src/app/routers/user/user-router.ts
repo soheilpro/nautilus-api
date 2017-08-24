@@ -1,22 +1,45 @@
+import * as restify from 'restify';
 import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
 import { IRequest } from '../../irequest';
+import { IResponse } from '../../iresponse';
 import { IParams } from '../iparams';
+import { Params } from '../params';
 import { IUserModel } from './iuser-model';
 
 export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUserModel> {
-  constructor(userManager: IUserManager) {
+  constructor(private userManager: IUserManager) {
     super(userManager);
+
+    this.getPermissions = this.getPermissions.bind(this);
   }
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/users',     this.getEntities,  ['users.read']),
-      this.protectedRoute('get',   '/users/:id', this.getEntity,    ['users.read']),
-      this.protectedRoute('post',  '/users',     this.postEntity,   ['users.write']),
-      this.protectedRoute('patch', '/users/:id', this.patchEntity,  ['users.write']),
-      this.protectedRoute('del',   '/users/:id', this.deleteEntity, ['users.write']),
+      this.protectedRoute('get',   '/users',                 this.getEntities,    ['users.read']),
+      this.protectedRoute('get',   '/users/:id',             this.getEntity,      ['users.read']),
+      this.protectedRoute('post',  '/users',                 this.postEntity,     ['users.write']),
+      this.protectedRoute('patch', '/users/:id',             this.patchEntity,    ['users.write']),
+      this.protectedRoute('del',   '/users/:id',             this.deleteEntity,   ['users.write']),
+      this.protectedRoute('get',   '/users/:id/permissions', this.getPermissions, ['users.read']),
     ];
+  }
+
+  async getPermissions(request: IRequest, response: IResponse) {
+    const params = new Params(request);
+    const user = await params.readEntity('id', this.userManager);
+
+    if (!user)
+      return response.send(new restify.NotFoundError());
+
+    if (user.id !== request.user.id)
+      return response.send(new restify.ForbiddenError());
+
+    const data = request.permissions;
+
+    response.send({
+      data: data,
+    });
   }
 
   async entityFromParams(params: IParams, request: IRequest) {

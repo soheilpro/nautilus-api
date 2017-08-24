@@ -9,7 +9,7 @@ import { PermissionHelper } from '../security';
 import { IRoute } from './iroute';
 import { IEntityModel } from './ientity-model';
 import { IParams } from './iparams';
-import Params from './params';
+import { Params } from './params';
 
 export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TEntityModel extends IEntityModel> implements IRouter {
   constructor(private manager: IManager<TEntity, TFilter, TChange>) {

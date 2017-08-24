@@ -2,7 +2,7 @@ import { IEntity, IManager } from '../framework';
 import { IParams } from './iparams';
 import { IRequest } from '../irequest';
 
-export default class Params implements IParams {
+export class Params implements IParams {
   constructor(private request: IRequest) {
   }
 

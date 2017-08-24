@@ -4,7 +4,7 @@ import { ISession, ISessionManager, ISessionFilter, ISessionChange } from '../..
 import { IUserManager } from '../../framework/user';
 import { IRequest } from '../../irequest';
 import { IResponse } from '../../iresponse';
-import Params from '../params';
+import { Params } from '../params';
 import { ISessionModel } from './isession-model';
 
 export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISessionChange, ISessionModel> {

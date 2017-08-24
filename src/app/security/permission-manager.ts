@@ -4,7 +4,14 @@ import { IPermission } from '../framework/security';
 
 export class PermissionManager {
   static async getUserPermissions(userRoles: IUserRole[], projects: IProject[]): Promise<IPermission[]> {
-    let permissions: IPermission[] = [];
+    let permissions = [
+      { name: 'item-priorities.read' },
+      { name: 'item-states.read' },
+      { name: 'item-types.read' },
+      { name: 'projects.read' },
+      { name: 'user-roles.read' },
+      { name: 'users.read' },
+    ];
 
     for (const userRole of userRoles)
       permissions = [...permissions, ...Array.from(this.getPermissions(userRole, projects))];
@@ -13,21 +20,14 @@ export class PermissionManager {
   }
 
   private static * getPermissions(userRole: IUserRole, projects: IProject[]): IterableIterator<IPermission> {
-    yield { name: 'item-priorities.read'};
-    yield { name: 'item-states.read'};
-    yield { name: 'item-types.read'};
-    yield { name: 'projects.read'};
-    yield { name: 'user-roles.read'};
-    yield { name: 'users.read'};
-
     switch (userRole.name) {
       case 'admin':
-        yield { name: 'item-priorities.write'};
-        yield { name: 'item-states.write'};
-        yield { name: 'item-types.write'};
-        yield { name: 'projects.write'};
-        yield { name: 'user-roles.write'};
-        yield { name: 'users.write'};
+        yield { name: 'item-priorities.write' };
+        yield { name: 'item-states.write' };
+        yield { name: 'item-types.write' };
+        yield { name: 'projects.write' };
+        yield { name: 'user-roles.write' };
+        yield { name: 'users.write' };
         break;
 
       case 'master':
