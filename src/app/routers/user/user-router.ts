@@ -1,6 +1,8 @@
 import * as restify from 'restify';
 import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { IResponse } from '../../iresponse';
 import { IParams } from '../iparams';
@@ -8,10 +10,14 @@ import { Params } from '../params';
 import { IUserModel } from './iuser-model';
 
 export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUserModel> {
-  constructor(private userManager: IUserManager) {
-    super(userManager);
+  constructor(private userManager: IUserManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(userManager, userLogManager, dateTimeService);
 
     this.getPermissions = this.getPermissions.bind(this);
+  }
+
+  getName() {
+    return 'users';
   }
 
   getRoutes() {

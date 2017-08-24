@@ -2,6 +2,8 @@ import { RouterBase } from '../router-base';
 import { IItemRelationship, IItemRelationshipManager, IItemRelationshipFilter, IItemRelationshipChange } from '../../framework/item-relationship';
 import { IItem, IItemManager } from '../../framework/item';
 import { IPermission } from '../../framework/security';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IUser } from '../../framework/user';
 import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
@@ -9,8 +11,12 @@ import { IParams } from '../iparams';
 import { IItemRelationshipModel } from './iitem-relationship-model';
 
 export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemRelationshipFilter, IItemRelationshipChange, IItemRelationshipModel> {
-  constructor(itemRelationshipManager: IItemRelationshipManager, private itemManager: IItemManager) {
-    super(itemRelationshipManager);
+  constructor(itemRelationshipManager: IItemRelationshipManager, private itemManager: IItemManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(itemRelationshipManager, userLogManager, dateTimeService);
+  }
+
+  getName() {
+    return 'item-relationships';
   }
 
   getRoutes() {

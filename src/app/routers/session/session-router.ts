@@ -2,16 +2,22 @@ import * as restify from 'restify';
 import { RouterBase } from '../router-base';
 import { ISession, ISessionManager, ISessionFilter, ISessionChange } from '../../framework/session';
 import { IUserManager } from '../../framework/user';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { IResponse } from '../../iresponse';
 import { Params } from '../params';
 import { ISessionModel } from './isession-model';
 
 export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISessionChange, ISessionModel> {
-  constructor(private sessionManager: ISessionManager, private userManager: IUserManager) {
-    super(sessionManager);
+  constructor(private sessionManager: ISessionManager, private userManager: IUserManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(sessionManager, userLogManager, dateTimeService);
 
     this.postEntity = this.postEntity.bind(this);
+  }
+
+  getName() {
+    return 'sessions';
   }
 
   getRoutes() {

@@ -1,12 +1,18 @@
 import { RouterBase } from '../router-base';
 import { IItemType, IItemTypeManager, IItemTypeFilter, IItemTypeChange } from '../../framework/item-type';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IItemTypeModel } from './iitem-type-model';
 
 export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItemTypeChange, IItemTypeModel> {
-  constructor(itemTypeManager: IItemTypeManager) {
-    super(itemTypeManager);
+  constructor(itemTypeManager: IItemTypeManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(itemTypeManager, userLogManager, dateTimeService);
+  }
+
+  getName() {
+    return 'item-types';
   }
 
   getRoutes() {

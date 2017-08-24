@@ -6,14 +6,20 @@ import { IItemStateManager } from '../../framework/item-state';
 import { IItemPriorityManager } from '../../framework/item-priority';
 import { IPermission } from '../../framework/security';
 import { IUser, IUserManager } from '../../framework/user';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
 import { IParams } from '../iparams';
 import { IItemModel } from './iitem-model';
 
 export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange, IItemModel> {
-  constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemPriorityManager: IItemPriorityManager) {
-    super(itemManager);
+  constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemPriorityManager: IItemPriorityManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(itemManager, userLogManager, dateTimeService);
+  }
+
+  getName() {
+    return 'items';
   }
 
   getRoutes() {

@@ -5,5 +5,6 @@ export * from './item-type';
 export * from './item';
 export * from './project';
 export * from './session';
+export * from './user-log';
 export * from './user-role';
 export * from './user';

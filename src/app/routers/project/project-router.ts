@@ -1,12 +1,18 @@
 import { RouterBase } from '../router-base';
 import { IProject, IProjectManager, IProjectFilter, IProjectChange } from '../../framework/project';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IProjectModel } from './iproject-model';
 
 export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProjectChange, IProjectModel> {
-  constructor(projectManager: IProjectManager) {
-    super(projectManager);
+  constructor(projectManager: IProjectManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(projectManager, userLogManager, dateTimeService);
+  }
+
+  getName() {
+    return 'projects';
   }
 
   getRoutes() {

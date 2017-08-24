@@ -1,12 +1,18 @@
 import { RouterBase } from '../router-base';
 import { IItemPriority, IItemPriorityManager, IItemPriorityFilter, IItemPriorityChange } from '../../framework/item-priority';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IItemPriorityModel } from './iitem-priority-model';
 
 export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityFilter, IItemPriorityChange, IItemPriorityModel> {
-  constructor(itemPriorityManager: IItemPriorityManager) {
-    super(itemPriorityManager);
+  constructor(itemPriorityManager: IItemPriorityManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(itemPriorityManager, userLogManager, dateTimeService);
+  }
+
+  getName() {
+    return 'item-priorities';
   }
 
   getRoutes() {

@@ -1,12 +1,18 @@
 import { RouterBase } from '../router-base';
 import { IItemState, IItemStateManager, IItemStateFilter, IItemStateChange } from '../../framework/item-state';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IItemStateModel } from './iitem-state-model';
 
 export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, IItemStateChange, IItemStateModel> {
-  constructor(itemStateManager: IItemStateManager) {
-    super(itemStateManager);
+  constructor(itemStateManager: IItemStateManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(itemStateManager, userLogManager, dateTimeService);
+  }
+
+  getName() {
+    return 'item-states';
   }
 
   getRoutes() {

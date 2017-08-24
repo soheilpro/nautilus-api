@@ -1,14 +1,20 @@
 import { RouterBase } from '../router-base';
 import { IUserRole, IUserRoleManager, IUserRoleFilter, IUserRoleChange } from '../../framework/user-role';
-import { IUserManager } from '../../framework/user';
 import { IProjectManager } from '../../framework/project';
+import { IUserManager } from '../../framework/user';
+import { IUserLogManager } from '../../framework/user-log';
+import { IDateTimeService } from '../../framework/system';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
 import { IUserRoleModel } from './iuser-role-model';
 
 export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUserRoleChange, IUserRoleModel> {
-  constructor(userRoleManager: IUserRoleManager, private userManager: IUserManager, private projectManager: IProjectManager) {
-    super(userRoleManager);
+  constructor(userRoleManager: IUserRoleManager, private userManager: IUserManager, private projectManager: IProjectManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+    super(userRoleManager, userLogManager, dateTimeService);
+  }
+
+  getName() {
+    return 'user-roles';
   }
 
   getRoutes() {

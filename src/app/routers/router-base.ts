@@ -1,8 +1,10 @@
 import * as restify from 'restify';
 import { IRouter } from '../irouter';
 import { IEntity, IFilter, IChange, IManager, DuplicateEntityError } from '../framework';
-import { IUser } from '../framework/user';
 import { IPermission } from '../framework/security';
+import { IUser } from '../framework/user';
+import { IUserLog, IUserLogManager } from '../framework/user-log';
+import { IDateTimeService } from '../framework/system';
 import { IRequest } from '../irequest';
 import { IResponse } from '../iresponse';
 import { PermissionHelper } from '../security';
@@ -12,7 +14,7 @@ import { IParams } from './iparams';
 import { Params } from './params';
 
 export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TEntityModel extends IEntityModel> implements IRouter {
-  constructor(private manager: IManager<TEntity, TFilter, TChange>) {
+  constructor(private manager: IManager<TEntity, TFilter, TChange>, private userLogManager: IUserLogManager, private dateTimeService: IDateTimeService) {
     this.getEntities = this.getEntities.bind(this);
     this.getEntity = this.getEntity.bind(this);
     this.postEntity = this.postEntity.bind(this);
@@ -24,6 +26,8 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     for (const route of this.getRoutes())
       (server as any)[route.method](route.url, this.authorize(route.isProtected, route.permissions), route.handler);
   }
+
+  abstract getName(): string;
 
   abstract getRoutes(): IRoute[];
 
@@ -104,6 +108,19 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
 
     try {
       const insertedEntity = await this.manager.insert(entity);
+
+      let userLog: IUserLog = {
+        dateTime: this.dateTimeService.nowUTC(),
+        user: request.user,
+        action: `${this.getName()}.create`,
+        item: insertedEntity,
+        params: {
+          entity: insertedEntity,
+        },
+      };
+
+      await this.userLogManager.insert(userLog);
+
       const data = this.entityToModel(insertedEntity);
 
       response.send(201, {
@@ -140,6 +157,19 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
 
     try {
       const updatedEntity = await this.manager.update(entity.id, change);
+
+      let userLog: IUserLog = {
+        dateTime: this.dateTimeService.nowUTC(),
+        user: request.user,
+        action: `${this.getName()}.update`,
+        item: updatedEntity,
+        params: {
+          change: change,
+        },
+      };
+
+      await this.userLogManager.insert(userLog);
+
       const data = this.entityToModel(updatedEntity);
 
       response.send({
@@ -165,6 +195,15 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
       return response.send(new restify.ForbiddenError());
 
     await this.manager.delete(entity.id);
+
+    let userLog: IUserLog = {
+      dateTime: this.dateTimeService.nowUTC(),
+      user: request.user,
+      action: `${this.getName()}.delete`,
+      item: entity,
+    };
+
+    await this.userLogManager.insert(userLog);
 
     response.send(200);
   }
