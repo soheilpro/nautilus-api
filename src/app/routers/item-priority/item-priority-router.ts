@@ -5,8 +5,8 @@ import { IParams } from '../iparams';
 import { IItemPriorityModel } from './iitem-priority-model';
 
 export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityFilter, IItemPriorityChange, IItemPriorityModel> {
-  constructor(projectManager: IItemPriorityManager) {
-    super(projectManager);
+  constructor(itemPriorityManager: IItemPriorityManager) {
+    super(itemPriorityManager);
   }
 
   getRoutes() {

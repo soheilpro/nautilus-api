@@ -2,9 +2,9 @@ import * as restify from 'restify';
 import * as debugModule from 'debug';
 import { DB } from './db';
 import { DateTimeService } from './services';
-import { UserManager, SessionManager, ProjectManager, UserRoleManager, ItemStateManager, ItemTypeManager, ItemPriorityManager, ItemManager } from './managers';
-import { UserRepository, SessionRepository, ProjectRepository, UserRoleRepository, ItemStateRepository, ItemTypeRepository, ItemPriorityRepository, ItemRepository } from './repositories';
-import { UserRouter, SessionRouter, ProjectRouter, UserRoleRouter, ItemStateRouter, ItemTypeRouter, ItemPriorityRouter, ItemRouter } from './routers';
+import { UserManager, SessionManager, ProjectManager, UserRoleManager, ItemStateManager, ItemTypeManager, ItemPriorityManager, ItemManager, ItemRelationshipManager } from './managers';
+import { UserRepository, SessionRepository, ProjectRepository, UserRoleRepository, ItemStateRepository, ItemTypeRepository, ItemPriorityRepository, ItemRepository, ItemRelationshipRepository } from './repositories';
+import { UserRouter, SessionRouter, ProjectRouter, UserRoleRouter, ItemStateRouter, ItemTypeRouter, ItemPriorityRouter, ItemRouter, ItemRelationshipRouter } from './routers';
 import { authenticator } from './plugins';
 
 const debug = debugModule('nautilus-web');
@@ -20,6 +20,7 @@ const itemStateRepository = new ItemStateRepository(db);
 const itemTypeRepository = new ItemTypeRepository(db);
 const itemPriorityRepository = new ItemPriorityRepository(db);
 const itemRepository = new ItemRepository(db);
+const itemRelationshipRepository = new ItemRelationshipRepository(db);
 
 const userManager = new UserManager(userRepository);
 const sessionManager = new SessionManager(sessionRepository);
@@ -29,6 +30,7 @@ const itemStateManager = new ItemStateManager(itemStateRepository);
 const itemTypeManager = new ItemTypeManager(itemTypeRepository);
 const itemPriorityManager = new ItemPriorityManager(itemPriorityRepository);
 const itemManager = new ItemManager(itemRepository);
+const itemRelationshipManager = new ItemRelationshipManager(itemRelationshipRepository);
 
 const routers = [
   new UserRouter(userManager),
@@ -39,6 +41,7 @@ const routers = [
   new ItemTypeRouter(itemTypeManager),
   new ItemPriorityRouter(itemPriorityManager),
   new ItemRouter(itemManager, userManager, projectManager, itemTypeManager, itemStateManager, itemPriorityManager),
+  new ItemRelationshipRouter(itemRelationshipManager, itemManager),
 ];
 
 const server = restify.createServer();

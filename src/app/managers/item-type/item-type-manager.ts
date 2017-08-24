@@ -42,8 +42,6 @@ export class ItemTypeManager extends ManagerBase<IItemType, IItemTypeFilter, IIt
   }
 
   validateChange(change: IItemType) {
-    console.log(change);
-
     if (change.itemKind !== undefined) {
       if (!ItemKindRegEx.test(change.itemKind))
         return { message: 'Invalid itemKind.' };

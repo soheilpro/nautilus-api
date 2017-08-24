@@ -42,8 +42,6 @@ export class ItemPriorityManager extends ManagerBase<IItemPriority, IItemPriorit
   }
 
   validateChange(change: IItemPriority) {
-    console.log(change);
-
     if (change.itemKind !== undefined) {
       if (!ItemKindRegEx.test(change.itemKind))
         return { message: 'Invalid itemKind.' };

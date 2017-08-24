@@ -1,11 +1,11 @@
 import { RouterBase } from '../router-base';
 import { IItem, IItemManager, IItemFilter, IItemChange } from '../../framework/item';
-import { IUser, IUserManager } from '../../framework/user';
 import { IProjectManager } from '../../framework/project';
 import { IItemTypeManager } from '../../framework/item-type';
 import { IItemStateManager } from '../../framework/item-state';
 import { IItemPriorityManager } from '../../framework/item-priority';
 import { IPermission } from '../../framework/security';
+import { IUser, IUserManager } from '../../framework/user';
 import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
 import { IParams } from '../iparams';
@@ -28,14 +28,16 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange, IIte
 
   checkEntityAccess(entity: IItem, access: string, user: IUser, permissions: IPermission[]) {
     if (entity.project)
-      return PermissionHelper.hasPermission(permissions, `project.${access}`, { projectId: entity.project.id });
+      if (!PermissionHelper.hasPermission(permissions, `project.${access}`, { projectId: entity.project.id }))
+        return false;
 
     return entity.createdBy.id === user.id;
   }
 
   checkChangeAccess(change: IItem, user: IUser, permissions: IPermission[]) {
     if (change.project)
-      return PermissionHelper.hasPermission(permissions, 'project.write', { projectId: change.project.id });
+      if (!PermissionHelper.hasPermission(permissions, 'project.write', { projectId: change.project.id }))
+        return false;
 
     return true;
   }

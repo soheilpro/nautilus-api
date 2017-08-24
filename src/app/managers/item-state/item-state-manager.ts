@@ -42,8 +42,6 @@ export class ItemStateManager extends ManagerBase<IItemState, IItemStateFilter, 
   }
 
   validateChange(change: IItemState) {
-    console.log(change);
-
     if (change.itemKind !== undefined) {
       if (!ItemKindRegEx.test(change.itemKind))
         return { message: 'Invalid itemKind.' };

@@ -5,8 +5,8 @@ import { IParams } from '../iparams';
 import { IItemTypeModel } from './iitem-type-model';
 
 export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItemTypeChange, IItemTypeModel> {
-  constructor(projectManager: IItemTypeManager) {
-    super(projectManager);
+  constructor(itemTypeManager: IItemTypeManager) {
+    super(itemTypeManager);
   }
 
   getRoutes() {

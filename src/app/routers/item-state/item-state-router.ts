@@ -5,8 +5,8 @@ import { IParams } from '../iparams';
 import { IItemStateModel } from './iitem-state-model';
 
 export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, IItemStateChange, IItemStateModel> {
-  constructor(projectManager: IItemStateManager) {
-    super(projectManager);
+  constructor(itemStateManager: IItemStateManager) {
+    super(itemStateManager);
   }
 
   getRoutes() {
