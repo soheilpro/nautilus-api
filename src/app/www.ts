@@ -43,7 +43,7 @@ const routers = [
   new ItemStateRouter(itemStateManager, userLogManager, dateTimeService),
   new ItemTypeRouter(itemTypeManager, userLogManager, dateTimeService),
   new ItemPriorityRouter(itemPriorityManager, userLogManager, dateTimeService),
-  new ItemRouter(itemManager, userManager, projectManager, itemTypeManager, itemStateManager, itemPriorityManager, userLogManager, dateTimeService),
+  new ItemRouter(itemManager, userManager, projectManager, itemTypeManager, itemStateManager, itemPriorityManager, itemRelationshipManager, userLogManager, dateTimeService),
   new ItemRelationshipRouter(itemRelationshipManager, itemManager, userLogManager, dateTimeService),
 ];
 

@@ -72,8 +72,15 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     const accessibleEntities = entities.filter(entity => this.checkEntityAccess(entity, 'read', request.user, request.permissions));
     const data = accessibleEntities.map(entity => this.entityToModel(entity));
 
+    const requestedSupplements = params.readStringArray('supplement') || [];
+    const supplements: IObject = {};
+
+    for (const requestedSupplement of requestedSupplements)
+      supplements[requestedSupplement] = await this.getSupplement(requestedSupplement, accessibleEntities);
+
     response.send({
       data: data,
+      supplements: supplements,
     });
   }
 
@@ -233,6 +240,10 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
       return undefined;
 
     return this.renderEntity(entity, true);
+  }
+
+  protected async getSupplement(name: string, entities: TEntity[]): Promise<any> {
+    throw new Error('Not implemented.');
   }
 
   protected renderEntity(entity: TEntity, includeMeta?: boolean) {

@@ -4,6 +4,7 @@ import { IProjectManager } from '../../framework/project';
 import { IItemTypeManager } from '../../framework/item-type';
 import { IItemStateManager } from '../../framework/item-state';
 import { IItemPriorityManager } from '../../framework/item-priority';
+import { IItemRelationshipManager } from '../../framework/item-relationship';
 import { IPermission } from '../../framework/security';
 import { IUser, IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
@@ -14,7 +15,7 @@ import { IParams } from '../iparams';
 import { IItemModel } from './iitem-model';
 
 export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange, IItemModel> {
-  constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemPriorityManager: IItemPriorityManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+  constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemPriorityManager: IItemPriorityManager, private itemRelationshipManager: IItemRelationshipManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(itemManager, userLogManager, dateTimeService);
   }
 
@@ -46,6 +47,27 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange, IIte
         return false;
 
     return true;
+  }
+
+  async getSupplement(name: string, entities: IItem[]) {
+    if (name === 'relationships') {
+      const entityIds = entities.map(entity => entity.id);
+
+      const filter = {
+        $or: [
+          { 'item1.id': { $in: entityIds } },
+          { 'item2.id': { $in: entityIds } },
+        ],
+      };
+
+      const relationships = await this.itemRelationshipManager.getAll(filter);
+
+      // TODO: map to model
+
+      return relationships;
+    }
+
+    return Promise.resolve(undefined);
   }
 
   async entityFromParams(params: IParams, request: IRequest) {

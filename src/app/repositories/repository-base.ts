@@ -68,14 +68,24 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
   private filterToQuery(filter: IFilter) {
     const result = {} as TFilter;
 
-    for (const key in filter) {
+    for (let key in filter) {
       if (!filter.hasOwnProperty(key))
         continue;
 
-      const value = filter[key];
+      let value = filter[key];
+      let keyParts = key.split('.');
 
-      if (key === 'id') {
-        result['_id'] = this.toObjectId(value);
+      if (keyParts[keyParts.length - 1] === 'id') {
+        // Change last .id to ._id
+        keyParts.splice(keyParts.length - 1, 1, '_id');
+        key = keyParts.join('.');
+
+        if (value['$in'])
+          value = { $in: value['$in'].map(this.toObjectId) };
+        else
+          value = this.toObjectId(value);
+
+        result[key] = value;
       }
       else if (_.isArray(value)) {
         result[key] = value.map(this.filterToQuery);

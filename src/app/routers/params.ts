@@ -38,7 +38,7 @@ export class Params implements IParams {
     if (value === undefined)
       return undefined;
 
-    const items = value.split(' ').filter(item => !!item);
+    const items = value.split(',').filter(item => !!item);
 
     if (items.length === 0)
       return null;
