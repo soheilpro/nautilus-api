@@ -2,11 +2,11 @@ import { RouterBase } from '../router-base';
 import { IItemState, IItemStateManager, IItemStateFilter, IItemStateChange } from '../../framework/item-state';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { ItemStateModel } from '../../models/item-state';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
-import { IItemStateModel } from './iitem-state-model';
 
-export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, IItemStateChange, IItemStateModel> {
+export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, IItemStateChange> {
   constructor(itemStateManager: IItemStateManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(itemStateManager, userLogManager, dateTimeService);
   }
@@ -45,16 +45,10 @@ export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, II
     };
   }
 
-  entityToModel(entity: IItemState): IItemStateModel {
+  entityToModel(entity: IItemState) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      itemKind: entity.itemKind,
-      title: entity.title,
-      key: entity.key,
-      order: entity.order,
-    };
+    return new ItemStateModel(entity);
   }
 }

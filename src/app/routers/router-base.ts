@@ -9,11 +9,10 @@ import { IRequest } from '../irequest';
 import { IResponse } from '../iresponse';
 import { PermissionHelper } from '../security';
 import { IRoute } from './iroute';
-import { IEntityModel } from './ientity-model';
 import { IParams } from './iparams';
 import { Params } from './params';
 
-export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange, TEntityModel extends IEntityModel> implements IRouter {
+export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange> implements IRouter {
   constructor(private manager: IManager<TEntity, TFilter, TChange>, private userLogManager: IUserLogManager, private dateTimeService: IDateTimeService) {
     this.getEntities = this.getEntities.bind(this);
     this.getEntity = this.getEntity.bind(this);
@@ -235,42 +234,9 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     return true;
   }
 
-  protected entityToModel(entity: TEntity) {
-    if (!entity)
-      return undefined;
-
-    return this.renderEntity(entity, true);
-  }
+  abstract entityToModel(entity: TEntity): any;
 
   protected async getSupplement(name: string, entities: TEntity[]): Promise<any> {
     throw new Error('Not implemented.');
-  }
-
-  protected renderEntity(entity: TEntity, includeMeta?: boolean) {
-    if (!entity)
-      return undefined;
-
-    const result = {
-      id: entity.id,
-    } as TEntityModel;
-
-    if (includeMeta) {
-      result.meta = {
-        version: entity.meta.version,
-        state: entity.meta.state,
-        insertDateTime: this.renderDateTime(entity.meta.insertDateTime),
-        updateDateTime: this.renderDateTime(entity.meta.updateDateTime),
-        deleteDateTime: this.renderDateTime(entity.meta.deleteDateTime),
-      };
-    }
-
-    return result;
-  }
-
-  protected renderDateTime(date: Date) {
-    if (!date)
-      return undefined;
-
-    return date.getTime();
   }
 }

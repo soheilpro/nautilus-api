@@ -2,11 +2,11 @@ import { RouterBase } from '../router-base';
 import { IItemType, IItemTypeManager, IItemTypeFilter, IItemTypeChange } from '../../framework/item-type';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { ItemTypeModel } from '../../models/item-type/';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
-import { IItemTypeModel } from './iitem-type-model';
 
-export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItemTypeChange, IItemTypeModel> {
+export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItemTypeChange> {
   constructor(itemTypeManager: IItemTypeManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(itemTypeManager, userLogManager, dateTimeService);
   }
@@ -45,16 +45,10 @@ export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItem
     };
   }
 
-  entityToModel(entity: IItemType): IItemTypeModel {
+  entityToModel(entity: IItemType) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      itemKind: entity.itemKind,
-      title: entity.title,
-      key: entity.key,
-      order: entity.order,
-    };
+    return new ItemTypeModel(entity);
   }
 }

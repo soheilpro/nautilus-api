@@ -9,12 +9,12 @@ import { IPermission } from '../../framework/security';
 import { IUser, IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { ItemModel } from '../../models/item';
 import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
 import { IParams } from '../iparams';
-import { IItemModel } from './iitem-model';
 
-export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange, IItemModel> {
+export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
   constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemPriorityManager: IItemPriorityManager, private itemRelationshipManager: IItemRelationshipManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(itemManager, userLogManager, dateTimeService);
   }
@@ -101,24 +101,10 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange, IIte
     };
   }
 
-  entityToModel(entity: IItem): IItemModel {
+  entityToModel(entity: IItem) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      sid: entity.sid,
-      kind: entity.kind,
-      type: this.renderEntity(entity.type),
-      title: entity.title,
-      description: entity.description,
-      state: this.renderEntity(entity.state),
-      priority: this.renderEntity(entity.priority),
-      tags: entity.tags,
-      project: this.renderEntity(entity.project),
-      assignedTo: this.renderEntity(entity.assignedTo),
-      createdBy: this.renderEntity(entity.createdBy),
-      modifiedBy: this.renderEntity(entity.modifiedBy),
-    };
+    return new ItemModel(entity);
   }
 }

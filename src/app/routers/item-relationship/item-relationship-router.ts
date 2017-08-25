@@ -5,12 +5,12 @@ import { IPermission } from '../../framework/security';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { IUser } from '../../framework/user';
+import { ItemRelationshipModel } from '../../models/item-relationship';
 import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
 import { IParams } from '../iparams';
-import { IItemRelationshipModel } from './iitem-relationship-model';
 
-export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemRelationshipFilter, IItemRelationshipChange, IItemRelationshipModel> {
+export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemRelationshipFilter, IItemRelationshipChange> {
   constructor(itemRelationshipManager: IItemRelationshipManager, private itemManager: IItemManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(itemRelationshipManager, userLogManager, dateTimeService);
   }
@@ -76,15 +76,10 @@ export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemR
     };
   }
 
-  entityToModel(entity: IItemRelationship): IItemRelationshipModel {
+  entityToModel(entity: IItemRelationship) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      item1: this.renderEntity(entity.item1),
-      item2: this.renderEntity(entity.item2),
-      type: entity.type,
-    };
+    return new ItemRelationshipModel(entity);
   }
 }

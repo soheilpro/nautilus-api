@@ -4,11 +4,11 @@ import { IProjectManager } from '../../framework/project';
 import { IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { UserRoleModel } from '../../models/user-role';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
-import { IUserRoleModel } from './iuser-role-model';
 
-export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUserRoleChange, IUserRoleModel> {
+export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUserRoleChange> {
   constructor(userRoleManager: IUserRoleManager, private userManager: IUserManager, private projectManager: IProjectManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(userRoleManager, userLogManager, dateTimeService);
   }
@@ -45,15 +45,10 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
     };
   }
 
-  entityToModel(entity: IUserRole): IUserRoleModel {
+  entityToModel(entity: IUserRole) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      user: this.renderEntity(entity.user),
-      project: this.renderEntity(entity.project),
-      name: entity.name,
-    };
+    return new UserRoleModel(entity);
   }
 }

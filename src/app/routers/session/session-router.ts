@@ -4,12 +4,12 @@ import { ISession, ISessionManager, ISessionFilter, ISessionChange } from '../..
 import { IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { SessionModel } from '../../models/session/';
 import { IRequest } from '../../irequest';
 import { IResponse } from '../../iresponse';
 import { Params } from '../params';
-import { ISessionModel } from './isession-model';
 
-export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISessionChange, ISessionModel> {
+export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISessionChange> {
   constructor(private sessionManager: ISessionManager, private userManager: IUserManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(sessionManager, userLogManager, dateTimeService);
 
@@ -59,14 +59,10 @@ export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISession
     });
   }
 
-  entityToModel(entity: ISession): ISessionModel {
+  entityToModel(entity: ISession) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      accessToken: entity.accessToken,
-      user: this.renderEntity(entity.user),
-    };
+    return new SessionModel(entity);
   }
 }

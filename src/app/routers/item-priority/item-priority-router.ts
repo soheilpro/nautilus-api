@@ -2,11 +2,11 @@ import { RouterBase } from '../router-base';
 import { IItemPriority, IItemPriorityManager, IItemPriorityFilter, IItemPriorityChange } from '../../framework/item-priority';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { ItemPriorityModel } from '../../models/item-priority/index';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
-import { IItemPriorityModel } from './iitem-priority-model';
 
-export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityFilter, IItemPriorityChange, IItemPriorityModel> {
+export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityFilter, IItemPriorityChange> {
   constructor(itemPriorityManager: IItemPriorityManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(itemPriorityManager, userLogManager, dateTimeService);
   }
@@ -45,16 +45,10 @@ export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityF
     };
   }
 
-  entityToModel(entity: IItemPriority): IItemPriorityModel {
+  entityToModel(entity: IItemPriority) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      itemKind: entity.itemKind,
-      title: entity.title,
-      key: entity.key,
-      order: entity.order,
-    };
+    return new ItemPriorityModel(entity);
   }
 }

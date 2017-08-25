@@ -3,13 +3,13 @@ import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { UserModel } from '../../models/user';
 import { IRequest } from '../../irequest';
 import { IResponse } from '../../iresponse';
 import { IParams } from '../iparams';
 import { Params } from '../params';
-import { IUserModel } from './iuser-model';
 
-export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUserModel> {
+export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange> {
   constructor(private userManager: IUserManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(userManager, userLogManager, dateTimeService);
 
@@ -68,15 +68,10 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange, IUse
     };
   }
 
-  entityToModel(entity: IUser): IUserModel {
+  entityToModel(entity: IUser) {
     if (!entity)
       return undefined;
 
-    return {
-      ...super.entityToModel(entity),
-      username: entity.username,
-      name: entity.name,
-      email: entity.email,
-    };
+    return new UserModel(entity);
   }
 }

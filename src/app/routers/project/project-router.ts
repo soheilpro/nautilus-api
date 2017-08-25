@@ -2,11 +2,11 @@ import { RouterBase } from '../router-base';
 import { IProject, IProjectManager, IProjectFilter, IProjectChange } from '../../framework/project';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
+import { ProjectModel } from '../../models/project';
 import { IRequest } from '../../irequest';
 import { IParams } from '../iparams';
-import { IProjectModel } from './iproject-model';
 
-export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProjectChange, IProjectModel> {
+export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProjectChange> {
   constructor(projectManager: IProjectManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(projectManager, userLogManager, dateTimeService);
   }
@@ -43,15 +43,7 @@ export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProject
     };
   }
 
-  entityToModel(entity: IProject): IProjectModel {
-    if (!entity)
-      return undefined;
-
-    return {
-      ...super.entityToModel(entity),
-      name: entity.name,
-      description: entity.description,
-      tags: entity.tags,
-    };
+  entityToModel(entity: IProject) {
+    return new ProjectModel(entity);
   }
 }
