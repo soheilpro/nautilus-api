@@ -10,6 +10,7 @@ import { IUser, IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { ItemModel } from '../../models/item';
+import { ItemRelationshipModel } from '../../models/item-relationship';
 import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
 import { IParams } from '../iparams';
@@ -52,7 +53,6 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
   async getSupplement(name: string, entities: IItem[]) {
     if (name === 'relationships') {
       const entityIds = entities.map(entity => entity.id);
-
       const filter = {
         $or: [
           { 'item1.id': { $in: entityIds } },
@@ -62,9 +62,7 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
 
       const relationships = await this.itemRelationshipManager.getAll(filter);
 
-      // TODO: map to model
-
-      return relationships;
+      return relationships.map(relationship => new ItemRelationshipModel(relationship));
     }
 
     return Promise.resolve(undefined);

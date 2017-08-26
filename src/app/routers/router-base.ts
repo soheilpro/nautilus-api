@@ -70,12 +70,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
 
     const accessibleEntities = entities.filter(entity => this.checkEntityAccess(entity, 'read', request.user, request.permissions));
     const data = accessibleEntities.map(entity => this.entityToModel(entity));
-
-    const requestedSupplements = params.readStringArray('supplement') || [];
-    const supplements: IObject = {};
-
-    for (const requestedSupplement of requestedSupplements)
-      supplements[requestedSupplement] = await this.getSupplement(requestedSupplement, accessibleEntities);
+    const supplements = await this.getSupplements(params, accessibleEntities);
 
     response.send({
       data: data,
@@ -94,9 +89,11 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
       return response.send(new restify.ForbiddenError());
 
     const data = this.entityToModel(entity);
+    const supplements = await this.getSupplements(params, [entity]);
 
     response.send({
       data: data,
+      supplements: supplements,
     });
   }
 
@@ -235,6 +232,20 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
   }
 
   abstract entityToModel(entity: TEntity): any;
+
+  private async getSupplements(params: IParams, entities: TEntity[]) {
+    const requestedSupplements = params.readStringArray('supplement') || [];
+
+    if (requestedSupplements.length === 0)
+      return undefined;
+
+    const supplements: IObject = {};
+
+    for (const requestedSupplement of requestedSupplements)
+      supplements[requestedSupplement] = await this.getSupplement(requestedSupplement, entities);
+
+    return supplements;
+  }
 
   protected async getSupplement(name: string, entities: TEntity[]): Promise<any> {
     throw new Error('Not implemented.');
