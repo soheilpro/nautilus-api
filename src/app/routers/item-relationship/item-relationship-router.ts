@@ -5,6 +5,7 @@ import { IPermission } from '../../framework/security';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { IUser } from '../../framework/user';
+import { EntityHelper } from '../../framework';
 import { ItemRelationshipModel } from '../../models/item-relationship';
 import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
@@ -51,7 +52,10 @@ export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemR
     return true;
   }
 
-  private checkItemAccess(item: IItem, access: string, user: IUser, permissions: IPermission[]) {
+  private async checkItemAccess(item: IItem, access: string, user: IUser, permissions: IPermission[]) {
+    if (EntityHelper.isBareEntity(item))
+      item = await this.itemManager.get({ id: item.id });
+
     if (item.project)
       return PermissionHelper.hasPermission(permissions, `project.${access}`, { projectId: item.project.id });
 

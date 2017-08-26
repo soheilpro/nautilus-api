@@ -1,4 +1,5 @@
 export * from './duplicate-entity-error';
+export * from './entity-helper';
 export * from './entity-state';
 export * from './ichange';
 export * from './ientity';

@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import { IEntity, IFilter, IChange, IManager, IValidationError, IRepository, DuplicateEntityError } from '../framework';
-import { ObjectHelper } from '../utilities';
+import { ObjectHelper } from '../utilities/object-helper';
 
 export default abstract class ManagerBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange> implements IManager<TEntity, TFilter, TChange> {
   constructor(protected repository: IRepository<TEntity, TFilter, TChange>) {

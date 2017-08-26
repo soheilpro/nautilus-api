@@ -1,6 +1,6 @@
 import * as mongodb from 'mongodb';
 import { IDateTimeService } from '../framework/system';
-import { ObjectHelper } from '../utilities';
+import { ObjectHelper } from '../utilities/object-helper';
 import { IDB } from './idb';
 import { IDocument } from './idocument';
 import { IManagedDocument } from './imanaged-document';
