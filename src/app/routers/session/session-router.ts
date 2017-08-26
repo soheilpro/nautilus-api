@@ -1,4 +1,4 @@
-import * as restify from 'restify';
+import * as errors from 'restify-errors';
 import { RouterBase } from '../router-base';
 import { ISession, ISessionManager, ISessionFilter, ISessionChange } from '../../framework/session';
 import { IUserManager } from '../../framework/user';
@@ -32,15 +32,15 @@ export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISession
     const password = params.readString('password');
 
     if (!username)
-      return response.send(new restify.UnprocessableEntityError('Missing username.'));
+      return response.send(new errors.UnprocessableEntityError('Missing username.'));
 
     if (!password)
-      return response.send(new restify.UnprocessableEntityError('Missing password.'));
+      return response.send(new errors.UnprocessableEntityError('Missing password.'));
 
     const user = await this.userManager.get({ username: username });
 
     if (!user || !this.userManager.testPassword(password, user.passwordHash))
-        return response.send(new restify.UnauthorizedError());
+        return response.send(new errors.UnauthorizedError());
 
     const session: ISession = {
       user: user,
@@ -49,7 +49,7 @@ export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISession
     const validationError = this.sessionManager.validateEntity(session);
 
     if (validationError)
-      return response.send(new restify.UnprocessableEntityError(validationError.message));
+      return response.send(new errors.UnprocessableEntityError(validationError.message));
 
     const insertedEntity = await this.sessionManager.insert(session);
     const data = this.entityToModel(insertedEntity);

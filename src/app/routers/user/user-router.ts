@@ -1,4 +1,4 @@
-import * as restify from 'restify';
+import * as errors from 'restify-errors';
 import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
@@ -36,10 +36,10 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange> {
     const user = await params.readEntity('id', this.userManager);
 
     if (!user)
-      return response.send(new restify.NotFoundError());
+      return response.send(new errors.NotFoundError());
 
     if (user.id !== request.user.id)
-      return response.send(new restify.ForbiddenError());
+      return response.send(new errors.ForbiddenError());
 
     const data = request.permissions;
 

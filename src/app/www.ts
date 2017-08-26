@@ -1,4 +1,5 @@
 import * as restify from 'restify';
+import * as corsMiddleware from 'restify-cors-middleware';
 import * as debugModule from 'debug';
 import { DB } from './db';
 import { DateTimeService } from './services';
@@ -47,11 +48,19 @@ const routers = [
   new ItemRelationshipRouter(itemRelationshipManager, itemManager, userLogManager, dateTimeService),
 ];
 
+const cors = corsMiddleware({
+  origins: ['*'],
+  allowHeaders: ['Authorization'],
+  exposeHeaders: [],
+});
+
 const server = restify.createServer();
-server.use(restify.authorizationParser());
-server.use(restify.queryParser());
-server.use(restify.bodyParser());
-server.use(restify.gzipResponse());
+server.pre(cors.preflight);
+server.use(restify.plugins.authorizationParser());
+server.use(restify.plugins.queryParser({ mapParams: true }));
+server.use(restify.plugins.bodyParser({ mapParams: true }));
+server.use(restify.plugins.gzipResponse());
+server.use(cors.actual);
 server.use(authenticator(sessionManager, userRoleManager, projectManager));
 
 for (const router of routers)

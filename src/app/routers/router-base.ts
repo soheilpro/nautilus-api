@@ -1,4 +1,5 @@
 import * as restify from 'restify';
+import * as errors from 'restify-errors';
 import { IRouter } from '../irouter';
 import { IEntity, IFilter, IChange, IManager, DuplicateEntityError } from '../framework';
 import { IPermission } from '../framework/security';
@@ -52,11 +53,11 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     return (request: IRequest, response: IResponse, next: restify.Next) => {
       if (isProtected) {
         if (!request.user)
-          return response.send(new restify.UnauthorizedError());
+          return response.send(new errors.UnauthorizedError());
 
         if (permissions && permissions.length !== 0)
           if (!permissions.every(permission => PermissionHelper.hasPermission(request.permissions, permission, {})))
-            return response.send(new restify.ForbiddenError());
+            return response.send(new errors.ForbiddenError());
       }
 
       next();
@@ -83,10 +84,10 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
-      return response.send(new restify.NotFoundError());
+      return response.send(new errors.NotFoundError());
 
     if (!this.checkEntityAccess(entity, 'read', request.user, request.permissions))
-      return response.send(new restify.ForbiddenError());
+      return response.send(new errors.ForbiddenError());
 
     const data = this.entityToModel(entity);
     const supplements = await this.getSupplements(params, [entity]);
@@ -104,10 +105,10 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     const validationError = this.manager.validateEntity(entity);
 
     if (validationError)
-      return response.send(new restify.UnprocessableEntityError(validationError.message));
+      return response.send(new errors.UnprocessableEntityError(validationError.message));
 
     if (!this.checkEntityAccess(entity, 'write', request.user, request.permissions))
-      return response.send(new restify.ForbiddenError());
+      return response.send(new errors.ForbiddenError());
 
     try {
       const insertedEntity = await this.manager.insert(entity);
@@ -132,7 +133,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     }
     catch (error) {
       if (error instanceof DuplicateEntityError)
-        return response.send(new restify.UnprocessableEntityError('Duplicate entity.'));
+        return response.send(new errors.UnprocessableEntityError('Duplicate entity.'));
 
       throw error;
     }
@@ -143,20 +144,20 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
-      return response.send(new restify.NotFoundError());
+      return response.send(new errors.NotFoundError());
 
     if (!this.checkEntityAccess(entity, 'write', request.user, request.permissions))
-      return response.send(new restify.ForbiddenError());
+      return response.send(new errors.ForbiddenError());
 
     const change = await this.changeFromParams(params, request);
 
     const validationError = this.manager.validateChange(change);
 
     if (validationError)
-      return response.send(new restify.UnprocessableEntityError(validationError.message));
+      return response.send(new errors.UnprocessableEntityError(validationError.message));
 
     if (!this.checkChangeAccess(change, request.user, request.permissions))
-      return response.send(new restify.ForbiddenError());
+      return response.send(new errors.ForbiddenError());
 
     try {
       const updatedEntity = await this.manager.update(entity.id, change);
@@ -181,7 +182,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     }
     catch (error) {
       if (error instanceof DuplicateEntityError)
-        return response.send(new restify.UnprocessableEntityError('Duplicate entity.'));
+        return response.send(new errors.UnprocessableEntityError('Duplicate entity.'));
 
       throw error;
     }
@@ -192,10 +193,10 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     const entity = await params.readEntity('id', this.manager);
 
     if (!entity)
-      return response.send(new restify.NotFoundError());
+      return response.send(new errors.NotFoundError());
 
     if (!this.checkEntityAccess(entity, 'write', request.user, request.permissions))
-      return response.send(new restify.ForbiddenError());
+      return response.send(new errors.ForbiddenError());
 
     await this.manager.delete(entity.id);
 
