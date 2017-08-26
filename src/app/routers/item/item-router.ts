@@ -79,7 +79,7 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
       priority: await params.readEntity('priority_id', this.itemPriorityManager),
       tags: params.readStringArray('tags'),
       project: await params.readEntity('project_id', this.projectManager),
-      assignedTo: await params.readEntity('assignedTo_id', this.userManager),
+      assignedTo: await params.readEntity('assigned_to_id', this.userManager),
       createdBy: request.user,
     };
   }
@@ -94,7 +94,7 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
       priority: await params.readEntity('priority_id', this.itemPriorityManager),
       tags: params.readStringArray('tags'),
       project: await params.readEntity('project_id', this.projectManager),
-      assignedTo: await params.readEntity('assignedTo_id', this.userManager),
+      assignedTo: await params.readEntity('assigned_to_id', this.userManager),
       modifiedBy: request.user,
     };
   }
