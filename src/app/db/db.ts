@@ -69,6 +69,15 @@ export class DB implements IDB {
     return collection.drop();
   }
 
+  async counter(name: string) {
+    const query = { name };
+    const update = { $inc: { value: 1 } };
+
+    const result = await this.update<ICounterDocument>('counters', query, update);
+
+    return result.value;
+  }
+
   async selectManaged<TDocument extends IManagedDocument>(collectionName: string, query: IQuery) {
     query = {
       ...query,
@@ -126,15 +135,6 @@ export class DB implements IDB {
     update.setOrUnset('meta.deleteDateTime', this.dateTimeService.nowUTC());
 
     await this.update(collectionName, query, update);
-  }
-
-  private async counter(name: string) {
-    const query = { name };
-    const update = { $inc: { value: 1 } };
-
-    const result = await this.update<ICounterDocument>('counters', query, update);
-
-    return result.value;
   }
 
   private async nextVersion() {

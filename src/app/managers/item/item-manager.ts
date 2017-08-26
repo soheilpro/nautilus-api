@@ -8,6 +8,12 @@ export class ItemManager extends ManagerBase<IItem, IItemFilter, IItemChange> im
     super(repository);
   }
 
+  async insert(entity: IItem) {
+    entity.sid = (await this.repository.counter('items')).toString();
+
+    return super.insert(entity);
+  }
+
   validateEntity(entity: IItem) {
     if (entity.kind === undefined)
       return { message: 'Missing kind.' };

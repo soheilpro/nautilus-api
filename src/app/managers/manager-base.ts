@@ -3,7 +3,7 @@ import { IEntity, IFilter, IChange, IManager, IValidationError, IRepository, Dup
 import { ObjectHelper } from '../utilities';
 
 export default abstract class ManagerBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange> implements IManager<TEntity, TFilter, TChange> {
-  constructor(private repository: IRepository<TEntity, TFilter, TChange>) {
+  constructor(protected repository: IRepository<TEntity, TFilter, TChange>) {
   }
 
   getAll(filter: TFilter) {

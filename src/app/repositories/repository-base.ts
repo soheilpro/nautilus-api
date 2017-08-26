@@ -65,6 +65,10 @@ export default abstract class RepositoryBase<TEntity extends IEntity, TFilter ex
     await this.db.deleteManaged(this.collectionName(), query);
   }
 
+  async counter(name: string) {
+    return await this.db.counter(name);
+  }
+
   private filterToQuery(filter: IFilter) {
     const result = {} as TFilter;
 

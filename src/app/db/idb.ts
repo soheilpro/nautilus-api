@@ -10,6 +10,7 @@ export interface IDB {
   update<TDocument extends IDocument>(collectionName: string, query: IQuery, update: IUpdate): Promise<TDocument>;
   delete(collectionName: string, query: IQuery): Promise<void>;
   drop(collectionName: string): Promise<void>;
+  counter(name: string): Promise<number>;
 
   selectManaged<TDocument extends IManagedDocument>(collectionName: string, query: IQuery): Promise<TDocument[]>;
   countManaged(collectionName: string, query: IQuery): Promise<number>;

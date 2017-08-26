@@ -8,4 +8,5 @@ export interface IRepository<TEntity extends IEntity, TFilter extends IFilter, T
   insert(entity: TEntity): Promise<TEntity>;
   update(id: string, change: TChange): Promise<TEntity>;
   delete(id: string): Promise<void>;
+  counter(name: string): Promise<number>;
 }
