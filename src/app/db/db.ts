@@ -22,7 +22,7 @@ export class DB implements IDB {
 
   private async getDB() {
     if (!DB._db)
-      DB._db = await mongodb.MongoClient.connect(this.address);
+      DB._db = await mongodb.MongoClient.connect(this.address, { ignoreUndefined: true });
 
     return DB._db;
   }
