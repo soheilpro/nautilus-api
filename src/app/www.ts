@@ -1,8 +1,7 @@
-import * as path from 'path';
-import * as nconf from 'nconf';
 import * as restify from 'restify';
 import * as corsMiddleware from 'restify-cors-middleware';
 import * as debugModule from 'debug';
+import { config } from './config';
 import { DB } from './db';
 import { DateTimeService } from './services';
 import { UserManager, UserLogManager, SessionManager, ProjectManager, UserRoleManager, ItemStateManager, ItemTypeManager, ItemPriorityManager, ItemManager, ItemRelationshipManager } from './managers';
@@ -10,19 +9,11 @@ import { UserRepository, UserLogRepository, SessionRepository, ProjectRepository
 import { UserRouter, SessionRouter, ProjectRouter, UserRoleRouter, ItemStateRouter, ItemTypeRouter, ItemPriorityRouter, ItemRouter, ItemRelationshipRouter } from './routers';
 import { authenticator } from './plugins';
 
-const config = nconf
-  .env()
-  .file({ file: path.join(__dirname, '../../config/app.json') })
-  .defaults({
-    'NAUTILUS_API_PORT': 3000,
-    'NAUTILUS_API_DB_ADDRESS': 'mongodb://localhost:27017/nautilus',
-  });
-
 const debug = debugModule('nautilus-api');
 
 const dateTimeService = new DateTimeService();
 
-const db = new DB(config.get('NAUTILUS_API_DB_ADDRESS'), dateTimeService);
+const db = new DB(config.db.address, dateTimeService);
 
 const userRepository = new UserRepository(db);
 const userLogRepository = new UserLogRepository(db);
@@ -76,6 +67,6 @@ server.use(authenticator(sessionManager, userRoleManager, projectManager));
 for (const router of routers)
   router.register(server);
 
-server.listen(config.get('NAUTILUS_API_PORT'), () => {
+server.listen(config.port, () => {
   debug(`Nautilus API listening on port ${server.address().port}`);
 });
