@@ -25,6 +25,7 @@
     "@types/bcryptjs": "^2.4.0",
     "@types/debug": "0.0.29",
     "@types/mongodb": "^2.2.6",
+    "@types/nconf": "0.0.34",
     "@types/node": "^7.0.32",
     "@types/restify": "^5.0.1",
     "@types/restify-cors-middleware": "^1.0.0",
