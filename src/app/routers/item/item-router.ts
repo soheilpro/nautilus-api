@@ -11,9 +11,8 @@ import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { ItemModel } from '../../models/item';
 import { ItemRelationshipModel } from '../../models/item-relationship';
-import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
-import { IParams } from '../iparams';
+import { IRequest, IParams } from '../../web';
 
 export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
   constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemPriorityManager: IItemPriorityManager, private itemRelationshipManager: IItemRelationshipManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

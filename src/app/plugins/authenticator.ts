@@ -2,8 +2,7 @@ import * as restify from 'restify';
 import { ISessionManager, ISessionFilter } from '../framework/session';
 import { IUserRoleManager, IUserRoleFilter } from '../framework/user-role';
 import { IProjectManager } from '../framework/project';
-import { IRequest } from '../irequest';
-import { IResponse } from '../iresponse';
+import { IRequest, IResponse } from '../web';
 import { PermissionManager } from '../security';
 
 export function authenticator(sessionManager: ISessionManager, userRoleManager: IUserRoleManager, projectManager: IProjectManager) {

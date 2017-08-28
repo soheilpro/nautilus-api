@@ -3,8 +3,7 @@ import { IItemPriority, IItemPriorityManager, IItemPriorityFilter, IItemPriority
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { ItemPriorityModel } from '../../models/item-priority/index';
-import { IRequest } from '../../irequest';
-import { IParams } from '../iparams';
+import { IRequest, IParams } from '../../web';
 
 export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityFilter, IItemPriorityChange> {
   constructor(itemPriorityManager: IItemPriorityManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

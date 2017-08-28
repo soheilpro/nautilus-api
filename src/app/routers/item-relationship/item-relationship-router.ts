@@ -7,9 +7,8 @@ import { IDateTimeService } from '../../framework/system';
 import { IUser } from '../../framework/user';
 import { EntityHelper } from '../../framework';
 import { ItemRelationshipModel } from '../../models/item-relationship';
-import { IRequest } from '../../irequest';
 import { PermissionHelper } from '../../security';
-import { IParams } from '../iparams';
+import { IRequest, IParams } from '../../web';
 
 export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemRelationshipFilter, IItemRelationshipChange> {
   constructor(itemRelationshipManager: IItemRelationshipManager, private itemManager: IItemManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

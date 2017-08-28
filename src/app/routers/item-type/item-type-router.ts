@@ -3,8 +3,7 @@ import { IItemType, IItemTypeManager, IItemTypeFilter, IItemTypeChange } from '.
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { ItemTypeModel } from '../../models/item-type/';
-import { IRequest } from '../../irequest';
-import { IParams } from '../iparams';
+import { IRequest, IParams } from '../../web';
 
 export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItemTypeChange> {
   constructor(itemTypeManager: IItemTypeManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

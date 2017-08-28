@@ -5,8 +5,7 @@ import { IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { UserRoleModel } from '../../models/user-role';
-import { IRequest } from '../../irequest';
-import { IParams } from '../iparams';
+import { IRequest, IParams } from '../../web';
 
 export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUserRoleChange> {
   constructor(userRoleManager: IUserRoleManager, private userManager: IUserManager, private projectManager: IProjectManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

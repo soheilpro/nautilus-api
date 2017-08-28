@@ -4,10 +4,7 @@ import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/u
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { UserModel } from '../../models/user';
-import { IRequest } from '../../irequest';
-import { IResponse } from '../../iresponse';
-import { IParams } from '../iparams';
-import { Params } from '../params';
+import { IRequest, IResponse, IParams, Params } from '../../web';
 
 export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange> {
   constructor(private userManager: IUserManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

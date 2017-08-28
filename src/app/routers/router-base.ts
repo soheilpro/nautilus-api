@@ -1,17 +1,13 @@
 import * as restify from 'restify';
 import * as errors from 'restify-errors';
-import { IRouter } from '../irouter';
 import { IEntity, IFilter, IChange, IManager, DuplicateEntityError } from '../framework';
 import { IPermission } from '../framework/security';
 import { IUser } from '../framework/user';
 import { IUserLog, IUserLogManager } from '../framework/user-log';
 import { IDateTimeService } from '../framework/system';
-import { IRequest } from '../irequest';
-import { IResponse } from '../iresponse';
 import { PermissionHelper } from '../security';
+import { IRouter, IRequest, IResponse, IParams, Params } from '../web';
 import { IRoute } from './iroute';
-import { IParams } from './iparams';
-import { Params } from './params';
 
 export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilter, TChange extends IChange> implements IRouter {
   constructor(private manager: IManager<TEntity, TFilter, TChange>, private userLogManager: IUserLogManager, private dateTimeService: IDateTimeService) {

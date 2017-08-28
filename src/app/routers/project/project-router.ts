@@ -3,8 +3,7 @@ import { IProject, IProjectManager, IProjectFilter, IProjectChange } from '../..
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { ProjectModel } from '../../models/project';
-import { IRequest } from '../../irequest';
-import { IParams } from '../iparams';
+import { IRequest, IParams } from '../../web';
 
 export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProjectChange> {
   constructor(projectManager: IProjectManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

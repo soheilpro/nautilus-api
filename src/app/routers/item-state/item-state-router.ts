@@ -3,8 +3,7 @@ import { IItemState, IItemStateManager, IItemStateFilter, IItemStateChange } fro
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { ItemStateModel } from '../../models/item-state';
-import { IRequest } from '../../irequest';
-import { IParams } from '../iparams';
+import { IRequest, IParams } from '../../web';
 
 export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, IItemStateChange> {
   constructor(itemStateManager: IItemStateManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {

@@ -5,9 +5,7 @@ import { IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../framework/system';
 import { SessionModel } from '../../models/session/';
-import { IRequest } from '../../irequest';
-import { IResponse } from '../../iresponse';
-import { Params } from '../params';
+import { IRequest, IResponse, Params } from '../../web';
 
 export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISessionChange> {
   constructor(private sessionManager: ISessionManager, private userManager: IUserManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
