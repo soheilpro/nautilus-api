@@ -1,7 +1,7 @@
-import * as mongodb from 'mongodb';
 import { IDateTimeService } from '../framework/system';
 import { ObjectHelper } from '../utilities/object-helper';
 import { IDB } from './idb';
+import { IConnection } from './iconnection';
 import { IDocument } from './idocument';
 import { IManagedDocument } from './imanaged-document';
 import { IQuery } from './iquery';
@@ -15,55 +15,46 @@ interface ICounterDocument extends IDocument {
 }
 
 export class DB implements IDB {
-  private static _db: mongodb.Db;
-
-  constructor(private address: string, private dateTimeService: IDateTimeService) {
-  }
-
-  private async getDB() {
-    if (!DB._db)
-      DB._db = await mongodb.MongoClient.connect(this.address, { ignoreUndefined: true });
-
-    return DB._db;
+  constructor(private connection: IConnection, private dateTimeService: IDateTimeService) {
   }
 
   async select<TDocument extends IDocument>(collectionName: string, query: IQuery) {
-    const db = await this.getDB();
+    const db = this.connection.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
     return await collection.find<TDocument>(ObjectHelper.cleanUp(query)).toArray();
   }
 
   async count(collectionName: string, query: IQuery) {
-    const db = await this.getDB();
+    const db = this.connection.getDB();
     const collection = db.collection(collectionName);
 
     return await collection.count(ObjectHelper.cleanUp(query));
   }
 
   async insert<TDocument extends IDocument>(collectionName: string, document: IDocument) {
-    const db = await this.getDB();
+    const db = this.connection.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
     return (await collection.insertOne(ObjectHelper.cleanUp(document))).ops[0];
   }
 
-  async update<TDocument extends IDocument>(collectionName: string, query: IQuery, update: IUpdate) {
-    const db = await this.getDB();
+  async update<TDocument extends IDocument>(collectionName: string, query: IQuery, update: IUpdate, upsert?: boolean) {
+    const db = this.connection.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
-    return (await collection.findOneAndUpdate(ObjectHelper.cleanUp(query), ObjectHelper.cleanUp(update), { returnOriginal: false })).value;
+    return (await collection.findOneAndUpdate(ObjectHelper.cleanUp(query), ObjectHelper.cleanUp(update), { returnOriginal: false, upsert: upsert })).value;
   }
 
   async delete(collectionName: string, query: IQuery) {
-    const db = await this.getDB();
+    const db = this.connection.getDB();
     const collection = db.collection(collectionName);
 
     await collection.deleteMany(ObjectHelper.cleanUp(query));
   }
 
   async drop(collectionName: string) {
-    const db = await this.getDB();
+    const db = this.connection.getDB();
     const collection = db.collection(collectionName);
 
     return collection.drop();

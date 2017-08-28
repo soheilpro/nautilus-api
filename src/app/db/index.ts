@@ -1,4 +1,6 @@
+export * from './connection';
 export * from './db';
+export * from './iconnection';
 export * from './idb';
 export * from './idocument';
 export * from './imanaged-document';

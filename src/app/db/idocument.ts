@@ -1,3 +1,4 @@
 export interface IDocument {
-  _id: any;
+  _id?: any;
+  [key: string]: any;
 }
