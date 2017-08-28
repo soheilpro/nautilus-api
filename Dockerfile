@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:8.4
 
 RUN mkdir -p /usr/app
 COPY . /usr/app
