@@ -1,4 +1,4 @@
-import { IDateTimeService } from '../../framework/system';
+import { IDateTimeService } from './idate-time-service';
 
 export class DateTimeService implements IDateTimeService {
   nowUTC() {

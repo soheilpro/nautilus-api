@@ -1,7 +1,7 @@
 import { RouterBase } from '../router-base';
 import { IItemPriority, IItemPriorityManager, IItemPriorityFilter, IItemPriorityChange } from '../../framework/item-priority';
 import { IUserLogManager } from '../../framework/user-log';
-import { IDateTimeService } from '../../framework/system';
+import { IDateTimeService } from '../../services';
 import { ItemPriorityModel } from '../../models/item-priority/index';
 import { IRequest, IParams } from '../../web';
 

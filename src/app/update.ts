@@ -1,6 +1,6 @@
 import { config } from './config';
-import { DB, Connection, IDocument } from './db';
 import { DateTimeService } from './services';
+import { DB, Connection, IDocument } from './db';
 import { v1 } from './schema';
 
 const schemas = [

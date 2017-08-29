@@ -1,4 +1,4 @@
-import { IDateTimeService } from '../framework/system';
+import { IDateTimeService } from '../services';
 import { ObjectHelper } from '../utilities/object-helper';
 import { IDB } from './idb';
 import { IConnection } from './iconnection';
