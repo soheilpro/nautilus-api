@@ -1,5 +1,6 @@
 import * as restify from 'restify';
 import * as corsMiddleware from 'restify-cors-middleware';
+import * as morgan from 'morgan';
 import * as debugModule from 'debug';
 import { settings } from './configuration';
 import { DateTimeService } from './services';
@@ -59,6 +60,7 @@ async function run() {
 
   const server = restify.createServer();
   server.pre(cors.preflight);
+  server.use(morgan('dev') as any);
   server.use(restify.plugins.authorizationParser());
   server.use(restify.plugins.queryParser({ mapParams: true }));
   server.use(restify.plugins.bodyParser({ mapParams: true }));
