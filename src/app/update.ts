@@ -1,4 +1,4 @@
-import { config } from './config';
+import { settings } from './configuration';
 import { DateTimeService } from './services';
 import { DB, Connection, IDocument } from './db';
 import { v1 } from './schema';
@@ -14,7 +14,7 @@ interface IMetaDocument extends IDocument {
 async function run() {
   const dateTimeService = new DateTimeService();
 
-  const connection = new Connection(config.db.address);
+  const connection = new Connection(settings.db.address);
   await connection.open();
   const db = new DB(connection, dateTimeService);
 

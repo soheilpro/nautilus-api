@@ -5,6 +5,7 @@
   "scripts": {
     "build": "buno tsc",
     "clean": "rm -rf ./out",
+    "config": "node ./out/config.js",
     "lint": "tslint \"app/**/*.ts\"",
     "start": "node ./out/www.js",
     "update": "node ./out/update.js'",

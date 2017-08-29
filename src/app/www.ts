@@ -1,7 +1,7 @@
 import * as restify from 'restify';
 import * as corsMiddleware from 'restify-cors-middleware';
 import * as debugModule from 'debug';
-import { config } from './config';
+import { settings } from './configuration';
 import { DateTimeService } from './services';
 import { DB, Connection } from './db';
 import { UserManager, UserLogManager, SessionManager, ProjectManager, UserRoleManager, ItemStateManager, ItemTypeManager, ItemPriorityManager, ItemManager, ItemRelationshipManager } from './managers';
@@ -14,7 +14,7 @@ const debug = debugModule('nautilus-api');
 async function run() {
   const dateTimeService = new DateTimeService();
 
-  const connection = new Connection(config.db.address);
+  const connection = new Connection(settings.db.address);
   await connection.open();
   const db = new DB(connection, dateTimeService);
 
@@ -70,7 +70,7 @@ async function run() {
   for (const router of routers)
     router.register(server);
 
-  server.listen(config.port, () => {
+  server.listen(settings.port, () => {
     debug(`Nautilus API listening on port ${server.address().port}`);
   });
 
