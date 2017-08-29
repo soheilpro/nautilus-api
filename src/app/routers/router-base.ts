@@ -23,7 +23,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
       (server as any)[route.method](route.url, this.authorize(route.isProtected, route.permissions), route.handler);
   }
 
-  abstract getName(): string;
+  abstract readonly name: string;
 
   abstract getRoutes(): IRoute[];
 
@@ -112,7 +112,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
       let userLog: IUserLog = {
         dateTime: this.dateTimeService.nowUTC(),
         user: request.user,
-        action: `${this.getName()}.create`,
+        action: `${this.name}.create`,
         item: insertedEntity,
         params: {
           entity: insertedEntity,
@@ -161,7 +161,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
       let userLog: IUserLog = {
         dateTime: this.dateTimeService.nowUTC(),
         user: request.user,
-        action: `${this.getName()}.update`,
+        action: `${this.name}.update`,
         item: updatedEntity,
         params: {
           change: change,
@@ -199,7 +199,7 @@ export abstract class RouterBase<TEntity extends IEntity, TFilter extends IFilte
     let userLog: IUserLog = {
       dateTime: this.dateTimeService.nowUTC(),
       user: request.user,
-      action: `${this.getName()}.delete`,
+      action: `${this.name}.delete`,
       item: entity,
     };
 

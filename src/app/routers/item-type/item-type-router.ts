@@ -10,9 +10,7 @@ export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItem
     super(itemTypeManager, userLogManager, dateTimeService);
   }
 
-  getName() {
-    return 'item-types';
-  }
+  readonly name = 'item-types';
 
   getRoutes() {
     return [

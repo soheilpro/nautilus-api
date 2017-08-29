@@ -10,9 +10,7 @@ export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProject
     super(projectManager, userLogManager, dateTimeService);
   }
 
-  getName() {
-    return 'projects';
-  }
+  readonly name = 'projects';
 
   getRoutes() {
     return [

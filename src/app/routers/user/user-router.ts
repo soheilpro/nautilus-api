@@ -13,9 +13,7 @@ export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange> {
     this.getPermissions = this.getPermissions.bind(this);
   }
 
-  getName() {
-    return 'users';
-  }
+  readonly name = 'users';
 
   getRoutes() {
     return [

@@ -10,9 +10,7 @@ export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityF
     super(itemPriorityManager, userLogManager, dateTimeService);
   }
 
-  getName() {
-    return 'item-priorities';
-  }
+  readonly name = 'item-priorities';
 
   getRoutes() {
     return [

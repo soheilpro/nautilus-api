@@ -10,9 +10,7 @@ export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, II
     super(itemStateManager, userLogManager, dateTimeService);
   }
 
-  getName() {
-    return 'item-states';
-  }
+  readonly name = 'item-states';
 
   getRoutes() {
     return [

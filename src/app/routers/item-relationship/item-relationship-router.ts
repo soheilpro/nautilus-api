@@ -15,9 +15,7 @@ export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemR
     super(itemRelationshipManager, userLogManager, dateTimeService);
   }
 
-  getName() {
-    return 'item-relationships';
-  }
+  readonly name = 'item-relationships';
 
   getRoutes() {
     return [

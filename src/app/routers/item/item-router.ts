@@ -19,9 +19,7 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
     super(itemManager, userLogManager, dateTimeService);
   }
 
-  getName() {
-    return 'items';
-  }
+  readonly name = 'items';
 
   getRoutes() {
     return [

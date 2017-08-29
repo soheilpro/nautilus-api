@@ -12,9 +12,7 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
     super(userRoleManager, userLogManager, dateTimeService);
   }
 
-  getName() {
-    return 'user-roles';
-  }
+  readonly name = 'user-roles';
 
   getRoutes() {
     return [

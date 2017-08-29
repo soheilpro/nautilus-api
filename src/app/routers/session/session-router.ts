@@ -14,9 +14,7 @@ export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISession
     this.postEntity = this.postEntity.bind(this);
   }
 
-  getName() {
-    return 'sessions';
-  }
+  readonly name = 'sessions';
 
   getRoutes() {
     return [
