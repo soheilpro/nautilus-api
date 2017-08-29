@@ -1,7 +1,8 @@
 import * as mongodb from 'mongodb';
 
 export interface IConnection {
-  open(): void;
-  getDB(): mongodb.Db;
-  close(): void;
+  isOpen(): boolean;
+  open(): Promise<void>;
+  getDB(): Promise<mongodb.Db>;
+  close(): Promise<void>;
 }

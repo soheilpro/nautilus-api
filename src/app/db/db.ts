@@ -19,42 +19,42 @@ export class DB implements IDB {
   }
 
   async select<TDocument extends IDocument>(collectionName: string, query: IQuery) {
-    const db = this.connection.getDB();
+    const db = await this.connection.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
     return await collection.find<TDocument>(ObjectHelper.cleanUp(query)).toArray();
   }
 
   async count(collectionName: string, query: IQuery) {
-    const db = this.connection.getDB();
+    const db = await this.connection.getDB();
     const collection = db.collection(collectionName);
 
     return await collection.count(ObjectHelper.cleanUp(query));
   }
 
   async insert<TDocument extends IDocument>(collectionName: string, document: IDocument) {
-    const db = this.connection.getDB();
+    const db = await this.connection.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
     return (await collection.insertOne(ObjectHelper.cleanUp(document))).ops[0];
   }
 
   async update<TDocument extends IDocument>(collectionName: string, query: IQuery, update: IUpdate, upsert?: boolean) {
-    const db = this.connection.getDB();
+    const db = await this.connection.getDB();
     const collection = db.collection<TDocument>(collectionName);
 
     return (await collection.findOneAndUpdate(ObjectHelper.cleanUp(query), ObjectHelper.cleanUp(update), { returnOriginal: false, upsert: upsert })).value;
   }
 
   async delete(collectionName: string, query: IQuery) {
-    const db = this.connection.getDB();
+    const db = await this.connection.getDB();
     const collection = db.collection(collectionName);
 
     await collection.deleteMany(ObjectHelper.cleanUp(query));
   }
 
   async drop(collectionName: string) {
-    const db = this.connection.getDB();
+    const db = await this.connection.getDB();
     const collection = db.collection(collectionName);
 
     return collection.drop();

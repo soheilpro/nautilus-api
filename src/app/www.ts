@@ -15,7 +15,6 @@ async function run() {
   const dateTimeService = new DateTimeService();
 
   const connection = new Connection(settings.db.address);
-  await connection.open();
   const db = new DB(connection, dateTimeService);
 
   const userRepository = new UserRepository(db);
@@ -74,8 +73,8 @@ async function run() {
     debug(`Nautilus API listening on port ${server.address().port}`);
   });
 
-  server.on('close', () => {
-    connection.close();
+  server.on('close', async () => {
+    await connection.close();
   });
 }
 

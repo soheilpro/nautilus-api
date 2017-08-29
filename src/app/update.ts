@@ -15,7 +15,6 @@ async function run() {
   const dateTimeService = new DateTimeService();
 
   const connection = new Connection(settings.db.address);
-  await connection.open();
   const db = new DB(connection, dateTimeService);
 
   const meta = (await db.select<IMetaDocument>('meta', {}))[0];
@@ -33,7 +32,7 @@ async function run() {
     console.log(` Done.`);
   }
 
-  connection.close();
+  await connection.close();
 }
 
 run();

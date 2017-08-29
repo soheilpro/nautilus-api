@@ -7,15 +7,23 @@ export class Connection implements IConnection {
   constructor(private address: string) {
   }
 
-  async open() {
-    Connection._db = await mongodb.MongoClient.connect(this.address, { ignoreUndefined: true });
+  isOpen() {
+    return !!Connection._db;
   }
 
-  getDB() {
+  async open() {
+    if (!this.isOpen())
+      Connection._db = await mongodb.MongoClient.connect(this.address, { ignoreUndefined: true });
+  }
+
+  async getDB() {
+    await this.open();
+
     return Connection._db;
   }
 
-  close(): void {
-    Connection._db.close();
+  async close() {
+    if (this.isOpen())
+      Connection._db.close();
   }
 }
