@@ -2,4 +2,3 @@
 config
 src/node_modules
 src/out
-src/npm-debug.log
