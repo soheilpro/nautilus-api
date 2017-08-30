@@ -1,5 +1,7 @@
 export interface ISettings {
-  port: number;
+  server: {
+    port: number;
+  };
   db: {
     address: string;
   };

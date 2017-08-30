@@ -71,7 +71,7 @@ async function run() {
   for (const router of routers)
     router.register(server);
 
-  server.listen(settings.port, () => {
+  server.listen(settings.server.port, () => {
     debug(`Nautilus API listening on port ${server.address().port}`);
   });
 
