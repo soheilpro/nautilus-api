@@ -5,8 +5,8 @@ COPY . /usr/app
 
 WORKDIR /usr/app
 
-RUN ./run.sh install
-RUN ./run.sh build
+RUN ./run.sh install && \
+    ./run.sh build
 
 ENTRYPOINT ["/usr/app/run.sh"]
 CMD ["start"]
