@@ -9,7 +9,6 @@ export class ItemModel extends EntityModelBase {
   title?: string;
   description?: string;
   state?: IEntityModel;
-  priority?: IEntityModel;
   tags?: string[];
   project?: IEntityModel;
   assignedTo?: IEntityModel;
@@ -25,7 +24,6 @@ export class ItemModel extends EntityModelBase {
     this.title = entity.title;
     this.description = entity.description;
     this.state = this.renderEntity(entity.state);
-    this.priority = this.renderEntity(entity.priority);
     this.tags = entity.tags;
     this.project = this.renderEntity(entity.project);
     this.assignedTo = this.renderEntity(entity.assignedTo);

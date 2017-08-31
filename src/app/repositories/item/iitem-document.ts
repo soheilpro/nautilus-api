@@ -7,7 +7,6 @@ export interface IItemDocument extends IManagedDocument {
   title?: string;
   description?: string;
   state?: IDocument;
-  priority?: IDocument;
   tags?: string[];
   project?: IDocument;
   assignedTo?: IDocument;

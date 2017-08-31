@@ -2,7 +2,7 @@ import { RouterBase } from '../router-base';
 import { IItemState, IItemStateManager, IItemStateFilter, IItemStateChange } from '../../framework/item-state';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../services';
-import { ItemStateModel } from '../../models/item-state';
+import { ItemStateModel } from '../../models';
 import { IRequest, IParams } from '../../web';
 
 export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, IItemStateChange> {

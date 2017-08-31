@@ -7,7 +7,6 @@ export interface IItem extends IEntity {
   title?: string;
   description?: string;
   state?: IEntity;
-  priority?: IEntity;
   tags?: string[];
   project?: IEntity;
   assignedTo?: IEntity;

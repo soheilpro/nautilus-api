@@ -3,19 +3,17 @@ import { IItem, IItemManager, IItemFilter, IItemChange } from '../../framework/i
 import { IProjectManager } from '../../framework/project';
 import { IItemTypeManager } from '../../framework/item-type';
 import { IItemStateManager } from '../../framework/item-state';
-import { IItemPriorityManager } from '../../framework/item-priority';
 import { IItemRelationshipManager } from '../../framework/item-relationship';
 import { IPermission } from '../../framework/security';
 import { IUser, IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../services';
-import { ItemModel } from '../../models/item';
-import { ItemRelationshipModel } from '../../models/item-relationship';
+import { ItemModel, ItemRelationshipModel } from '../../models';
 import { PermissionHelper } from '../../security';
 import { IRequest, IParams } from '../../web';
 
 export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
-  constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemPriorityManager: IItemPriorityManager, private itemRelationshipManager: IItemRelationshipManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
+  constructor(itemManager: IItemManager, private userManager: IUserManager, private projectManager: IProjectManager, private itemTypeManager: IItemTypeManager, private itemStateManager: IItemStateManager, private itemRelationshipManager: IItemRelationshipManager, userLogManager: IUserLogManager, dateTimeService: IDateTimeService) {
     super(itemManager, userLogManager, dateTimeService);
   }
 
@@ -73,7 +71,6 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
       title: params.readString('title'),
       description: params.readString('description'),
       state: await params.readEntity('state_id', this.itemStateManager),
-      priority: await params.readEntity('priority_id', this.itemPriorityManager),
       tags: params.readStringArray('tags'),
       project: await params.readEntity('project_id', this.projectManager),
       assignedTo: await params.readEntity('assigned_to_id', this.userManager),
@@ -88,7 +85,6 @@ export class ItemRouter extends RouterBase<IItem, IItemFilter, IItemChange> {
       title: params.readString('title'),
       description: params.readString('description'),
       state: await params.readEntity('state_id', this.itemStateManager),
-      priority: await params.readEntity('priority_id', this.itemPriorityManager),
       tags: params.readStringArray('tags'),
       project: await params.readEntity('project_id', this.projectManager),
       assignedTo: await params.readEntity('assigned_to_id', this.userManager),

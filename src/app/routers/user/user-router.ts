@@ -3,7 +3,7 @@ import { RouterBase } from '../router-base';
 import { IUser, IUserManager, IUserFilter, IUserChange } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../services';
-import { UserModel } from '../../models/user';
+import { UserModel } from '../../models';
 import { IRequest, IResponse, IParams, Params } from '../../web';
 
 export class UserRouter extends RouterBase<IUser, IUserFilter, IUserChange> {

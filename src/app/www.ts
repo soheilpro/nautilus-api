@@ -5,9 +5,9 @@ import * as debugModule from 'debug';
 import { settings } from './configuration';
 import { DateTimeService } from './services';
 import { DB, Connection } from './db';
-import { UserManager, UserLogManager, SessionManager, ProjectManager, UserRoleManager, ItemStateManager, ItemTypeManager, ItemPriorityManager, ItemManager, ItemRelationshipManager } from './managers';
-import { UserRepository, UserLogRepository, SessionRepository, ProjectRepository, UserRoleRepository, ItemStateRepository, ItemTypeRepository, ItemPriorityRepository, ItemRepository, ItemRelationshipRepository } from './repositories';
-import { UserRouter, SessionRouter, ProjectRouter, UserRoleRouter, ItemStateRouter, ItemTypeRouter, ItemPriorityRouter, ItemRouter, ItemRelationshipRouter } from './routers';
+import { UserManager, UserLogManager, SessionManager, ProjectManager, UserRoleManager, ItemStateManager, ItemTypeManager, ItemManager, ItemRelationshipManager } from './managers';
+import { UserRepository, UserLogRepository, SessionRepository, ProjectRepository, UserRoleRepository, ItemStateRepository, ItemTypeRepository, ItemRepository, ItemRelationshipRepository } from './repositories';
+import { UserRouter, SessionRouter, ProjectRouter, UserRoleRouter, ItemStateRouter, ItemTypeRouter, ItemRouter, ItemRelationshipRouter } from './routers';
 import { authenticator } from './plugins';
 
 const debug = debugModule('nautilus-api');
@@ -25,7 +25,6 @@ async function run() {
   const userRoleRepository = new UserRoleRepository(db);
   const itemStateRepository = new ItemStateRepository(db);
   const itemTypeRepository = new ItemTypeRepository(db);
-  const itemPriorityRepository = new ItemPriorityRepository(db);
   const itemRepository = new ItemRepository(db);
   const itemRelationshipRepository = new ItemRelationshipRepository(db);
 
@@ -36,7 +35,6 @@ async function run() {
   const userRoleManager = new UserRoleManager(userRoleRepository);
   const itemStateManager = new ItemStateManager(itemStateRepository);
   const itemTypeManager = new ItemTypeManager(itemTypeRepository);
-  const itemPriorityManager = new ItemPriorityManager(itemPriorityRepository);
   const itemManager = new ItemManager(itemRepository);
   const itemRelationshipManager = new ItemRelationshipManager(itemRelationshipRepository);
 
@@ -47,8 +45,7 @@ async function run() {
     new ProjectRouter(projectManager, userLogManager, dateTimeService),
     new ItemStateRouter(itemStateManager, userLogManager, dateTimeService),
     new ItemTypeRouter(itemTypeManager, userLogManager, dateTimeService),
-    new ItemPriorityRouter(itemPriorityManager, userLogManager, dateTimeService),
-    new ItemRouter(itemManager, userManager, projectManager, itemTypeManager, itemStateManager, itemPriorityManager, itemRelationshipManager, userLogManager, dateTimeService),
+    new ItemRouter(itemManager, userManager, projectManager, itemTypeManager, itemStateManager, itemRelationshipManager, userLogManager, dateTimeService),
     new ItemRelationshipRouter(itemRelationshipManager, itemManager, userLogManager, dateTimeService),
   ];
 

@@ -2,7 +2,7 @@ import { RouterBase } from '../router-base';
 import { IProject, IProjectManager, IProjectFilter, IProjectChange } from '../../framework/project';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../services';
-import { ProjectModel } from '../../models/project';
+import { ProjectModel } from '../../models';
 import { IRequest, IParams } from '../../web';
 
 export class ProjectRouter extends RouterBase<IProject, IProjectFilter, IProjectChange> {

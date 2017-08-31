@@ -4,7 +4,7 @@ import { ISession, ISessionManager, ISessionFilter, ISessionChange } from '../..
 import { IUserManager } from '../../framework/user';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../services';
-import { SessionModel } from '../../models/session/';
+import { SessionModel } from '../../models';
 import { IRequest, IResponse, Params } from '../../web';
 
 export class SessionRouter extends RouterBase<ISession, ISessionFilter, ISessionChange> {

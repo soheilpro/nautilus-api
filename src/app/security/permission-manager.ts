@@ -5,7 +5,6 @@ import { IPermission } from '../framework/security';
 export class PermissionManager {
   static async getUserPermissions(userRoles: IUserRole[], projects: IProject[]): Promise<IPermission[]> {
     let permissions = [
-      { name: 'item-priorities.read' },
       { name: 'item-states.read' },
       { name: 'item-types.read' },
       { name: 'projects.read' },
@@ -22,7 +21,6 @@ export class PermissionManager {
   private static * getPermissions(userRole: IUserRole, projects: IProject[]): IterableIterator<IPermission> {
     switch (userRole.name) {
       case 'admin':
-        yield { name: 'item-priorities.write' };
         yield { name: 'item-states.write' };
         yield { name: 'item-types.write' };
         yield { name: 'projects.write' };

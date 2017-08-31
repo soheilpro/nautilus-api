@@ -2,7 +2,7 @@ import { RouterBase } from '../router-base';
 import { IItemType, IItemTypeManager, IItemTypeFilter, IItemTypeChange } from '../../framework/item-type';
 import { IUserLogManager } from '../../framework/user-log';
 import { IDateTimeService } from '../../services';
-import { ItemTypeModel } from '../../models/item-type/';
+import { ItemTypeModel } from '../../models';
 import { IRequest, IParams } from '../../web';
 
 export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItemTypeChange> {

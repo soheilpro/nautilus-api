@@ -6,7 +6,7 @@ import { IUserLogManager } from '../../framework/user-log';
 import { IUser } from '../../framework/user';
 import { EntityHelper } from '../../framework';
 import { IDateTimeService } from '../../services';
-import { ItemRelationshipModel } from '../../models/item-relationship';
+import { ItemRelationshipModel } from '../../models';
 import { PermissionHelper } from '../../security';
 import { IRequest, IParams } from '../../web';
 
