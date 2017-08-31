@@ -28,7 +28,7 @@ export class PermissionManager {
         yield { name: 'users.write' };
         break;
 
-      case 'master':
+      case 'project.master':
         if (userRole.project) {
           yield { name: 'project.read',  params: { projectId: userRole.project.id } };
           yield { name: 'project.write', params: { projectId: userRole.project.id } };
@@ -41,7 +41,7 @@ export class PermissionManager {
         }
         break;
 
-      case 'member':
+      case 'project.member':
         yield { name: 'project.read',  params: { projectId: userRole.project.id } };
         yield { name: 'project.write', params: { projectId: userRole.project.id } };
         break;
