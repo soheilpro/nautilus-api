@@ -7,7 +7,7 @@ export class v1 implements ISchema {
 
   async apply(db: IDB) {
     const versionCounter: IDocument = {
-      'name': '_version',
+      'name': '*.meta.version',
       'value': 0,
     };
 

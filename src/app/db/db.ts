@@ -129,6 +129,6 @@ export class DB implements IDB {
   }
 
   private async nextVersion() {
-    return await this.counter('_version');
+    return await this.counter('*.meta.version');
   }
 }

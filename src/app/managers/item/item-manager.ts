@@ -9,7 +9,7 @@ export class ItemManager extends ManagerBase<IItem, IItemFilter, IItemChange> im
   }
 
   async insert(entity: IItem) {
-    entity.sid = (await this.repository.counter('items')).toString();
+    entity.sid = (await this.repository.counter('item.sid')).toString();
 
     return super.insert(entity);
   }
