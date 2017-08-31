@@ -9,7 +9,7 @@ export class SessionRepository extends RepositoryBase<ISession, ISessionFilter, 
   }
 
   collectionName() {
-    return 'session';
+    return 'sessions';
   }
 
   documentToEntity(document: ISessionDocument) {

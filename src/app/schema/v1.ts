@@ -11,7 +11,7 @@ export class v1 implements ISchema {
       'value': 0,
     };
 
-    await db.insert('counter', versionCounter);
+    await db.insert('counters', versionCounter);
 
     let adminUser: IDocument = {
       'name': 'Admin',

@@ -9,7 +9,7 @@ export class ItemRelationshipRepository extends RepositoryBase<IItemRelationship
   }
 
   collectionName() {
-    return 'item_relationship';
+    return 'itemRelationships';
   }
 
   changeToUpdate(change: IItemRelationshipChange) {

@@ -9,7 +9,7 @@ export class UserRoleRepository extends RepositoryBase<IUserRole, IUserRoleFilte
   }
 
   collectionName() {
-    return 'user_role';
+    return 'userRoles';
   }
 
   changeToUpdate(change: IUserRoleDocument) {

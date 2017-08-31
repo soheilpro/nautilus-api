@@ -9,7 +9,7 @@ export class UserLogRepository extends RepositoryBase<IUserLog, IUserLogFilter, 
   }
 
   collectionName() {
-    return 'user_log';
+    return 'userLogs';
   }
 
   documentToEntity(document: IUserLogDocument) {
