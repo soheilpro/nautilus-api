@@ -1,11 +1,7 @@
 import { settings } from './configuration';
 import { DateTimeService } from './services';
 import { DB, Connection, IDocument } from './db';
-import { v1 } from './schema';
-
-const schemas = [
-  new v1(),
-];
+import { schemas } from './schema';
 
 interface IMetaDocument extends IDocument {
   version: number;
