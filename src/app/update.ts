@@ -20,7 +20,7 @@ async function run() {
     if (schema.version <= currentVersion)
       continue;
 
-    process.stdout.write(`Updating database schema to version ${schema.version}...`);
+    process.stdout.write(`Updating database to version ${schema.version}...`);
 
     await schema.apply(db);
     await db.update('meta', {}, { $set: { version: schema.version } }, true);
