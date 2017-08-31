@@ -9,7 +9,7 @@ export class ItemStateRepository extends RepositoryBase<IItemState, IItemStateFi
   }
 
   collectionName() {
-    return 'item_states';
+    return 'item_state';
   }
 
   changeToUpdate(change: IItemStateChange) {

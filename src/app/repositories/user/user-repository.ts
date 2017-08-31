@@ -9,7 +9,7 @@ export class UserRepository extends RepositoryBase<IUser, IUserFilter, IUserChan
   }
 
   collectionName() {
-    return 'users';
+    return 'user';
   }
 
   changeToUpdate(change: IUserChange) {

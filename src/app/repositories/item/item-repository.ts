@@ -9,7 +9,7 @@ export class ItemRepository extends RepositoryBase<IItem, IItemFilter, IItemChan
   }
 
   collectionName() {
-    return 'items';
+    return 'item';
   }
 
   changeToUpdate(change: IItemChange) {

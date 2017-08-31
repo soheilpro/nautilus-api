@@ -64,7 +64,7 @@ export class DB implements IDB {
     const query = { name };
     const update = { $inc: { value: 1 } };
 
-    const result = await this.update<ICounterDocument>('counters', query, update);
+    const result = await this.update<ICounterDocument>('counter', query, update);
 
     return result.value;
   }

@@ -9,7 +9,7 @@ export class ProjectRepository extends RepositoryBase<IProject, IProjectFilter, 
   }
 
   collectionName() {
-    return 'projects';
+    return 'project';
   }
 
   changeToUpdate(change: IProjectChange) {

@@ -9,7 +9,7 @@ export class ItemTypeRepository extends RepositoryBase<IItemType, IItemTypeFilte
   }
 
   collectionName() {
-    return 'item_types';
+    return 'item_type';
   }
 
   changeToUpdate(change: IItemTypeChange) {
