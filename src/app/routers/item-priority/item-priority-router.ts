@@ -14,11 +14,11 @@ export class ItemPriorityRouter extends RouterBase<IItemPriority, IItemPriorityF
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/itempriorities',     this.getEntities,  ['item-priorities.read']),
-      this.protectedRoute('get',   '/itempriorities/:id', this.getEntity,    ['item-priorities.read']),
-      this.protectedRoute('post',  '/itempriorities',     this.postEntity,   ['item-priorities.write']),
-      this.protectedRoute('patch', '/itempriorities/:id', this.patchEntity,  ['item-priorities.write']),
-      this.protectedRoute('del',   '/itempriorities/:id', this.deleteEntity, ['item-priorities.write']),
+      this.protectedRoute('get',   '/item-priorities',     this.getEntities,  ['item-priorities.read']),
+      this.protectedRoute('get',   '/item-priorities/:id', this.getEntity,    ['item-priorities.read']),
+      this.protectedRoute('post',  '/item-priorities',     this.postEntity,   ['item-priorities.write']),
+      this.protectedRoute('patch', '/item-priorities/:id', this.patchEntity,  ['item-priorities.write']),
+      this.protectedRoute('del',   '/item-priorities/:id', this.deleteEntity, ['item-priorities.write']),
     ];
   }
 

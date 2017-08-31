@@ -16,11 +16,11 @@ export class UserRoleRouter extends RouterBase<IUserRole, IUserRoleFilter, IUser
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/userroles',     this.getEntities,  ['user-roles.read']),
-      this.protectedRoute('get',   '/userroles/:id', this.getEntity,    ['user-roles.read']),
-      this.protectedRoute('post',  '/userroles',     this.postEntity,   ['user-roles.write']),
-      this.protectedRoute('patch', '/userroles/:id', this.patchEntity,  ['user-roles.write']),
-      this.protectedRoute('del',   '/userroles/:id', this.deleteEntity, ['user-roles.write']),
+      this.protectedRoute('get',   '/user-roles',     this.getEntities,  ['user-roles.read']),
+      this.protectedRoute('get',   '/user-roles/:id', this.getEntity,    ['user-roles.read']),
+      this.protectedRoute('post',  '/user-roles',     this.postEntity,   ['user-roles.write']),
+      this.protectedRoute('patch', '/user-roles/:id', this.patchEntity,  ['user-roles.write']),
+      this.protectedRoute('del',   '/user-roles/:id', this.deleteEntity, ['user-roles.write']),
     ];
   }
 

@@ -19,11 +19,11 @@ export class ItemRelationshipRouter extends RouterBase<IItemRelationship, IItemR
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/itemrelationships',     this.getEntities),
-      this.protectedRoute('get',   '/itemrelationships/:id', this.getEntity),
-      this.protectedRoute('post',  '/itemrelationships',     this.postEntity),
-      this.protectedRoute('patch', '/itemrelationships/:id', this.patchEntity),
-      this.protectedRoute('del',   '/itemrelationships/:id', this.deleteEntity),
+      this.protectedRoute('get',   '/item-relationships',     this.getEntities),
+      this.protectedRoute('get',   '/item-relationships/:id', this.getEntity),
+      this.protectedRoute('post',  '/item-relationships',     this.postEntity),
+      this.protectedRoute('patch', '/item-relationships/:id', this.patchEntity),
+      this.protectedRoute('del',   '/item-relationships/:id', this.deleteEntity),
     ];
   }
 

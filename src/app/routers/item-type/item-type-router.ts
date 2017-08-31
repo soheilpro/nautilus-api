@@ -14,11 +14,11 @@ export class ItemTypeRouter extends RouterBase<IItemType, IItemTypeFilter, IItem
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/itemtypes',     this.getEntities,  ['item-types.read']),
-      this.protectedRoute('get',   '/itemtypes/:id', this.getEntity,    ['item-types.read']),
-      this.protectedRoute('post',  '/itemtypes',     this.postEntity,   ['item-types.write']),
-      this.protectedRoute('patch', '/itemtypes/:id', this.patchEntity,  ['item-types.write']),
-      this.protectedRoute('del',   '/itemtypes/:id', this.deleteEntity, ['item-types.write']),
+      this.protectedRoute('get',   '/item-types',     this.getEntities,  ['item-types.read']),
+      this.protectedRoute('get',   '/item-types/:id', this.getEntity,    ['item-types.read']),
+      this.protectedRoute('post',  '/item-types',     this.postEntity,   ['item-types.write']),
+      this.protectedRoute('patch', '/item-types/:id', this.patchEntity,  ['item-types.write']),
+      this.protectedRoute('del',   '/item-types/:id', this.deleteEntity, ['item-types.write']),
     ];
   }
 

@@ -14,11 +14,11 @@ export class ItemStateRouter extends RouterBase<IItemState, IItemStateFilter, II
 
   getRoutes() {
     return [
-      this.protectedRoute('get',   '/itemstates',     this.getEntities,  ['item-states.read']),
-      this.protectedRoute('get',   '/itemstates/:id', this.getEntity,    ['item-states.read']),
-      this.protectedRoute('post',  '/itemstates',     this.postEntity,   ['item-states.write']),
-      this.protectedRoute('patch', '/itemstates/:id', this.patchEntity,  ['item-states.write']),
-      this.protectedRoute('del',   '/itemstates/:id', this.deleteEntity, ['item-states.write']),
+      this.protectedRoute('get',   '/item-states',     this.getEntities,  ['item-states.read']),
+      this.protectedRoute('get',   '/item-states/:id', this.getEntity,    ['item-states.read']),
+      this.protectedRoute('post',  '/item-states',     this.postEntity,   ['item-states.write']),
+      this.protectedRoute('patch', '/item-states/:id', this.patchEntity,  ['item-states.write']),
+      this.protectedRoute('del',   '/item-states/:id', this.deleteEntity, ['item-states.write']),
     ];
   }
 
